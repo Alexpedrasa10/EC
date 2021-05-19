@@ -6,13 +6,14 @@ use App\Models\CartProduct;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use App\Actions\Jetstream\MercadoPagoPayment; 
 
 class CartProducts extends Component
 {
     public $cart, $user, $products, 
     $confirmDeleteProduct = FALSE, $idProductDelete = NULL,
     $editProductCart = FALSE, $productEdit = NULL, $productEditQuantity= NULL, $stock = NULL,
-    $productEditName= NULL, $productEditUnitPrice= NULL, $productEditAmount= NULL, $productEditID;
+    $productEditName= NULL, $productEditUnitPrice= NULL, $productEditAmount= NULL, $productEditID, $ashe;
 
     // Eliminar product
     public function cancel()
@@ -116,6 +117,15 @@ class CartProducts extends Component
         ]);
     }
 
+
+    public function paymentMercadopago(MercadoPagoPayment $MP)
+    {
+        $product = $this->user->products()->select('cart_products.*')
+        ->addSelect('p.name as name', 'p.price as unit_price', 'p.id as product_id')
+        ->leftjoin('products as p', 'p.id', '=', 'cart_products.product_id')->get();
+
+        $MP->createOrder($product);
+    }
 
     public function render()
     {

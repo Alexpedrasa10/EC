@@ -73,7 +73,7 @@
           </p>
         </h1>
         <div class="float-right">
-          <button class="bg-blue-600 uppercase text-white dark:text-white p-3 mt-1"  wire:$toggle="deleteProduct">
+          <button class="bg-blue-600 uppercase text-white dark:text-white p-3 mt-1" wire:click="paymentMercadopago">
             Procesar pago
           </button>
           <button class="bg-red-600 uppercase text-white dark:text-white p-3 mt-1">
