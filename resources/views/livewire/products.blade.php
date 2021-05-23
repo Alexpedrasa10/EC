@@ -5,7 +5,7 @@
         @foreach ($products as $item)
 
         <div class="flex bg-white dark:bg-gray-800 rounded-lg shadow">
-            <div class="flex-none w-24 md:w-48  relative">
+            <div class="flex-none w-28 sm:w-40 md:w-48 relative">
                 <img src="{{$item->url_photos}}" alt="shopping image" class="absolute rounded-lg inset-0 w-full h-full object-cover"/>
             </div>
             <form class="flex-auto p-6">
@@ -19,6 +19,29 @@
                     <div class="w-full flex-none text-sm font-medium text-gray-500 dark:text-gray-300 mt-2">
                     In stock
                     </div>
+                </div>
+                <div class="flex items-baseline mt-4 mb-6 text-gray-700 dark:text-gray-300">
+                    <div class="space-x-2 flex">
+                        <label class="text-center">
+                            <input type="radio" class="w-6 h-6 flex items-center justify-center" name="size" value="s" wire:model="item->size"/>
+                                S
+                        </label>
+                        <label class="text-center">
+                            <input type="radio" class="w-6 h-6 flex items-center justify-center" name="size" value="m"/>
+                                M
+                        </label>
+                        <label class="text-center">
+                            <input type="radio" class="w-6 h-6 flex items-center justify-center" name="size" value="l"/>
+                            L
+                        </label>
+                        <label class="text-center">
+                            <input type="radio" class="w-6 h-6 flex items-center justify-center" name="size" value="xl"/>
+                                XL
+                        </label>
+                    </div>
+                    <a href="#" class="ml-auto hidden md:block text-sm text-gray-500 dark:text-gray-300 underline">
+                        Size Guide
+                    </a>
                 </div>
                 <div class="flex mb-4 text-sm font-medium">
                     <button type="button" 

@@ -78,6 +78,6 @@ class User extends AuthUser
 
     public function products() :HasManyThrough
     {
-        return $this->hasManyThrough(CartProduct::class, UserCart::class, 'user_id', 'user_cart_id', 'id', 'id');
+        return $this->hasManyThrough(CartProduct::class, UserCart::class, 'user_id', 'user_cart_id', 'id', 'id')->whereNull('user_cart.buy')->whereNull('user_cart.canceled');;
     }
 }

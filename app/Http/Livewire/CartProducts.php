@@ -13,7 +13,8 @@ class CartProducts extends Component
     public $cart, $user, $products, 
     $confirmDeleteProduct = FALSE, $idProductDelete = NULL,
     $editProductCart = FALSE, $productEdit = NULL, $productEditQuantity= NULL, $stock = NULL,
-    $productEditName= NULL, $productEditUnitPrice= NULL, $productEditAmount= NULL, $productEditID, $ashe;
+    $productEditName= NULL, $productEditUnitPrice= NULL, $productEditAmount= NULL, $productEditID, $ashe,
+    $confirmCancelCart = FALSE;
 
     // Eliminar product
     public function cancel()
@@ -33,18 +34,29 @@ class CartProducts extends Component
         if (!empty($this->idProductDelete) && $this->confirmDeleteProduct){
 
             $product = CartProduct::where('id', '=', $this->idProductDelete)->first();
-            $product->delete();
 
-            $this->cart->amount -= $product->amount;
-            $this->cart->save();
+            // Si es el unico producto
+            if ($product->amount != $this->cart->amount) {
+                
+                $product->delete();
 
-            $this->cancel();
+                $this->cart->amount -= $product->amount;
+                $this->cart->save();
 
-            $this->dispatchBrowserEvent('alert',[
-                'title' => 'Producto eliminado del carrito.',
-                'type'=>'success', 
-            ]);
+                $this->cancel();
 
+                $this->dispatchBrowserEvent('alert',[
+                    'title' => 'Producto eliminado del carrito.',
+                    'type'=>'success', 
+                ]);
+
+            }
+            else {
+
+                $product->delete();
+                $this->cart->delete();
+                return redirect('/productos');
+            }
         }
     }
 
@@ -117,6 +129,22 @@ class CartProducts extends Component
         ]);
     }
 
+    // Cancelar carrito
+
+    public function cancelCart()
+    {
+        return $this->confirmCancelCart = !$this->confirmCancelCart;
+    }
+
+    public function confirmCancelCart()
+    {
+        $this->cart->canceled = true;
+        $this->cart->save();
+        $this->confirmCancelCart = false;
+        return redirect('/productos');
+    }
+
+    // Pagar producto
 
     public function paymentMercadopago(MercadoPagoPayment $MP)
     {
