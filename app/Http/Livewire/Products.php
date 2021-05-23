@@ -12,7 +12,7 @@ use Livewire\Component;
 
 class Products extends Component
 {
-    public $products, $categories, $user;
+    public $categories, $user;
 
     public function addProductToCart(int $idProduct)
     {
@@ -81,11 +81,12 @@ class Products extends Component
 
     public function render()
     {
-        $this->products = Product::all();
+        $products = Product::where('is_active', 1);
         $this->categories = Property::all();
         $this->user = User::where('id', '=', Auth::user()->id)->first();
 
-
-        return view('livewire.products');
+        return view('livewire.products', [ 
+            'products' => $products->paginate(5)
+        ]);
     }
 }

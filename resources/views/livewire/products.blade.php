@@ -1,5 +1,5 @@
 <div class="p-10">
-    <h2 class="font-black text-3xl pb-10 dark:text-white">Todos los productos</h2>
+    <h2 class="font-black text-3xl dark:text-white">Todos los productos</h2>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:sm:grid-cols-2 lg:sm:grid-cols-6 gap-6">
         @foreach ($products as $item)
@@ -55,7 +55,9 @@
                 </p>
             </form>
         </div>
-
         @endforeach
+    </div>
+    <div class="my-5 bg-gray-50">
+        {{$products->links()}}
     </div>
 </div>
