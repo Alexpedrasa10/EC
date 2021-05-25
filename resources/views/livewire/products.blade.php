@@ -2,7 +2,7 @@
     <h2 class="font-black text-3xl dark:text-white">Todos los productos</h2>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:sm:grid-cols-2 lg:sm:grid-cols-6 gap-6">
-        @foreach ($products as $item)
+        @foreach ($this->getProducts($products) as $item)
 
         <div class="flex bg-white dark:bg-gray-800 rounded-lg shadow">
             <div class="flex-none w-28 sm:w-40 md:w-48 relative">
@@ -22,7 +22,14 @@
                 </div>
                 <div class="flex items-baseline mt-4 mb-6 text-gray-700 dark:text-gray-300">
                     <div class="space-x-2 flex">
+                        @if (!empty($item->sizes ))
+                        @foreach ($item->sizes as $value => $sizes)
                         <label class="text-center">
+                            <input type="radio" class="w-6 h-6 flex items-center justify-center" name="size" value="{{$sizes}}"/>
+                               {{strtoupper($value)}}
+                        </label>
+                        @endforeach
+                        <!--label class="text-center">
                             <input type="radio" class="w-6 h-6 flex items-center justify-center" name="size" value="s" wire:model="item->size"/>
                                 S
                         </label>
@@ -37,7 +44,9 @@
                         <label class="text-center">
                             <input type="radio" class="w-6 h-6 flex items-center justify-center" name="size" value="xl"/>
                                 XL
-                        </label>
+                        </label-->
+                        @endif
+                        
                     </div>
                     <a href="#" class="ml-auto hidden md:block text-sm text-gray-500 dark:text-gray-300 underline">
                         Size Guide

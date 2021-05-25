@@ -79,6 +79,18 @@ class Products extends Component
         }
     }
 
+    public function getProducts($products) :Array
+    {
+        $arr = array();
+
+        foreach ($products as $key => $value) {
+            $value->sizes = json_decode($value->sizes);
+            array_push($arr, $value);
+        }
+
+        return $arr;
+    }
+
     public function render()
     {
         $products = Product::where('is_active', 1);
