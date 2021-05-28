@@ -1,6 +1,10 @@
 <div class="p-10">
     <h2 class="font-black text-3xl dark:text-white">Todos los productos </h2>
 
+    {{-- @foreach ($dataProducts as $item)
+        {{json_encode($item)}}
+    @endforeach --}}
+
     <div class="grid grid-cols-1 sm:grid-cols-2 md:sm:grid-cols-2 lg:sm:grid-cols-6 gap-6">
         @foreach ($this->getProducts($products) as $item)
 
@@ -11,7 +15,7 @@
             <form class="flex-auto p-6">
                 <div class="flex flex-wrap">
                     <h1 class="flex-auto text-xl font-semibold dark:text-gray-50">
-                        {{$item->name}}   
+                        {{$item->name}}
                     </h1>
                     <div class="text-2xl font-black text-blue-600 dark:text-gray-300">
                         ${{$item->price}}
@@ -22,21 +26,46 @@
                 </div>
                 <div class="flex items-baseline mt-4 mb-6 text-gray-700 dark:text-gray-300">
                     <div class="space-x-2 flex">
-                        @if (!empty($item->sizes ))
-                            @foreach ($item->sizes as $value => $sizes)
-                            <button type="button" wire:click="setProductSizes( {{$item->id}}, '{{$value}}' )">
-                                <label class="text-center">
-                                    <input type="radio" class="w-6 h-6 flex items-center justify-center" name="size"/>
-                                    {{strtoupper($value)}}
-                                </label>
-                            </button>
-                            @endforeach
-                        @endif
+                    @foreach ($item->sizes[$item->current_color] as $sizes => $q)
+                        
+                        <button type="button" wire:click="setProductSizes( {{$item->id}}, '{{$item->current_color}}', '{{$sizes}}' )">
+                            <label class="text-center">
+                                <input type="radio" class="cursor-pointer w-6 h-6 flex items-center justify-center" name="size"/>
+                                {{strtoupper($sizes)}}
+                            </label>
+                        </button>
+                    @endforeach
                         
                     </div>
                     <a href="#" class="ml-auto hidden md:block text-sm text-gray-500 dark:text-gray-300 underline">
-                        Size Guide
+                        Size Guide {{$item->current_color}}
                     </a>
+                </div>
+                <div class="flex items-baseline mt-4 mb-6 text-gray-700 dark:text-gray-300">
+                    <ul class="flex flex-row justify-center items-center">
+                        @foreach ($item->colors as $colors)
+                            <li class="mr-4 last:mr-0" title="{{strtoupper($colors)}}" wire:click="setCurrentColor( {{$item->id}}, '{{$colors}}' )">
+                                @if ($colors == $item->current_color)
+                                <span class="block p-1 border-2 border-gray-500 hover:border-gray-500 rounded-full transition ease-in duration-300 cursor-pointer">
+                                    @if ($colors == 'black' || $colors == 'white')
+                                        <a class="block w-6 h-6 bg-{{$colors}} rounded-full"></a>
+                                    @else
+                                        <a class="block w-6 h-6 bg-{{$colors}}-500 rounded-full"></a>
+                                    @endif
+                                </span>
+                                @else
+                                <span class="block p-1 border-2 border-white hover:border-gray-500 rounded-full transition ease-in duration-300 cursor-pointer">
+                                    @if ($colors == 'black' || $colors == 'white')
+                                        <a class="block w-6 h-6 bg-{{$colors}} rounded-full"></a>
+                                    @else
+                                        <a class="block w-6 h-6 bg-{{$colors}}-500 rounded-full"></a>
+                                    @endif
+                                </span>
+                                @endif
+                                
+                            </li>
+                        @endforeach
+                    </ul>
                 </div>
                 <div class="flex mb-4 text-sm font-medium">
                     <button type="button" 

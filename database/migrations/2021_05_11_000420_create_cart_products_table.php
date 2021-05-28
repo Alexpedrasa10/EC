@@ -19,7 +19,7 @@ class CreateCartProductsTable extends Migration
             $table->unsignedBigInteger('product_id');
             $table->decimal('quantity');
             $table->decimal('amount');
-            $table->jsonb('sizes')->nullable();
+            $table->jsonb('data')->nullable();
             $table->timestamps();
 
             $table->foreign('user_cart_id')->references('id')->on('user_cart');

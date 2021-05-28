@@ -17,6 +17,7 @@
 
         <!-- Scripts -->
         <script src="{{ mix('js/app.js') }}" defer></script>
+        <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.3/dist/alpine.min.js" defer></script>
     </head>
     <body class="font-sans antialiased dark:bg-gray-900">
         <x-jet-banner />

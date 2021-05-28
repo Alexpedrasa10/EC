@@ -14,7 +14,7 @@ use Livewire\WithPagination;
 
 class Products extends Component
 {
-    public $categories, $user, $sizeProducts = array();
+    public $categories, $user, $dataProducts = array();
 
     use WithPagination;
 
@@ -24,7 +24,7 @@ class Products extends Component
         $cart = $user->cart()->first();
         $product = Product::where('id', '=', $idProduct)->first();
 
-        if ( $this->checkProductSize($idProduct, FALSE) ) {
+        if ( $this->checkDataProducts($idProduct, FALSE) ) {
         
             if (!empty($cart)){
 
@@ -38,7 +38,7 @@ class Products extends Component
                     $newProductCart->user_cart_id = $cart->id;
                     $newProductCart->product_id = $product->id;
                     $newProductCart->quantity = 1;
-                    $newProductCart->sizes = $this->getSizeJSON($idProduct);
+                    $newProductCart->data = $this->getSizeJSON($idProduct);
                     $newProductCart->amount = $product->price;
                     $newProductCart->save();
     
@@ -53,7 +53,7 @@ class Products extends Component
                 else{
     
                     $productCart->quantity++;
-                    $productCart->sizes = $this->checkSizesInCart($productCart->sizes, $idProduct);
+                    $productCart->data = $this->checkDataInCart($productCart->data, $idProduct);
                     $productCart->amount = $productCart->amount + $product->price;
                     $productCart->save();
     
@@ -78,7 +78,7 @@ class Products extends Component
                 $newProductCart->user_cart_id = $newCart->id;
                 $newProductCart->product_id = $product->id;
                 $newProductCart->quantity = 1;
-                $newProductCart->sizes = $this->getSizeJSON($idProduct);
+                $newProductCart->data = $this->getSizeJSON($idProduct);
                 $newProductCart->amount = $product->price;
                 $newProductCart->save();
     
@@ -101,40 +101,128 @@ class Products extends Component
         $arr = array();
 
         foreach ($products as $key => $value) {
-            $value->sizes = json_decode($value->sizes);
-            array_push($arr, $value);
+
+            $data = json_decode($value->data);
+            $colors = array();
+            $sizess = array();
+            $current_color =  $this->checkDataProducts($value->id, FALSE, NULL, NULL, TRUE);
+
+            foreach ($data as $colorin => $sizes) {
+                array_push($colors, $colorin);
+                $sizess[$colorin] = $sizes;
+            }
+
+            $product = new StdClass();
+            $product->price = $value->price;
+            $product->colors = $colors;
+            $product->id = intval($value->id);
+            $product->sizes = $sizess;
+            $product->url_photos = $value->url_photos;
+            $product->name = $value->name;
+            $product->slug = $value->slug;
+            $product->current_color = $current_color ? $current_color : $product->colors[0];
+
+            array_push($arr, $product);
         }
 
         return $arr;
     }
 
-    public function setProductSizes(int $idProduct, string $size)
+    public function setCurrentColor(int $idProduct, string $color)
     {
-        if ( !$this->checkProductSize($idProduct, TRUE, $size) ) {
+        if ( !$this->checkDataProducts($idProduct, TRUE, $color) ) {
            
             $obj = new stdClass;
             $obj->product_id = $idProduct;
-            $obj->size = $size;
-            array_push($this->sizeProducts, $obj);
+            $obj->color = $color;
+            array_push($this->dataProducts, $obj);
+        }
+        else{
+            $this->checkDataProducts($idProduct, TRUE, $color);
         }
     }
 
-    public function checkProductSize( int $idProduct, bool $update, string $size = NULL )
+    public function setProductSizes(int $idProduct, string $color, string $size)
+    {
+        if ( !$this->checkDataProducts($idProduct, TRUE, $color, $size) ) {
+           
+            $obj = new stdClass;
+            $obj->product_id = $idProduct;
+            $obj->color = $color;
+            $obj->size = $size;
+            array_push($this->dataProducts, $obj);
+        }
+    }
+
+    public function checkDataProducts( int $idProduct, bool $update, string $color = NULL, string $size = NULL, bool $get = NULL )
     {
         $exist = FALSE;
 
-        if (!empty($this->sizeProducts)) {
+        if (!empty($this->dataProducts)) {
 
-            foreach ($this->sizeProducts as $key => $value) {
+            foreach ($this->dataProducts as $key => $value) {
 
-                if ($value['product_id'] == $idProduct){
+                if (gettype($value) == "array") {
+                    
+                    if ($value['product_id'] == $idProduct){
+
+                        if (!is_null($get) && $get) {
+                            return $value['color'];
+                        }
+                
+                        if ($update){
+                            
+                            if (!is_null($size)) {
+                                $this->dataProducts[$key]['size'] = $size;
+                                $exist = TRUE;
+                            }
     
-                    $exist = TRUE;
+                            if (!is_null($color)) {
+
+                                if ($value['color'] != $color) {
+                                    $this->dataProducts[$key]['color'] = $color;
+                                    $exist = TRUE;
+                                }
+                            }
+                        }
+                        elseif($update == FALSE){
+
+                            if (isset($value['size'])) {
+                               $exist = TRUE;
+                            }
+                        }
+                    }
+                }
+                else{
+
+                    if ($value->product_id == $idProduct){
+
+                        if (!is_null($get) && $get) {
+                            return $value->color;
+                        }
+        
+                        $exist = TRUE;
+        
+                        if ($update){
+                            
+                            if (!is_null($size)) {
+                                $this->dataProducts[$key]['size'] = $size;
+                                $exist = TRUE;
+                            }
     
-                    if ($update){
-                        
-                        if (!is_null($size)) {
-                            $this->sizeProducts[$key]['size'] = $size;
+                            if (!is_null($color)) {
+                                
+                                if ($vale->color != $color) {
+                                    $this->dataProducts[$key]['color'] = $color;
+                                    $exist = TRUE;
+                                }
+                            }
+                        }
+                        elseif($update == FALSE){
+
+                            if (isset($value->size)) {
+                               $exist = TRUE;
+                            }
                         }
                     }
                 }
@@ -145,45 +233,55 @@ class Products extends Component
         return $exist;
     }
 
-    public function getSizeJSON( int $idProduct, bool $onlySize = NULL) :string
+    public function getSizeJSON( int $idProduct, bool $onlySize = NULL, bool $color = NULL) :string
     {
         $res = NULL;
+        $data = array();
 
-        foreach ($this->sizeProducts as $key => $value) {
+        foreach ($this->dataProducts as $key => $value) {
 
             if ($value['product_id'] == $idProduct){
 
                 $size = $value['size'];
+                $current_color = $value['color'];
 
                 if (is_null($onlySize)) {
-                    $obj = new StdClass;
-                    $obj->$size = 1;
-                    return json_encode($obj);
+                    $arr = array();
+                    $arr['quantity'] = 1;
+                    $arr['size'] = $size;
+                    $arr['color'] = $value['color'];
+                    array_push($data, $arr);
+                    return json_encode($data);
                 }
-                else{
+                elseif($onlySize){
                     return $size;
+                }
+                elseif($color){
+                    return $current_color;
                 }
             }
         }
     }
 
-    public function checkSizesInCart($productSizes, int $idProduct) :string
+    public function checkDataInCart($productSizes, int $idProduct) :string
     {
-        $sizes = json_decode($productSizes);
+        $data = json_decode($productSizes);
         $current_size = $this->getSizeJSON($idProduct, TRUE);
+        $current_color = $this->getSizeJSON($idProduct, FALSE, TRUE);
 
-        // Si está ese talle, aumenta la cantidad
-        foreach ($sizes as $size => $q) {
-            
-            if ($size == $current_size) {
+        // Si está ese talle y color, aumenta la cantidad
+        foreach ($data as $key => $order) {
 
-                $sizes->$current_size++;
-                return json_encode($sizes);
+            if ($order->size == $current_size && $order->color == $current_color) {
+
+                $order->quantity++;
+                return json_encode($data);
             }
         }
 
-        $sizes->$current_size = 1;
-        return json_encode($sizes);
+        $newData = json_decode($this->getSizeJSON($idProduct));
+        array_push($data, $newData[0]);
+        return json_encode($data);
     }
 
     public function render()
