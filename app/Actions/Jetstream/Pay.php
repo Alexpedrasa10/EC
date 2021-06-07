@@ -4,7 +4,7 @@ namespace App\Actions\Jetstream;
 
 use \App\PaymentMethods\Mercadopago;
 
-class MercadoPagoPayment
+class Pay
 {
     
     public function createOrder($preOrder)

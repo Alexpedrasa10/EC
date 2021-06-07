@@ -1,6 +1,7 @@
-<div>
-  <h2 class="text-3xl font-bold mb-5 dark:text-black">Mi carrito</h2>
-  <div class="flex flex-col">
+<div class="container">
+  <h2 class="text-3xl font-bold dark:text-black">Mi carrito</h2>
+  <p class="text-base font-light text-gray-600">Estos son todos los productos en tu carrito de compras.</p>
+  <div class="flex flex-col mt-5">
     <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
       <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -8,10 +9,7 @@
             <thead class="bg-gray-50">
               <tr>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Nombre
-                </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Precio p/unidad
+                  Producto
                 </th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Cantidad
@@ -19,8 +17,7 @@
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Precio total
                 </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Acción
+                <th scope="col" class=" text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 </th>
               </tr>
             </thead>
@@ -28,18 +25,18 @@
               @foreach ($products as $item)
               <tr>
                 <td class="px-6 py-4 whitespace-nowrap">
-                    {{$item->name}}
+                    {{$item->name}}  <br>
+                    <span class="text-xs text-gray-500">
+                      ${{$item->unit_price}} por unidad.
+                    </span>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    ${{$item->unit_price}}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">              
+                <td class="px-6 py-4 whitespace-nowraps">              
                   {{$item->quantity}}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">                
                   ${{$item->amount}}
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-left">                
+                <td class="whitespace-nowrap text-left">                
                   <div class="inline-flex">
                     <span class="px-2 cursor-pointer text-1xl text-blue-700 hover:text-blue-900" title="Editar"
                       wire:click="showModelEditProduct({{ $item->id }})">
@@ -175,49 +172,61 @@
 
  <!--Modal para confirmar la eliminación de un producto-->
   @if ($editProductCart)
-    <div class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-
-          <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-      
-          <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true"></span>
-      
-          <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-              <div class="sm:flex sm:items-start">
-                <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left p-5">
-                  <div class="mt-2">
-                    <h2 class="text-2xl font-bold">{{$productEditName}} x ${{$productEditUnitPrice}}</h2>
-                  </div>
-                  <div class="mt-2">
-                    <label class="block text-sm font-medium text-gray-700">Cantidad</label>
-                    <select class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                      @foreach ($stock as $s)
-                        <option wire:click="updateAmount( {{$s}} )">{{$s}}</option>
-                      @endforeach
-                    </select>
-                  </div>
-                  <div class="mt-5">
-                    <h2  class="block text-sm font-medium text-gray-700">Total: <br> 
-                      <span class="font-bold text-2xl text-green-700">${{$productEditAmount}}</span>
-                    </h2>
-                  </div>
-                </div>
-              </div>
+  <x-jet-modal>
+    <div>
+      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+        <div class="sm:flex sm:items-start">
+          <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left p-5">
+            <div class="mt-2">
+              <h2 class="text-3xl font-bold">{{$editDataProduct['name']}}</h2>
+              <h5 class="text-xs font-light text-gray-600">${{$editDataProduct['unit_price']}} p/ unidad.</h5>
             </div>
-            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-              <a wire:click="editProduct" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm cursor-pointer">
-                Editar
-              </a>
-              <a wire:click="cancelEditProduct" type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm cursor-pointer">
-                Cancelar
-              </a>
+            <div class="my-5 w-full inline-block">
+              @foreach ($editDataProduct['order'] as $item)
+                  <div class="mb-3 p-3 ">
+                    <span>
+                      <button wire:click="decrementQuantity({{json_encode($item)}})" class="p-0 w-6 h-6 bg-red-600 rounded-full hover:bg-red-700 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline-block text-white" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+                        </svg>
+                      </button>
+                  </span>
+                  @if (gettype($item) == 'array')
+                    <span class="text-1xl font-semibold px-4">{{$item['quantity']}} en talle {{$item['size']}}</span>
+                  @else
+                    <span class="text-1xl font-semibold px-4">{{$item->quantity}} en talle {{$item->size}}</span>
+                  @endif
+                    <span>
+                        <button wire:click="incrementQuantity({{json_encode($item)}})"   class="p-0 w-6 h-6 bg-blue-600 rounded-full hover:bg-blue-700 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none">
+                          <svg viewBox="0 0 20 20" enable-background="new 0 0 20 20" class="w-5 h-5 inline-block">
+                            <path fill="#FFFFFF" d="M16,10c0,0.553-0.048,1-0.601,1H11v4.399C11,15.951,10.553,16,10,16c-0.553,0-1-0.049-1-0.601V11H4.601
+                              C4.049,11,4,10.553,4,10c0-0.553,0.049-1,0.601-1H9V4.601C9,4.048,9.447,4,10,4c0.553,0,1,0.048,1,0.601V9h4.399
+                              C15.952,9,16,9.447,16,10z" />
+                          </svg>
+                        </button>
+                    </span>
+                    <br>
+                  </div>
+              @endforeach
+            </div>
+            <div class="mt-4">
+              <h2  class="block text-sm font-medium text-gray-700">Total: <br> 
+                <span class="font-bold text-2xl text-blue-700">${{$editDataProduct['amount']}}</span>
+              </h2>
             </div>
           </div>
         </div>
       </div>
-    
+      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+        <a wire:click="editProduct" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm cursor-pointer">
+          Editar
+        </a>
+        <a wire:click="cancelEditProduct" type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm cursor-pointer">
+          Cancelar
+        </a>
+      </div>
     </div>
+  </x-jet-modal>
   @endif
 
 </div>

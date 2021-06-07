@@ -20,7 +20,7 @@
                     </x-jet-nav-link>
                 </div>
             </div>
-
+            @auth
             <div class="hidden sm:flex sm:items-center sm:ml-6">
 
                 <!-- Settings Dropdown -->
@@ -80,6 +80,8 @@
                     </svg>
                 </button>
             </div>
+            @endauth
+            
         </div>
     </div>
 
@@ -94,6 +96,9 @@
             </x-jet-responsive-nav-link>
         </div>
 
+        @auth
+            
+        
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="flex items-center px-4">
@@ -164,8 +169,10 @@
                 @endif
             </div>
         </div>
+        @endauth
     </div>
 </nav>
+@auth
 @if(!empty(App\Models\User::where('id', '=', Auth::user()->id)->first()->cart()->first()))
 <div class="bg-indigo-600">
     <div class="max-w-7xl mx-auto py-3 px-3 sm:px-6 lg:px-8">
@@ -196,3 +203,5 @@
     </div>
   </div>
 @endif
+@endauth
+

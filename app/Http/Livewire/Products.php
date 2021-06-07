@@ -288,7 +288,10 @@ class Products extends Component
     {
         $products = Product::where('is_active', 1);
         $this->categories = Property::all();
-        $this->user = User::where('id', '=', Auth::user()->id)->first();
+
+        if (Auth::user()){
+            $this->user = User::where('id', '=', Auth::user()->id)->first();
+        }
 
         return view('livewire.products', [ 
             'products' => $products->paginate(5)

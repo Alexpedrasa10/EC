@@ -6,14 +6,15 @@ use App\Models\CartProduct;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
-use App\Actions\Jetstream\MercadoPagoPayment; 
+use App\Actions\Jetstream\Pay; 
+use stdClass;
 
 class CartProducts extends Component
 {
     public $cart, $user, $products, 
     $confirmDeleteProduct = FALSE, $idProductDelete = NULL,
-    $editProductCart = FALSE, $productEdit = NULL, $productEditQuantity= NULL, $stock = NULL,
-    $productEditName= NULL, $productEditUnitPrice= NULL, $productEditAmount= NULL, $productEditID, $ashe,
+    $editProductCart = FALSE, $productEdit = NULL, $editDataProduct= NULL, $stock = NULL,
+    $productEditID,
     $confirmCancelCart = FALSE;
 
     // Eliminar product
@@ -65,16 +66,14 @@ class CartProducts extends Component
     {
         $this->editProductCart = TRUE;
         $this->productEdit = $this->user->products()->select('cart_products.*')
-            ->addSelect('p.name as name', 'p.price as unit_price', 'p.id as product_id', 'p.stock as stock')
+            ->addSelect('p.name as name', 'p.price as unit_price', 
+                'p.id as product_id', 'p.stock as stock', 'p.data as data_stock', 'cart_products.data as order')
             ->leftjoin('products as p', 'p.id', '=', 'cart_products.product_id')
             ->where('cart_products.id', '=', $id)
             ->first();
         $this->productEditID = $id;
-        $this->productEditQuantity = $this->productEdit->quantity;
-        $this->productEditName = $this->productEdit->name;
-        $this->productEditUnitPrice = $this->productEdit->unit_price;
-        $this->productEditAmount = $this->productEdit->amount;
-        $this->getStockQuantityOptions($this->productEdit->stock);
+        $this->getProductData($this->productEdit);
+        //$this->getStockQuantityOptions($this->productEdit->stock);
     }
 
     public function getStockQuantityOptions(int $stock)
@@ -94,10 +93,55 @@ class CartProducts extends Component
         return $this->stock = $s;
     }
 
-    public function updateAmount(int $quantity)
+    public function getProductData(CartProduct $product)
     {
-        $this->productEditQuantity = $quantity;
-        $this->productEditAmount = $this->productEditUnitPrice * $quantity;
+        $editDataProduct = array();
+        $editDataProduct['name'] = $product->name;
+        $editDataProduct['order'] = json_decode($product->order);
+        $editDataProduct['quantity'] = $product->quantity;
+        $editDataProduct['amount'] = $product->amount;
+        $editDataProduct['unit_price'] = $product->unit_price;
+        $editDataProduct['stock'] = $product->stock;
+        $editDataProduct['data_stock'] = json_decode($product->data_stock);
+        $this->editDataProduct = $editDataProduct;
+    }
+
+    public function incrementQuantity($order)
+    {
+        $data = $this->editDataProduct['order'];
+
+        foreach ($data as $key => $value) {
+
+            if ($value['size'] == $order['size']) {
+                $data[$key]['quantity']++;
+            }
+        }      
+        
+        $this->editDataProduct['order'] = $data;
+        $this->editDataProduct['quantity']++;
+        $this->editDataProduct['amount'] += $this->editDataProduct['unit_price'];
+    }
+
+    public function decrementQuantity($order)
+    {
+        $data = $this->editDataProduct['order'];
+
+        foreach ($data as $key => $value) {
+
+            if ($value['size'] == $order['size']) {
+
+                if ($value['quantity'] !== 1) {
+                    $data[$key]['quantity']--;
+                }
+                else{
+                    unset($data[$key]);
+                }
+            }
+        }      
+        
+        $this->editDataProduct['order'] = $data;
+        $this->editDataProduct['quantity']--;
+        $this->editDataProduct['amount'] -= $this->editDataProduct['unit_price'];
     }
 
     public function cancelEditProduct()
@@ -105,21 +149,20 @@ class CartProducts extends Component
         $this->editProductCart = false;
         $this->productEdit = NULL;
         $this->productEditID = NULL;
-        $this->productEditQuantity =  NULL;
-        $this->productEditName =  NULL;
-        $this->productEditUnitPrice =  NULL;
-        $this->productEditAmount = NULL;
+        $this->editDataProduct = NULL;
     }
 
     public function editProduct()
     {
         $productCart = CartProduct::where('id', '=', $this->productEditID)->first();
-        $brr = $productCart->amount;
-        $productCart->quantity = $this->productEditQuantity;
-        $productCart->amount = $this->productEditAmount;
-        $productCart->save();
+        $productCart->data = $this->editDataProduct['order'];
+        $productCart->quantity =$this->editDataProduct['quantity'];
 
-        $this->cart->amount = ($this->cart->amount - $brr) +  $productCart->amount;
+        $this->cart->amount = ($this->cart->amount - $productCart->amount) +  $this->editDataProduct['amount'];
+
+        $productCart->amount = $this->editDataProduct['amount'];
+
+        $productCart->save();
         $this->cart->save();
         
         $this->cancelEditProduct();
@@ -146,7 +189,7 @@ class CartProducts extends Component
 
     // Pagar producto
 
-    public function paymentMercadopago(MercadoPagoPayment $MP)
+    public function paymentMercadopago(Pay $MP)
     {
         $product = $this->user->products()->select('cart_products.*')
         ->addSelect('p.name as name', 'p.price as unit_price', 'p.id as product_id')

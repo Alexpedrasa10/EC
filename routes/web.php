@@ -17,14 +17,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+Route::get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/cart', function () {
+Route::get('/cart', function () {
     return view('cart');
 })->name('cart');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/productos', function () {
+Route::get('/productos', function () {
     return view('productos');
 })->name('productos');
