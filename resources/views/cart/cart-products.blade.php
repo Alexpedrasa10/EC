@@ -70,10 +70,10 @@
           </p>
         </h1>
         <div class="float-right">
-          <button class="bg-blue-700 hover:bg-blue-900 rounded-full shadow-sm uppercase font-bold text-white dark:text-white p-3 mt-1" wire:click="paymentMercadopago">
+          <button class="w-full my-2 flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm text-gray-50 font-black bg-blue-600 hover:bg-blue-800" wire:click="paymentMercadopago">
             Procesar pago
           </button>
-          <button class="bg-red-600 hover:bg-red-900 rounded-full shadow-sm uppercase font-bold text-white dark:text-white p-3 mt-1" wire:click="cancelCart">
+          <button class="w-full my-2 flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm text-gray-50 font-black bg-red-600 hover:bg-red-800" wire:click="cancelCart">
             Cancelar compra
           </button>
         </div>
@@ -174,7 +174,7 @@
   @if ($editProductCart)
   <x-jet-modal>
     <div>
-      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 w-full">
         <div class="sm:flex sm:items-start">
           <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left p-5">
             <div class="mt-2">
@@ -197,7 +197,7 @@
                     <span class="text-1xl font-semibold px-4">{{$item->quantity}} en talle {{$item->size}}</span>
                   @endif
                     <span>
-                        <button wire:click="incrementQuantity({{json_encode($item)}})"   class="p-0 w-6 h-6 bg-blue-600 rounded-full hover:bg-blue-700 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none">
+                        <button wire:click="incrementQuantity({{json_encode($item)}})" class="p-0 w-6 h-6 bg-blue-600 rounded-full hover:bg-blue-700 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none">
                           <svg viewBox="0 0 20 20" enable-background="new 0 0 20 20" class="w-5 h-5 inline-block">
                             <path fill="#FFFFFF" d="M16,10c0,0.553-0.048,1-0.601,1H11v4.399C11,15.951,10.553,16,10,16c-0.553,0-1-0.049-1-0.601V11H4.601
                               C4.049,11,4,10.553,4,10c0-0.553,0.049-1,0.601-1H9V4.601C9,4.048,9.447,4,10,4c0.553,0,1,0.048,1,0.601V9h4.399
@@ -208,6 +208,7 @@
                     <br>
                   </div>
               @endforeach
+              <p wire:click="addSizes()" class="text-blue-500 text-sm cursor-pointer">Agregar más talles</p>
             </div>
             <div class="mt-4">
               <h2  class="block text-sm font-medium text-gray-700">Total: <br> 

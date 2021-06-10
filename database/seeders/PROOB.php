@@ -50,25 +50,24 @@ class PROOB extends Seeder
         $categories = new stdClass;
         $categories->categories = 1;
 
-        $sizesOne = new stdClass;
-        $sizesOne->S = 2;
-        $sizesOne->M = 4;
-        $sizesOne->XL = 4;
+        $sizeM = new stdClass;
+        $sizeM->size = "M";
+        $sizeM->quantity = 4;
 
-        $sizesTwo = new stdClass;
-        $sizesTwo->S = 1;
-        $sizesTwo->L = 5;
-        $sizesTwo->XL = 4;
+        $sizeS = new stdClass;
+        $sizeS->size = "S";
+        $sizeS->quantity = 3;
 
-        $colors = new stdClass;
-        $colors->yellow = $sizesOne;
-        $colors->black = $sizesOne;
-        $colors->green = $sizesTwo;
+        $sizeL = new stdClass;
+        $sizeL->size = "L";
+        $sizeL->quantity = 3;
 
-        $colorsTwo = new stdClass;
-        $colorsTwo->black =  $sizesTwo;
-        $colorsTwo->gray =  $sizesTwo;
-        $colorsTwo->blue =  $sizesOne;
+        $allSizes = new stdClass;
+        $allSizes->sizes = [
+            $sizeL,
+            $sizeM,
+            $sizeS,
+        ];
 
 
 
@@ -79,7 +78,7 @@ class PROOB extends Seeder
             'stock' => 10,
             'price' => 250.00,
             'category' => json_encode($categories),
-            'data' => json_encode($colorsTwo),
+            'data' => json_encode($allSizes),
             'url_photos' => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSnMPTgGjLMCU5FPFFn6GaxrNdv2ROkhUkDQ&usqp=CAU",
             'is_active' => 1
         ]);
@@ -91,7 +90,7 @@ class PROOB extends Seeder
             'stock' => 10,
             'price' => 450.00,
             'category' => json_encode($categories),
-            'data' => json_encode($colors),
+            'data' => json_encode($allSizes),
             'url_photos' => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSnMPTgGjLMCU5FPFFn6GaxrNdv2ROkhUkDQ&usqp=CAU",
             'is_active' => 1
         ]);
@@ -103,7 +102,7 @@ class PROOB extends Seeder
             'stock' => 10,
             'price' => 999.99,
             'category' => json_encode($categories),
-            'data' => json_encode($colorsTwo),
+            'data' => json_encode($allSizes),
             'url_photos' => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSnMPTgGjLMCU5FPFFn6GaxrNdv2ROkhUkDQ&usqp=CAU",
             'is_active' => 1
         ]);
@@ -116,7 +115,7 @@ class PROOB extends Seeder
             'stock' => 10,
             'price' => 480.00,
             'category' => json_encode($categories),
-            'data' => json_encode($colors),
+            'data' => json_encode($allSizes),
             'url_photos' => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSnMPTgGjLMCU5FPFFn6GaxrNdv2ROkhUkDQ&usqp=CAU",
             'is_active' => 1
         ]);
@@ -128,7 +127,7 @@ class PROOB extends Seeder
             'stock' => 10,
             'price' => 450.00,
             'category' => json_encode($categories),
-            'data' => json_encode($colors),
+            'data' => json_encode($allSizes),
             'url_photos' => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSnMPTgGjLMCU5FPFFn6GaxrNdv2ROkhUkDQ&usqp=CAU",
             'is_active' => 1
         ]);
@@ -140,7 +139,7 @@ class PROOB extends Seeder
             'stock' => 10,
             'price' => 799.99,
             'category' => json_encode($categories),
-            'data' => json_encode($colorsTwo),
+            'data' => json_encode($allSizes),
             'url_photos' => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSnMPTgGjLMCU5FPFFn6GaxrNdv2ROkhUkDQ&usqp=CAU",
             'is_active' => 1
         ]);
@@ -153,7 +152,7 @@ class PROOB extends Seeder
             'stock' => 10,
             'price' => 179.99,
             'category' => json_encode($categories),
-            'data' => json_encode($colors),
+            'data' => json_encode($allSizes),
             'url_photos' => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSnMPTgGjLMCU5FPFFn6GaxrNdv2ROkhUkDQ&usqp=CAU",
             'is_active' => 1
         ]);
@@ -165,7 +164,7 @@ class PROOB extends Seeder
             'stock' => 10,
             'price' => 420.00,
             'category' => json_encode($categories),
-            'data' => json_encode($colors),
+            'data' => json_encode($allSizes),
             'url_photos' => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSnMPTgGjLMCU5FPFFn6GaxrNdv2ROkhUkDQ&usqp=CAU",
             'is_active' => 1
         ]);
@@ -177,7 +176,7 @@ class PROOB extends Seeder
             'stock' => 10,
             'price' => 999.99,
             'category' => json_encode($categories),
-            'data' => json_encode($colors),
+            'data' => json_encode($allSizes),
             'url_photos' => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSnMPTgGjLMCU5FPFFn6GaxrNdv2ROkhUkDQ&usqp=CAU",
             'is_active' => 1
         ]);
@@ -190,7 +189,7 @@ class PROOB extends Seeder
             'stock' => 10,
             'price' => 300.00,
             'category' => json_encode($categories),
-            'data' => json_encode($colors),
+            'data' => json_encode($allSizes),
             'url_photos' => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSnMPTgGjLMCU5FPFFn6GaxrNdv2ROkhUkDQ&usqp=CAU",
             'is_active' => 1
         ]);
@@ -202,7 +201,7 @@ class PROOB extends Seeder
             'stock' => 10,
             'price' => 150.00,
             'category' => json_encode($categories),
-            'data' => json_encode($colorsTwo),
+            'data' => json_encode($allSizes),
             'url_photos' => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSnMPTgGjLMCU5FPFFn6GaxrNdv2ROkhUkDQ&usqp=CAU",
             'is_active' => 1
         ]);
@@ -214,7 +213,7 @@ class PROOB extends Seeder
             'stock' => 10,
             'price' => 1999.99,
             'category' => json_encode($categories),
-            'data' => json_encode($colorsTwo),
+            'data' => json_encode($allSizes),
             'url_photos' => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSnMPTgGjLMCU5FPFFn6GaxrNdv2ROkhUkDQ&usqp=CAU",
             'is_active' => 1
         ]);

@@ -144,6 +144,23 @@ class CartProducts extends Component
         $this->editDataProduct['amount'] -= $this->editDataProduct['unit_price'];
     }
 
+    // public function getStockSize($order)
+    // {
+    //     $stockSize = $this->editDataProduct['data_stock'];
+    //     $orderQ = $order->quantity;
+    //     $orderSize = $order->size;
+
+    //     foreach ($stockSize as $key => $value) {
+    //         dump($value);
+    //         if ($value->$orderSize == $orderSize) {
+    //             dump('asheee');
+    //         }
+    //     }
+
+
+    //     return true;
+    // }
+
     public function cancelEditProduct()
     {
         $this->editProductCart = false;

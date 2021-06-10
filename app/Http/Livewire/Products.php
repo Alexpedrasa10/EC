@@ -26,7 +26,7 @@ class Products extends Component
 
         if ( $this->checkDataProducts($idProduct, FALSE) ) {
         
-            if (!empty($cart)){
+            if (!is_null($cart)){
 
                 $productCart = CartProduct::where('user_cart_id', '=', $cart->id)
                     ->where('product_id', '=', $product->id)
@@ -96,6 +96,7 @@ class Products extends Component
         }
     }
 
+    // Metodo para obtener un objeto de todos los productos
     public function getProducts($products) :Array
     {
         $arr = array();
@@ -103,24 +104,19 @@ class Products extends Component
         foreach ($products as $key => $value) {
 
             $data = json_decode($value->data);
-            $colors = array();
-            $sizess = array();
-            $current_color =  $this->checkDataProducts($value->id, FALSE, NULL, NULL, TRUE);
+            $sizes = array();
 
-            foreach ($data as $colorin => $sizes) {
-                array_push($colors, $colorin);
-                $sizess[$colorin] = $sizes;
+            foreach ($data->sizes as $size) {
+                array_push($sizes, $size);
             }
 
             $product = new StdClass();
             $product->price = $value->price;
-            $product->colors = $colors;
             $product->id = intval($value->id);
-            $product->sizes = $sizess;
+            $product->sizes = $sizes;
             $product->url_photos = $value->url_photos;
             $product->name = $value->name;
             $product->slug = $value->slug;
-            $product->current_color = $current_color ? $current_color : $product->colors[0];
 
             array_push($arr, $product);
         }
@@ -128,27 +124,12 @@ class Products extends Component
         return $arr;
     }
 
-    public function setCurrentColor(int $idProduct, string $color)
+    public function setProductSizes(int $idProduct, string $size)
     {
-        if ( !$this->checkDataProducts($idProduct, TRUE, $color) ) {
+        if ( !$this->checkDataProducts($idProduct, TRUE, NULL, $size) ) {
            
             $obj = new stdClass;
             $obj->product_id = $idProduct;
-            $obj->color = $color;
-            array_push($this->dataProducts, $obj);
-        }
-        else{
-            $this->checkDataProducts($idProduct, TRUE, $color);
-        }
-    }
-
-    public function setProductSizes(int $idProduct, string $color, string $size)
-    {
-        if ( !$this->checkDataProducts($idProduct, TRUE, $color, $size) ) {
-           
-            $obj = new stdClass;
-            $obj->product_id = $idProduct;
-            $obj->color = $color;
             $obj->size = $size;
             array_push($this->dataProducts, $obj);
         }
@@ -165,24 +146,12 @@ class Products extends Component
                 if (gettype($value) == "array") {
                     
                     if ($value['product_id'] == $idProduct){
-
-                        if (!is_null($get) && $get) {
-                            return $value['color'];
-                        }
                 
                         if ($update){
                             
                             if (!is_null($size)) {
                                 $this->dataProducts[$key]['size'] = $size;
                                 $exist = TRUE;
-                            }
-    
-                            if (!is_null($color)) {
-
-                                if ($value['color'] != $color) {
-                                    $this->dataProducts[$key]['color'] = $color;
-                                    $exist = TRUE;
-                                }
                             }
                         }
                         elseif($update == FALSE){
@@ -196,10 +165,6 @@ class Products extends Component
                 else{
 
                     if ($value->product_id == $idProduct){
-
-                        if (!is_null($get) && $get) {
-                            return $value->color;
-                        }
         
                         $exist = TRUE;
         
@@ -208,14 +173,6 @@ class Products extends Component
                             if (!is_null($size)) {
                                 $this->dataProducts[$key]['size'] = $size;
                                 $exist = TRUE;
-                            }
-    
-                            if (!is_null($color)) {
-                                
-                                if ($vale->color != $color) {
-                                    $this->dataProducts[$key]['color'] = $color;
-                                    $exist = TRUE;
-                                }
                             }
                         }
                         elseif($update == FALSE){
@@ -243,21 +200,16 @@ class Products extends Component
             if ($value['product_id'] == $idProduct){
 
                 $size = $value['size'];
-                $current_color = $value['color'];
 
                 if (is_null($onlySize)) {
                     $arr = array();
                     $arr['quantity'] = 1;
                     $arr['size'] = $size;
-                    $arr['color'] = $value['color'];
                     array_push($data, $arr);
                     return json_encode($data);
                 }
                 elseif($onlySize){
                     return $size;
-                }
-                elseif($color){
-                    return $current_color;
                 }
             }
         }
@@ -267,12 +219,11 @@ class Products extends Component
     {
         $data = json_decode($productSizes);
         $current_size = $this->getSizeJSON($idProduct, TRUE);
-        $current_color = $this->getSizeJSON($idProduct, FALSE, TRUE);
 
-        // Si está ese talle y color, aumenta la cantidad
+        // Si está ese talle , aumenta la cantidad
         foreach ($data as $key => $order) {
 
-            if ($order->size == $current_size && $order->color == $current_color) {
+            if ($order->size == $current_size) {
 
                 $order->quantity++;
                 return json_encode($data);
@@ -294,7 +245,7 @@ class Products extends Component
         }
 
         return view('livewire.products', [ 
-            'products' => $products->paginate(5)
+            'products' => $products->paginate(10)
         ]);
     }
 }
