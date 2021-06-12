@@ -1,18 +1,18 @@
 <div class="p-10">
     <h2 class="font-black text-3xl dark:text-white">Todos los productos </h2>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:sm:grid-cols-2 lg:sm:grid-cols-6 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-3 md:sm:grid-cols-2 lg:sm:grid-cols-6 gap-6">
         @foreach ($this->getProducts($products) as $item)
 
         <div class="flex bg-white dark:bg-gray-800 rounded-lg shadow-lg">
-            <div class="flex-none w-32 sm:w-40 md:w-48 relative">
+            <div class="flex-none w-32 sm:w-20 md:w-48 relative">
                 <img src="{{$item->url_photos}}" alt="shopping image" class="absolute rounded-lg inset-0 w-full h-full object-cover"/>
             </div>
             <form class="flex-auto p-6">
                 <div class="flex flex-wrap">
-                    <h1 class="flex-auto text-xl font-semibold dark:text-gray-50">
+                    <a href="/productos/{{$item->slug}}" class="cursor-pointer flex-auto text-xl font-semibold dark:text-gray-50">
                         {{$item->name}}   
-                    </h1>
+                    </a>
                     <div class="text-2xl font-black text-blue-600 dark:text-gray-300">
                         ${{$item->price}}
                     </div>
@@ -45,9 +45,6 @@
                         Agregar al carrito
                     </button>
                 </div>
-                <p class="text-sm text-gray-500 dark:text-gray-300">
-                Free shipping on all continental US orders.
-                </p>
             </form>
         </div>
         @endforeach

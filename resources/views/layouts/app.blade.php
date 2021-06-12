@@ -22,7 +22,7 @@
     <body class="font-sans antialiased dark:bg-gray-900">
         <x-jet-banner />
 
-        <div class="min-h-screen bg-gradient-to-b from-gray-50 to-gray-300 dark:bg-gray-900">
+        <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
             @livewire('navigation-menu')
 
             <!-- Page Content -->

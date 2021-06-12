@@ -28,3 +28,9 @@ Route::get('/cart', function () {
 Route::get('/productos', function () {
     return view('productos');
 })->name('productos');
+
+Route::get('/productos/{slug}', function ($slug) {
+    return view('producto', [ 
+        'slug' => $slug
+    ]);
+})->name('producto');
