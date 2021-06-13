@@ -35,7 +35,7 @@ class Mercadopago
 
 
     # Create a payer object
-    $preference->payer = $this->getPayer();
+    //$preference->payer = $this->getPayer();
 
     //   # Save External Reference
     //   $preference->external_reference = $order->id;
