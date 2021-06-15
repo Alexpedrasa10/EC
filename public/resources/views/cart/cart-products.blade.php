@@ -14,6 +14,9 @@
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Cantidad
                 </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Precio total
+                </th>
                 <th scope="col" class=" text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 </th>
               </tr>
@@ -22,32 +25,25 @@
               @foreach ($products as $item)
               <tr>
                 <td class="px-6 py-4 whitespace-nowrap">
-                    <a class="text-black hover:text-blue-700 font-bold" href="/productos/{{$item->slug}}">{{$item->name}}</a>  
-                    <br>
+                    {{$item->name}}  <br>
                     <span class="text-xs text-gray-500">
-                      ${{$item->unit_price}} p/ unidad.
+                      ${{$item->unit_price}} por unidad.
                     </span>
-                    <br>
-                      <p class="text-xs text-gray-500">Total:</p>
-                      <span class="text-gray-900 text-1xl font-bold">
-                        ${{$item->amount}}
-                      </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowraps">              
-                  @foreach ( $this->getSizes($item->data) as $order)
-                  <div class="flex items-center py-5">
-                        <button wire:click="decrement( {{$item->id}}, '{{$order->size}}' )" class="hover:text-black text-gray-500 focus:outline-none focus:text-gray-600" title="Quitar">
-                          <svg class="h-5 w-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        </button>
-                        <span class="text-center text-gray-600 text-sm px-5">{{$order->quantity}} en {{$order->size}}</span>
-                        <button wire:click="increment( {{$item->id}}, '{{$order->size}}' )" class="hover:text-black text-gray-500 focus:outline-none focus:text-gray-600" title="Agregar">
-                          <svg class="h-5 w-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        </button>
-                      </div><br>
-                  @endforeach
+                  {{$item->quantity}}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">                
+                  ${{$item->amount}}
                 </td>
                 <td class="whitespace-nowrap text-left">                
                   <div class="inline-flex">
+                    <span class="px-2 cursor-pointer text-1xl text-blue-700 hover:text-blue-900" title="Editar"
+                      wire:click="showModelEditProduct({{ $item->id }})">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                      </svg>
+                    </span>
                     <span class="px-2 cursor-pointer text-1xl text-red-500 hover:text-red-900" title="Eliminar {{$item->name}} del carrito." 
                       wire:click="confirmDeleteProduct({{ $item->id }})">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -116,7 +112,7 @@
               </div>
             </div>
             <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-              <a wire:click="deleteProduct()" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm cursor-pointer">
+              <a wire:click="deleteProduct" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm cursor-pointer">
                 Si
               </a>
               <a wire:click="cancel" type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm cursor-pointer">
@@ -172,6 +168,66 @@
       </div>
 
     </div>
+  @endif
+
+ <!--Modal para confirmar la eliminación de un producto-->
+  @if ($editProductCart)
+  <x-jet-modal>
+    <div>
+      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 w-full">
+        <div class="sm:flex sm:items-start">
+          <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left p-5">
+            <div class="mt-2">
+              <h2 class="text-3xl font-bold">{{$editDataProduct['name']}}</h2>
+              <h5 class="text-xs font-light text-gray-600">${{$editDataProduct['unit_price']}} p/ unidad.</h5>
+            </div>
+            <div class="my-5 w-full inline-block">
+              @foreach ($editDataProduct['order'] as $item)
+                  <div class="mb-3 p-3 ">
+                    <span>
+                      <button wire:click="decrementQuantity({{json_encode($item)}})" class="p-0 w-6 h-6 bg-red-600 rounded-full hover:bg-red-700 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline-block text-white" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+                        </svg>
+                      </button>
+                  </span>
+                  @if (gettype($item) == 'array')
+                    <span class="text-1xl font-semibold px-4">{{$item['quantity']}} en talle {{$item['size']}}</span>
+                  @else
+                    <span class="text-1xl font-semibold px-4">{{$item->quantity}} en talle {{$item->size}}</span>
+                  @endif
+                    <span>
+                        <button wire:click="incrementQuantity({{json_encode($item)}})" class="p-0 w-6 h-6 bg-blue-600 rounded-full hover:bg-blue-700 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none">
+                          <svg viewBox="0 0 20 20" enable-background="new 0 0 20 20" class="w-5 h-5 inline-block">
+                            <path fill="#FFFFFF" d="M16,10c0,0.553-0.048,1-0.601,1H11v4.399C11,15.951,10.553,16,10,16c-0.553,0-1-0.049-1-0.601V11H4.601
+                              C4.049,11,4,10.553,4,10c0-0.553,0.049-1,0.601-1H9V4.601C9,4.048,9.447,4,10,4c0.553,0,1,0.048,1,0.601V9h4.399
+                              C15.952,9,16,9.447,16,10z" />
+                          </svg>
+                        </button>
+                    </span>
+                    <br>
+                  </div>
+              @endforeach
+              <p wire:click="addSizes()" class="text-blue-500 text-sm cursor-pointer">Agregar más talles</p>
+            </div>
+            <div class="mt-4">
+              <h2  class="block text-sm font-medium text-gray-700">Total: <br> 
+                <span class="font-bold text-2xl text-blue-700">${{$editDataProduct['amount']}}</span>
+              </h2>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+        <a wire:click="editProduct" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm cursor-pointer">
+          Editar
+        </a>
+        <a wire:click="cancelEditProduct" type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm cursor-pointer">
+          Cancelar
+        </a>
+      </div>
+    </div>
+  </x-jet-modal>
   @endif
 
 </div>

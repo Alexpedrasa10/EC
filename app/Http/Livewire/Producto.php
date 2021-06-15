@@ -62,7 +62,8 @@ class Producto extends Component
         $arr = array();
 
         $order = new stdClass();
-        $order->name = $this->product->name;
+        $order->id = $this->product->id;
+        $order->name = $this->product->name ." (talle {$this->current_size})";
         $order->unit_price = $this->product->price;
         $order->quantity = $this->current_quantity;
         $order->size = $this->current_size;
@@ -73,8 +74,13 @@ class Producto extends Component
 
     public function pay (Pay $pay)
     {
-        $order = $this->getOrder();
-        $pay->createOrder($order);
+        if (!empty($this->current_size)) {
+            $order = $this->getOrder();
+            $pay->createOrder($order);        
+        }
+        else{
+            $this->toaster("Debes elegir un talle", "error");
+        }
     }
 
     public function getAmount ()
@@ -108,7 +114,7 @@ class Producto extends Component
                         $newProductCart->amount = $this->getAmount();
                         $newProductCart->save();
         
-                        $cart->amount = $cart->amount + $product->price;
+                        $cart->amount += $this->getAmount();
                         $cart->save();
         
                         $this->toaster('Producto agregado al carrito.', 'success');
@@ -117,7 +123,7 @@ class Producto extends Component
         
                         $productCart->quantity += $this->current_quantity;
                         $productCart->data = $this->checkDataInCart($productCart->data);
-                        $productCart->amount = $productCart->amount + $product->price;
+                        $productCart->amount += $this->getAmount();
                         $productCart->save();
         
                         $cart->amount += $this->getAmount();

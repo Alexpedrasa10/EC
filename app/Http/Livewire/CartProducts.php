@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\CartProduct;
 use App\Models\User;
+use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use App\Actions\Jetstream\Pay; 
@@ -11,10 +12,8 @@ use stdClass;
 
 class CartProducts extends Component
 {
-    public $cart, $user, $products, 
-    $confirmDeleteProduct = FALSE, $idProductDelete = NULL,
-    $editProductCart = FALSE, $productEdit = NULL, $editDataProduct= NULL, $stock = NULL,
-    $productEditID,
+    public $cart, $user, $products, $idProductDelete,
+    $confirmDeleteProduct = FALSE,
     $confirmCancelCart = FALSE;
 
     // Eliminar product
@@ -32,7 +31,7 @@ class CartProducts extends Component
 
     public function deleteProduct()
     {
-        if (!empty($this->idProductDelete) && $this->confirmDeleteProduct){
+        if ( !empty($this->idProductDelete) ){
 
             $product = CartProduct::where('id', '=', $this->idProductDelete)->first();
 
@@ -61,165 +60,139 @@ class CartProducts extends Component
         }
     }
 
-    // Editar product
-    public function showModelEditProduct(int $id)
+    public function checkStock( $stockData, $size, $quantity)
     {
-        $this->editProductCart = TRUE;
-        $this->productEdit = $this->user->products()->select('cart_products.*')
-            ->addSelect('p.name as name', 'p.price as unit_price', 
-                'p.id as product_id', 'p.stock as stock', 'p.data as data_stock', 'cart_products.data as order')
-            ->leftjoin('products as p', 'p.id', '=', 'cart_products.product_id')
-            ->where('cart_products.id', '=', $id)
-            ->first();
-        $this->productEditID = $id;
-        $this->getProductData($this->productEdit);
-        //$this->getStockQuantityOptions($this->productEdit->stock);
-    }
+        $data = json_decode($stockData)->sizes;
+        $response = FALSE;
 
-    public function getStockQuantityOptions(int $stock)
-    {
-        $s = [];
-
-        for ($i=1; $i < ($stock + 1); $i++) { 
-            $n = $i .'.00';
-            if ($n !== $this->productEditQuantity ){
-                $s[($i - 1)] = $n;
-            }
-            else{
-                $s[($this->productEditQuantity - 1)] = $this->productEditQuantity;
+        foreach ($data as $stock) {
+            
+            if ($stock->size == $size) {
+                
+                if ($stock->quantity > $quantity) {
+                    $response = TRUE;
+                }
             }
         }
 
-        return $this->stock = $s;
+        if (!$response) {
+            $this->toaster("No hay mas unidades para este talle", 'error');
+        }
+
+        return $response;
     }
 
-    public function getProductData(CartProduct $product)
-    {
-        $editDataProduct = array();
-        $editDataProduct['name'] = $product->name;
-        $editDataProduct['order'] = json_decode($product->order);
-        $editDataProduct['quantity'] = $product->quantity;
-        $editDataProduct['amount'] = $product->amount;
-        $editDataProduct['unit_price'] = $product->unit_price;
-        $editDataProduct['stock'] = $product->stock;
-        $editDataProduct['data_stock'] = json_decode($product->data_stock);
-        $this->editDataProduct = $editDataProduct;
-    }
 
-    public function incrementQuantity($order)
-    {
-        $data = $this->editDataProduct['order'];
+    public function increment ($productID, $size)
+    {   
 
-        foreach ($data as $key => $value) {
+        foreach ($this->products as $product) {
+            
+            if ($product->id == $productID) {
+                
+                $data = json_decode($product->data);
 
-            if ($value['size'] == $order['size']) {
-                $data[$key]['quantity']++;
-            }
-        }      
-        
-        $this->editDataProduct['order'] = $data;
-        $this->editDataProduct['quantity']++;
-        $this->editDataProduct['amount'] += $this->editDataProduct['unit_price'];
-    }
+                foreach ($data as $order) {
 
-    public function decrementQuantity($order)
-    {
-        $data = $this->editDataProduct['order'];
+                    if ($order->size == $size ) {
 
-        foreach ($data as $key => $value) {
+                        $productToEdit = Product::where('id', $product->product_id)->first();
+                        $hasStock = $this->checkStock($productToEdit->data, $size, $order->quantity);
 
-            if ($value['size'] == $order['size']) {
+                        if ($hasStock) {
 
-                if ($value['quantity'] !== 1) {
-                    $data[$key]['quantity']--;
-                }
-                else{
-                    unset($data[$key]);
+                            $order->quantity++;
+                            $this->updateProduct($product->id, $data, $productToEdit->price, TRUE);
+                        }
+                    }
                 }
             }
-        }      
-        
-        $this->editDataProduct['order'] = $data;
-        $this->editDataProduct['quantity']--;
-        $this->editDataProduct['amount'] -= $this->editDataProduct['unit_price'];
+
+        }
     }
 
-    // public function getStockSize($order)
-    // {
-    //     $stockSize = $this->editDataProduct['data_stock'];
-    //     $orderQ = $order->quantity;
-    //     $orderSize = $order->size;
-
-    //     foreach ($stockSize as $key => $value) {
-    //         dump($value);
-    //         if ($value->$orderSize == $orderSize) {
-    //             dump('asheee');
-    //         }
-    //     }
-
-
-    //     return true;
-    // }
-
-    public function cancelEditProduct()
+    public function decrement ($productID, $size)
     {
-        $this->editProductCart = false;
-        $this->productEdit = NULL;
-        $this->productEditID = NULL;
-        $this->editDataProduct = NULL;
-    }
+        foreach ($this->products as $product) {
+            
+            if ($product->id == $productID) {
+                
+                $data = json_decode($product->data);
 
-    public function editProduct()
+                foreach ($data as $order) {
+
+                    if ($order->size == $size ) {
+
+                        $productToEdit = Product::where('id', $product->product_id)->first();
+
+                        if ($order->quantity > 1) {
+
+                            $order->quantity--;
+                            $this->updateProduct($product->id, $data, $productToEdit->price, FALSE);
+                        }
+                        else{
+                            $this->confirmDeleteProduct($product->id);
+                        }
+                        
+                    }
+                }
+            }
+
+        }    }
+
+    public function updateProduct (int $id, $data, $unitPrice, bool $action)
     {
-        $productCart = CartProduct::where('id', '=', $this->productEditID)->first();
-        $productCart->data = $this->editDataProduct['order'];
-        $productCart->quantity =$this->editDataProduct['quantity'];
+        $cartProduct = CartProduct::where('id', $id)->first();
+        $cartProduct->data = json_encode($data);
 
-        $this->cart->amount = ($this->cart->amount - $productCart->amount) +  $this->editDataProduct['amount'];
+        if ($action) {
 
-        $productCart->amount = $this->editDataProduct['amount'];
+            $cartProduct->amount += $unitPrice;
+            $this->cart->amount += $unitPrice;
+            $cartProduct->quantity++;
+        }
+        else{
+            $cartProduct->amount -= $unitPrice;
+            $this->cart->amount -= $unitPrice;
+            $cartProduct->quantity--;
+        }
 
-        $productCart->save();
+        $cartProduct->save();
         $this->cart->save();
-        
-        $this->cancelEditProduct();
+    }
+
+    public function toaster(string $title, string $type)
+    {
         $this->dispatchBrowserEvent('alert',[
-            'title' => 'Producto editado.',
-            'type'=>'success', 
+            'title' => $title,
+            'type'=> $type, 
         ]);
     }
 
-    // Cancelar carrito
-
-    public function cancelCart()
-    {
-        return $this->confirmCancelCart = !$this->confirmCancelCart;
-    }
-
-    public function confirmCancelCart()
-    {
-        $this->cart->canceled = true;
-        $this->cart->save();
-        $this->confirmCancelCart = false;
-        return redirect('/productos');
-    }
+    
 
     // Pagar producto
-
     public function paymentMercadopago(Pay $MP)
     {
         $product = $this->user->products()->select('cart_products.*')
-        ->addSelect('p.name as name', 'p.price as unit_price', 'p.id as product_id')
+        ->addSelect('p.name as name', 'p.price as unit_price', 'cart_products.data as data',
+         'p.id as product_id')
         ->leftjoin('products as p', 'p.id', '=', 'cart_products.product_id')->get();
 
         $MP->createOrder($product);
+    }
+
+    public function getSizes ($data)
+    {
+        return json_decode($data);
     }
 
     public function render()
     {
         $this->user = User::where('id', '=', Auth::user()->id)->first();
         $this->products = $this->user->products()->select('cart_products.*')
-            ->addSelect('p.name as name', 'p.price as unit_price', 'p.id as product_id')
+            ->addSelect('p.name as name', 'p.slug as slug', 'p.price as unit_price',
+            'p.data as stock_size')
             ->leftjoin('products as p', 'p.id', '=', 'cart_products.product_id')->get();
         $this->cart = $this->user->cart()->first();
 
