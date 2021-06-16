@@ -2,8 +2,8 @@
     <main class="my-8">
         <div class="container mx-auto px-6">
             <div class="md:flex">
-                <div class="w-full h-full">
-                    <img class="h-full w-full rounded-md object-cover max-w-lg mx-auto" 
+                <div class="w-full h-2/3">
+                    <img class="w-full rounded-md object-cover max-w-lg mx-auto" 
                     src="{{$product->url_photos}}" alt="{{$product->name}}">
                 </div>
                 <div class="w-full mt-1 max-w-lg mx-auto md:ml-8 md:mt-0 md:w-1/2">
