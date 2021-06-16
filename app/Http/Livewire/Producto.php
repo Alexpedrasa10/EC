@@ -13,13 +13,14 @@ use App\Models\CartProduct;
 
 class Producto extends Component
 {
-    public $product, $current_quantity, $current_size;
+    public $product, $current_quantity, $current_size, $price;
     
     public $user, $cart, $cartProduct;
     
     public function mount($slug)
     {
         $this->product = Product::where('slug', $slug)->first();
+        $this->price = !is_null($this->product->sale_price) ? $this->product->sale_price : $this->product->price;
         $this->current_quantity = 1;
 
         if ( Auth::user() ) {
@@ -202,7 +203,7 @@ class Producto extends Component
         $order = new stdClass();
         $order->id = $this->product->id;
         $order->name = $this->product->name ." (talle {$this->current_size})";
-        $order->unit_price = $this->product->price;
+        $order->unit_price = $this->price;
         $order->quantity = $this->current_quantity;
         $order->size = $this->current_size;
         array_push($arr, $order);
@@ -223,7 +224,7 @@ class Producto extends Component
 
     public function getAmount ()
     {
-        return $this->current_quantity * $this->product->price;
+        return $this->current_quantity * $this->price;
     }
 
     public function addToCart ()

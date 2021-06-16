@@ -2,13 +2,23 @@
     <main class="my-8">
         <div class="container mx-auto px-6">
             <div class="md:flex">
-                <div class="w-4/5 h-4/5">
+                <div class="w-full h-full">
                     <img class="h-full w-full rounded-md object-cover max-w-lg mx-auto" 
                     src="{{$product->url_photos}}" alt="{{$product->name}}">
                 </div>
                 <div class="w-full mt-1 max-w-lg mx-auto md:ml-8 md:mt-0 md:w-1/2">
                     <h3 class="text-gray-900 uppercase font-black text-4xl">{{$product->name}}</h3>
-                    <span class="text-indigo-600 mt-3 text-3xl font-bold">${{$product->price}}</span>
+                    @if (is_null($product->sale_price))
+                        <span class="text-indigo-600 mt-3 text-3xl font-bold">
+                            ${{$product->price}}
+                        </span>
+                    @else
+                        <span class="text-indigo-600 mt-3 text-3xl font-bold">
+                            ${{$product->sale_price}}
+                            <p class="text-red-500 text-base line-through inline-block">${{$product->price}}</p>
+                        </span>
+                    @endif
+                    
                     <h1 class="my-5 text-base text-gray-500">
                         {{$product->description}}
                     </h1>

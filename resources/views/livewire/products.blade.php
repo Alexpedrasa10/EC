@@ -19,17 +19,17 @@
                     </div>
                 @endif
                 <div class="flex flex-wrap">
-                    <a href="/productos/{{$item->slug}}" class="cursor-pointer flex-auto text-xl font-semibold dark:text-gray-50">
+                    <a href="/productos/{{$item->slug}}" class="cursor-pointer hover:text-indigo-600 flex-auto text-xl font-semibold dark:text-gray-50">
                         {{$item->name}}   
                     </a>
                 </div>
                 <div class="flex flex-wrap">
-                    <div class="text-2xl font-black text-blue-600 dark:text-gray-300">
+                    <div class="text-2xl font-black text-indigo-600 dark:text-gray-300">
                         @if (!isset($item->old_price))
                             ${{$item->price}}
                         @else
                             ${{$item->price}}
-                            <span class="text-sm text-gray-500 line-through">${{$item->old_price}}</span>
+                            <span class="text-red-500 text-base line-through inline-block">${{$item->old_price}}</span>
                         @endif
                     </div>
                     <div class="w-full flex-none text-sm font-medium text-gray-500 dark:text-gray-300 mt-2">
