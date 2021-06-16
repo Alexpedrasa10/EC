@@ -111,7 +111,16 @@ class Products extends Component
             }
 
             $product = new StdClass();
-            $product->price = $value->price;
+
+            if (!is_null($value->sale_price)) {
+                $product->price = $value->sale_price;
+                $product->old_price = $value->price;
+                $product->sale = TRUE;
+            }
+            else{
+                $product->price = $value->price;
+            }
+
             $product->id = intval($value->id);
             $product->sizes = $sizes;
             $product->url_photos = $value->url_photos;

@@ -20,6 +20,7 @@ class CreateProductsTable extends Migration
             $table->string('description');
             $table->decimal('stock');
             $table->float('price');
+            $table->float('sale_price')->nullable();
             $table->string('code')->nullable();
             $table->jsonb('category')->nullable();
             $table->jsonb('data')->nullable();
