@@ -16,11 +16,11 @@
                     <div class="mt-2">
                         <label class="text-gray-700 text-sm" for="count">Cantidad:</label>
                         <div class="flex items-center mt-1">
-                            <button wire:click="decrement()" class="text-gray-500 focus:outline-none focus:text-gray-600">
+                            <button wire:click="decrement()" class="hover:text-black text-gray-500 focus:outline-none focus:text-gray-600">
                                 <svg class="h-5 w-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             </button>
                             <span class="text-gray-700 text-lg mx-2">{{$current_quantity}}</span>
-                            <button wire:click="increment()" class="text-gray-500 focus:outline-none focus:text-gray-600">
+                            <button wire:click="increment()" class="hover:text-black text-gray-500 focus:outline-none focus:text-gray-600">
                                 <svg class="h-5 w-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             </button>
                         </div>
@@ -56,6 +56,11 @@
                             Comprar
                         </button>
                     </div>
+                    @if ($cartProduct)
+                        <div class="my-5">
+                            <a href="/cart" class="text-sm text-gray-600 hover:text-indigo-600">Ya tienes este producto en el carrito! Para verlo, apreta aquí.</a>
+                        </div>
+                    @endif
                 </div>
             </div>
             <div class="mt-16">

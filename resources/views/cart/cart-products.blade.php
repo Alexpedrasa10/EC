@@ -35,7 +35,7 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowraps">              
                   @foreach ( $this->getSizes($item->data) as $order)
-                  <div class="flex items-center py-5">
+                  <div class="flex items-center py-2">
                         <button wire:click="decrement( {{$item->id}}, '{{$order->size}}' )" class="hover:text-black text-gray-500 focus:outline-none focus:text-gray-600" title="Quitar">
                           <svg class="h-5 w-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </button>
