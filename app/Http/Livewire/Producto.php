@@ -27,11 +27,14 @@ class Producto extends Component
 
             $this->user = User::where('id', Auth::user()->id)->first();
             $this->cart = $this->user->cart()->first();
-            $this->cartProduct = CartProduct::where('product_id', $this->product->id)
-                ->where('user_cart_id', $this->cart->id)
-                ->first();
-        }
 
+            if (!is_null($this->cart)) {
+                
+                $this->cartProduct = CartProduct::where('product_id', $this->product->id)
+                    ->where('user_cart_id', $this->cart->id)
+                    ->first();
+            }
+        }
     }
 
     public function checkQuantity()

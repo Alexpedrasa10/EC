@@ -12,14 +12,14 @@
             
             <form class="flex-auto px-1">
                 @if (isset($item->sale))
-                    <div class="flex items-end justify-center rounded-xl w-full bg-yellow-400 text-xl font-black text-gray-50">
+                    <div class="flex items-end justify-center rounded-sm p-1 w-full bg-yellow-400 text-xl font-black text-gray-50">
                         <span class="text-sm">
                             OFERTA!
                         </span>
                     </div>
                 @endif
                 <div class="flex flex-wrap">
-                    <a href="/productos/{{$item->slug}}" class="cursor-pointer hover:text-indigo-600 flex-auto text-xl font-semibold dark:text-gray-50">
+                    <a title="Ver más" href="/productos/{{$item->slug}}" class="cursor-pointer hover:text-indigo-600 flex-auto text-xl font-semibold dark:text-gray-50">
                         {{$item->name}}   
                     </a>
                 </div>
@@ -40,12 +40,14 @@
                     <div class="space-x-2 flex">
                         @if (!empty($item->sizes ))
                             @foreach ($item->sizes as $sizes)
-                            <button type="button" wire:click="setProductSizes( {{$item->id}}, '{{$sizes->size}}' )">
-                                <label class="text-center">
-                                    <input type="radio" class="w-6 h-6 flex items-center justify-center" name="size"/>
-                                    {{strtoupper($sizes->size)}}
-                                </label>
-                            </button>
+                                @if ($sizes->quantity > 0)
+                                    <button type="button" wire:click="setProductSizes( {{$item->id}}, '{{$sizes->size}}' )">
+                                        <label class="text-center">
+                                            <input type="radio" class="cursor-pointer w-6 h-6 flex items-center justify-center" name="size"/>
+                                            {{strtoupper($sizes->size)}}
+                                        </label>
+                                    </button>
+                                @endif
                             @endforeach
                         @endif
                         

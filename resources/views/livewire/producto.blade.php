@@ -38,12 +38,14 @@
                     <div class="flex items-baseline mt-4 mb-6 text-gray-700 dark:text-gray-300">
                         <div class="space-x-2 flex">
                             @foreach (json_decode($product->data)->sizes as $sizes)
+                                @if ($sizes->quantity > 0)
                                 <button wire:click="setSize('{{$sizes->size}}')" type="button">
                                     <label class="text-center text-gray-500 focus:text-gray-600">
                                         <input type="radio" class="w-6 h-6 flex items-center justify-center" name="size"/>
                                         {{strtoupper($sizes->size)}}
                                     </label>
                                 </button>
+                                @endif
                             @endforeach                            
                         </div>
                         <a href="#" class="ml-auto hidden md:block text-sm text-gray-500 dark:text-gray-300 underline">

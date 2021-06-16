@@ -39,10 +39,10 @@ class Products extends Component
                     $newProductCart->product_id = $product->id;
                     $newProductCart->quantity = 1;
                     $newProductCart->data = $this->getSizeJSON($idProduct);
-                    $newProductCart->amount = $product->price;
+                    $newProductCart->amount += $product->price;
                     $newProductCart->save();
     
-                    $cart->amount = $cart->amount + $product->price;
+                    $cart->amount += $product->price;
                     $cart->save();
     
                     $this->dispatchBrowserEvent('alert',[
@@ -52,18 +52,27 @@ class Products extends Component
                 }
                 else{
     
-                    $productCart->quantity++;
-                    $productCart->data = $this->checkDataInCart($productCart->data, $idProduct);
-                    $productCart->amount = $productCart->amount + $product->price;
-                    $productCart->save();
-    
-                    $cart->amount += $product->price;
-                    $cart->save();
-    
-                    $this->dispatchBrowserEvent('alert',[
-                        'title' => 'Producto agregado al carrito.',
-                        'type'=>'success', 
-                    ]);
+                    if ( $this->checkStock($productCart->data, $product->data, $idProduct) ) {
+
+                        $productCart->quantity++;
+                        $productCart->data = $this->checkDataInCart($productCart->data, $idProduct);
+                        $productCart->amount = $productCart->amount + $product->price;
+                        $productCart->save();
+        
+                        $cart->amount += $product->price;
+                        $cart->save();
+        
+                        $this->dispatchBrowserEvent('alert',[
+                            'title' => 'Producto agregado al carrito.',
+                            'type'=>'success', 
+                        ]);
+                    }
+                    else{
+                        $this->dispatchBrowserEvent('alert',[
+                            'title' => 'No hay mas unidades disponibles para este talle.',
+                            'type'=>'error', 
+                        ]);
+                    }
                 }
             }
             else{
@@ -94,6 +103,45 @@ class Products extends Component
                 'type'=>'error', 
             ]);
         }
+    }
+
+    public function checkStock ($orderCart, $stockData, $idProduct )
+    {
+        $hasStock = FALSE;
+        $current_size = $this->getSizeJSON($idProduct, TRUE);
+        $dataOrder = json_decode($orderCart);
+        $dataStock = json_decode($stockData)->sizes;
+        $quantitySize = NULL;
+
+        // Checkea que este en el cart_product.data
+        foreach ($dataOrder as $order) {
+            
+            if ($order->size == $current_size) {
+                
+                $quantitySize = $order->quantity;
+            }
+        }
+
+        if (!is_null($quantitySize)) {
+            
+            foreach ($dataStock as $stock) {
+                
+                if ($stock->size == $current_size) {
+                    
+                    $avalaible = $stock->quantity - $quantitySize;
+
+                    if ($avalaible > 1) {
+                        return $hasStock = TRUE;
+                    }
+                }
+            }
+            
+        }
+        else{
+            $hasStock = TRUE;
+        }
+
+        return $hasStock;
     }
 
     // Metodo para obtener un objeto de todos los productos
