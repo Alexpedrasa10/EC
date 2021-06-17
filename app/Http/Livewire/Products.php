@@ -24,6 +24,10 @@ class Products extends Component
         $cart = $user->cart()->first();
         $product = Product::where('id', '=', $idProduct)->first();
 
+        if (!is_null($product->sale_price)) {
+            $product->price = $product->sale_price;
+        }
+
         if ( $this->checkDataProducts($idProduct, FALSE) ) {
         
             if (!is_null($cart)){
@@ -76,7 +80,6 @@ class Products extends Component
                 }
             }
             else{
-    
     
                 $newCart = new UserCart();
                 $newCart->user_id = $user->id;

@@ -24,9 +24,17 @@
                 <td class="px-6 py-4 whitespace-nowrap">
                     <a class="text-black hover:text-blue-700 font-bold" href="/productos/{{$item->slug}}">{{$item->name}}</a>  
                     <br>
-                    <span class="text-xs text-gray-500">
-                      ${{$item->unit_price}} p/ unidad.
-                    </span>
+                    @if (is_null($item->sale_price))
+                      <span class="text-sm text-gray-500">
+                        ${{$item->unit_price}} p/ unidad.
+                      </span>
+                    @else
+                    <span class="block text-xs line-through text-red-400">${{$item->unit_price}} p/ unidad</span>
+                      <span class="text-sm text-gray-500">
+                        ${{$item->sale_price}} p/ unidad. 
+                      </span>
+                    @endif
+                    
                     <br>
                       <p class="text-xs text-gray-500">Total:</p>
                       <span class="text-gray-900 text-1xl font-bold">
