@@ -11,12 +11,14 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use stdClass;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\DB;
 
 class Products extends Component
 {
     public $categories, $user, $dataProducts = array();
 
     use WithPagination;
+    public $filter = NULL, $priceLimit;
 
     public function addProductToCart(int $idProduct)
     {
@@ -275,6 +277,25 @@ class Products extends Component
         }
     }
 
+    public function getFilteredProducts ()
+    {
+        $products = Product::where('is_active', 1);
+
+        if ($this->filter == "sale") {
+            $products->whereNotNull('sale_price');
+        }
+
+        if ($this->filter == "priceLower") {
+            $products->orderBy('price', 'ASC');
+        }
+
+        if ($this->filter == "priceHigher") {
+            $products->orderBy('price', 'DESC');
+        }
+
+        return $products;
+    }
+
     public function checkDataInCart($productSizes, int $idProduct) :string
     {
         $data = json_decode($productSizes);
@@ -297,15 +318,14 @@ class Products extends Component
 
     public function render()
     {
-        $products = Product::where('is_active', 1);
-        $this->categories = Property::all();
-
         if (Auth::user()){
             $this->user = User::where('id', '=', Auth::user()->id)->first();
         }
 
+        $products = $this->getFilteredProducts();
+
         return view('livewire.products', [ 
-            'products' => $products->paginate(10)
+            'products' => $products->paginate(6)
         ]);
     }
 }

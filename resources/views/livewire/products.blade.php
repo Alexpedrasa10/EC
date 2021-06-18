@@ -1,5 +1,19 @@
-<div class="p-10">
-    <h2 class="font-black text-3xl dark:text-white">Todos los productos </h2>
+<div class="px-2">
+    <h1 class="text-3xl font-bold ">Productos {{$filter}}</h1>
+
+    <div class="py-5">
+        <div class="w-full flex flex-col mb-3">
+            <div>
+                <label class=" text-gray-500 py-2">Filtrar por</label>
+                <select wire:model="filter" class="block text-grey-darker border border-gray-200 rounded-lg w-full sm:w-1/5 md:w-2/5 " required="required" name="integration[city_id]" id="integration_city_id">
+                    <option value="null">Todos</option>
+                    <option value="priceLower">Precio más bajo</option>
+                    <option value="priceHigher">Precio más alto</option>
+                    <option value="sale">En oferta</option>
+                </select>
+            </div>
+        </div>
+    </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-3 md:sm:grid-cols-2 lg:sm:grid-cols-6 gap-6">
         @foreach ($this->getProducts($products) as $item)
