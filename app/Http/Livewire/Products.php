@@ -149,43 +149,6 @@ class Products extends Component
         return $hasStock;
     }
 
-    // Metodo para obtener un objeto de todos los productos
-    public function getProducts($products) :Array
-    {
-        $arr = array();
-
-        foreach ($products as $key => $value) {
-
-            $data = json_decode($value->data);
-            $sizes = array();
-
-            foreach ($data->sizes as $size) {
-                array_push($sizes, $size);
-            }
-
-            $product = new StdClass();
-
-            if (!is_null($value->sale_price)) {
-                $product->price = $value->sale_price;
-                $product->old_price = $value->price;
-                $product->sale = TRUE;
-            }
-            else{
-                $product->price = $value->price;
-            }
-
-            $product->id = intval($value->id);
-            $product->sizes = $sizes;
-            $product->url_photos = $value->url_photos;
-            $product->name = $value->name;
-            $product->slug = $value->slug;
-
-            array_push($arr, $product);
-        }
-
-        return $arr;
-    }
-
     public function setProductSizes(int $idProduct, string $size)
     {
         if ( !$this->checkDataProducts($idProduct, TRUE, NULL, $size) ) {
@@ -293,6 +256,8 @@ class Products extends Component
             $products->orderBy('price', 'DESC');
         }
 
+        //$products->where(DB::raw('JSON_EXTRACT( data, "$.categories")'), '=', 1);
+
         return $products;
     }
 
@@ -318,14 +283,14 @@ class Products extends Component
 
     public function render()
     {
-        if (Auth::user()){
+        if (Auth::user()) {
             $this->user = User::where('id', '=', Auth::user()->id)->first();
         }
 
         $products = $this->getFilteredProducts();
 
         return view('livewire.products', [ 
-            'products' => $products->paginate(6)
+            'products' => $products->paginate(5)
         ]);
     }
 }

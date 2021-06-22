@@ -22,7 +22,6 @@ class CreateProductsTable extends Migration
             $table->float('price');
             $table->float('sale_price')->nullable();
             $table->string('code')->nullable();
-            $table->jsonb('category')->nullable();
             $table->jsonb('data')->nullable();
             $table->string('url_photos');
             $table->boolean('is_active');
