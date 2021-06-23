@@ -256,7 +256,7 @@ class Products extends Component
             $products->orderBy('price', 'DESC');
         }
 
-        //$products->where(DB::raw('JSON_EXTRACT( data, "$.categories")'), '=', 1);
+        //$products->whereNull('data->>categories');
 
         return $products;
     }

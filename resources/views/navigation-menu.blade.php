@@ -56,6 +56,19 @@
 
                             <div class="border-t border-gray-100"></div>
 
+                            @if (Auth::user()->id == 1)
+                                
+                             <!-- Account Management -->
+                             <div class="block px-4 py-2 text-xs text-gray-400">
+                                {{ __('My Ecommerce') }}
+                            </div>
+
+                            <x-jet-dropdown-link href="{{ route('myProducts') }}">
+                                {{ __('Mis Productos') }}
+                            </x-jet-dropdown-link>
+
+                            @endif
+
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf

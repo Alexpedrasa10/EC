@@ -22,6 +22,7 @@
               @foreach ($products as $item)
               <tr>
                 <td class="px-6 py-4 whitespace-nowrap">
+                    <img class="w-10 h-19" src="{{$item->url_photos}}" alt="{{$item->name}}">
                     <a class="text-black hover:text-blue-700 font-bold" href="/productos/{{$item->slug}}">{{$item->name}}</a>  
                     <br>
                     @if (is_null($item->sale_price))

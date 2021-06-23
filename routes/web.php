@@ -34,3 +34,7 @@ Route::get('/productos/{slug}', function ($slug) {
         'slug' => $slug
     ]);
 })->name('producto');
+
+Route::get('/my-products', function () {
+    return view('myProducts');
+})->name('myProducts');

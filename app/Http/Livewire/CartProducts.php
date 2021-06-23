@@ -200,7 +200,7 @@ class CartProducts extends Component
         $this->user = User::where('id', '=', Auth::user()->id)->first();
         $this->products = $this->user->products()->select('cart_products.*')
             ->addSelect('p.name as name', 'p.slug as slug', 'p.price as unit_price',
-            'p.data as stock_size', 'p.sale_price as sale_price')
+            'p.data as stock_size', 'p.sale_price as sale_price', 'p.url_photos')
             ->leftjoin('products as p', 'p.id', '=', 'cart_products.product_id')->get();
         $this->cart = $this->user->cart()->first();
 
