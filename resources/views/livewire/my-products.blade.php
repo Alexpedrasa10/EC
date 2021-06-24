@@ -11,6 +11,9 @@
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Stock
                 </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Categorias
+                </th>
                 <th scope="col" class=" text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 </th>
               </tr>
@@ -36,6 +39,13 @@
                 <td class="px-6 py-4 whitespace-nowraps">              
                     {{$item->stock}} <br>
                     <span class="text-gray-500 text-sm text-center">({{$this->getStockData($item->data)}})</span>
+                </td>
+                <td>
+                  @if (!empty($item->properties()))
+                  <span class="text-gray-500 text-sm text-center">
+                    {{$this->getPropertiesStr($item->properties()->get())}}
+                  </span>
+                  @endif
                 </td>
                 <td class="whitespace-nowrap text-left">                
                   <div class="inline-flex">

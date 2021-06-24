@@ -10,6 +10,24 @@ class MyProducts extends Component
 {
     public $products;
 
+    public function getPropertiesStr ($properties)
+    {
+        $res = "";
+        $qProp = count($properties);
+
+        foreach ($properties as $idx => $prop) {
+            
+            if ( ($qProp - 1) != $idx ) {
+                $res = $res." {$prop->name},";       
+            }
+            else{
+                $res = $res." y {$prop->name}.";       
+            }
+        }
+
+        return $res;
+    }
+
     public function getStockData ($data)
     {
         if (!is_null($data)) {

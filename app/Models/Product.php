@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Product extends Model
 {
@@ -24,14 +25,9 @@ class Product extends Model
         'data',
     ];
     
-    /**
-     * Get all of the properties for the Product
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
-     */
     public function properties(): HasManyThrough
     {
-        return $this->hasManyThrough(Property::class, ProductProperties::class);
+        return $this->HasManyThrough(Property::class, ProductProperties::class, 'product_id', 'id', 'id', 'property_id');
     }
 
 }
