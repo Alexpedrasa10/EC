@@ -18,7 +18,8 @@ class UserAdmin extends Seeder
             'id' => 1,
             'name' => 'Administrador',
             'email' => 'admin@ecommerce.com',
-            'password' => bcrypt("admin123")
+            'password' => bcrypt("admin123"),
+            'current_team_id' => 1
         ]);
 
         DB::table('team_user')->insert([
