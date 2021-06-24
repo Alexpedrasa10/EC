@@ -10,7 +10,7 @@ class MyProducts extends Component
 {
     public $products;
 
-    public function getPropertiesStr ($properties)
+    public function getPropertiesStr ($properties) :string
     {
         $res = "";
         $qProp = count($properties);

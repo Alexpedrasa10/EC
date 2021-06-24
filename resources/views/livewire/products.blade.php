@@ -1,5 +1,5 @@
 <div class="px-2">
-    <h1 class="text-3xl font-bold ">Productos {{$filter}}</h1>
+    <h1 class="text-3xl font-bold ">Productos</h1>
 
     <div class="py-5">
         <div class="w-full flex flex-col mb-3">
@@ -15,11 +15,9 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-3 md:sm:grid-cols-3 lg:sm:grid-cols-6 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-3 md:sm:grid-cols-3 lg:sm:grid-cols-6 gap-3 sm:gap-2 md:gap-2 lg:gap-2">
         @foreach ($products as $item)
-
-        
-        <div class="flex bg-white dark:bg-gray-800 rounded-lg shadow-lg py-4">
+        <div class="flex bg-white dark:bg-gray-800 rounded-sm shadow-md hover:shadow-lg py-4">
             <div class="flex-none w-32 sm:w-20 md:w-48 relative">
                 <img src="{{$item->url_photos}}" alt="shopping image" class="absolute rounded-lg inset-0 w-full h-full object-cover"/>
             </div>
@@ -42,8 +40,8 @@
                         @if (is_null($item->sale_price))
                             ${{$item->price}}
                         @else
-                            ${{$item->price}}
-                            <span class="text-red-500 text-base line-through inline-block">${{$item->sale_price}}</span>
+                            ${{$item->sale_price}}
+                            <span class="text-red-500 text-base line-through inline-block">${{$item->price}}</span>
                         @endif
                     </div>
                     <div class="w-full flex-none text-sm font-medium text-gray-500 dark:text-gray-300 mt-2">

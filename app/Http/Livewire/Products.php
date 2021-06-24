@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class Products extends Component
 {
-    public $categories, $user, $dataProducts = array();
+    public $categories, $category, $user, $dataProducts = array();
 
     use WithPagination;
     public $filter = NULL, $priceLimit;
@@ -242,8 +242,14 @@ class Products extends Component
 
     public function getFilteredProducts ()
     {
-        $products = Product::where('is_active', 1);
-
+        $products = Product::with('properties');
+        
+        if (!empty($this->category)) {
+            $products->whereHas('properties', function ($query) {
+                return $query->where('id', '=', $this->category);
+            });
+        }
+        
         if ($this->filter == "sale") {
             $products->whereNotNull('sale_price');
         }
@@ -255,9 +261,7 @@ class Products extends Component
         if ($this->filter == "priceHigher") {
             $products->orderBy('price', 'DESC');
         }
-
-        //$products->whereNull('data->>categories');
-
+        
         return $products;
     }
 
@@ -290,7 +294,7 @@ class Products extends Component
         $products = $this->getFilteredProducts();
 
         return view('livewire.products', [ 
-            'products' => $products->paginate(5)
+            'products' => $products->paginate(8)
         ]);
     }
 }
