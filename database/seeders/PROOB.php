@@ -14,37 +14,7 @@ class PROOB extends Seeder
      * @return void
      */
     public function run()
-    {
-        DB::table('properties')->insert([
-            'category' => 'GENDER',
-            'code' => 'M',
-            'name' => 'Hombre'
-        ]);
-
-        DB::table('properties')->insert([
-            'category' => 'GENDER',
-            'code' => 'W',
-            'name' => 'Mujer'
-        ]);
-
-        DB::table('properties')->insert([
-            'category' => 'CAT',
-            'code' => 'SPORT',
-            'name' => 'Ropa deportiva',
-        ]);
-
-        DB::table('properties')->insert([
-            'category' => 'SUBCAT',
-            'code' => 'PANT',
-            'name' => 'Pantalón'
-        ]);
-
-        DB::table('properties')->insert([
-            'category' => 'SUBCAT',
-            'code' => 'TSHIRT',
-            'name' => 'Remera'
-        ]);
-
+    {        
         // PRODUCTS
 
         $sizeM = new stdClass;
@@ -69,7 +39,6 @@ class PROOB extends Seeder
             $sizeM,
             $sizeS,
         ];
-        $dataWomen->categories = array(2, 4);
 
         $dataMen = new StdClass();
         $dataMen->sizes = [
@@ -77,7 +46,6 @@ class PROOB extends Seeder
             $sizeM,
             $sizeXL,
         ];
-        $dataMen->categories = array(1, 3);
 
 
         DB::table('products')->insert([

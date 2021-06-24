@@ -16,5 +16,6 @@ class DatabaseSeeder extends Seeder
         $this->call(Teams::class);
         $this->call(UserAdmin::class);
         $this->call(PROOB::class);
+        $this->call(Properties::class);
     }
 }

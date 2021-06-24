@@ -15,9 +15,23 @@ class Product extends Model
      * @var array
      */
     protected $fillable = [
-        'data',
         'name',
+        'slug',
+        'stock',
+        'description',
         'price',
+        'sale_price',
+        'data',
     ];
+    
+    /**
+     * Get all of the properties for the Product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function properties(): HasManyThrough
+    {
+        return $this->hasManyThrough(Property::class, ProductProperties::class);
+    }
 
 }
