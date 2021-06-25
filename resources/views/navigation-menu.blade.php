@@ -15,8 +15,13 @@
                     <x-jet-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-jet-nav-link>
-                    <x-jet-nav-link href="{{ route('productos') }}" :active="request()->routeIs('productos')">
-                        {{ __('Productos') }}
+
+                    <x-jet-nav-link href="{{ route('productos') }}/MEN" :active="request()->is('productos')">
+                        {{ __('Hombre') }}
+                    </x-jet-nav-link>
+
+                    <x-jet-nav-link href="{{ route('productos') }}/WOMEN" :active="request()->routeIs('productos')">
+                        {{ __('Mujer') }}
                     </x-jet-nav-link>
                 </div>
             </div>
@@ -104,9 +109,9 @@
             <x-jet-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-jet-responsive-nav-link>
-            <x-jet-responsive-nav-link href="{{ route('productos') }}" :active="request()->routeIs('productos')">
+            {{-- <x-jet-responsive-nav-link href="{{ route('productos') }}/SPORT" :active="request()->routeIs('productos')">
                 {{ __('Productos') }}
-            </x-jet-responsive-nav-link>
+            </x-jet-responsive-nav-link> --}}
         </div>
 
         @auth

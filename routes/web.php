@@ -25,8 +25,10 @@ Route::get('/cart', function () {
     return view('cart');
 })->name('cart');
 
-Route::get('/productos', function () {
-    return view('productos');
+Route::get('/productos/{category?}', function ($category = NULL) {
+    return view('productos', [ 
+        'category' => $category
+    ]);
 })->name('productos');
 
 Route::get('/productos/{slug}', function ($slug) {

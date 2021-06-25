@@ -16,13 +16,13 @@ class Properties extends Seeder
     {
         DB::table('properties')->insert([
             'category' => 'GENDER',
-            'code' => 'M',
+            'code' => 'MEN',
             'name' => 'Hombre'
         ]);
 
         DB::table('properties')->insert([
             'category' => 'GENDER',
-            'code' => 'W',
+            'code' => 'WOMEN',
             'name' => 'Mujer'
         ]);
 

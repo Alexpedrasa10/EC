@@ -246,7 +246,7 @@ class Products extends Component
         
         if (!empty($this->category)) {
             $products->whereHas('properties', function ($query) {
-                return $query->where('id', '=', $this->category);
+                return $query->where('id', '=', $this->category->id);
             });
         }
         
@@ -283,6 +283,11 @@ class Products extends Component
         $newData = json_decode($this->getSizeJSON($idProduct));
         array_push($data, $newData[0]);
         return json_encode($data);
+    }
+
+    public function mount ($category)
+    {
+        $this->category = Property::where('code', $category)->first();
     }
 
     public function render()
