@@ -31,7 +31,7 @@ Route::get('/productos/{category?}', function ($category = NULL) {
     ]);
 })->name('productos');
 
-Route::get('/productos/{slug}', function ($slug) {
+Route::get('/producto/{slug}', function ($slug) {
     return view('producto', [ 
         'slug' => $slug
     ]);

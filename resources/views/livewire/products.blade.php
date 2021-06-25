@@ -31,7 +31,7 @@
                     </div>
                 @endif
                 <div class="flex flex-wrap">
-                    <a title="Ver más" href="/productos/{{$item->slug}}" class="cursor-pointer hover:text-indigo-600 flex-auto text-xl font-semibold dark:text-gray-50">
+                    <a title="Ver más" href="/producto/{{$item->slug}}" class="cursor-pointer hover:text-indigo-600 flex-auto text-xl font-semibold dark:text-gray-50">
                         {{$item->name}}   
                     </a>
                 </div>

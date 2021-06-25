@@ -19,7 +19,7 @@ class Producto extends Component
     
     public function mount($slug)
     {
-        $this->product = Product::where('slug', $slug)->first();
+        $this->product = Product::with('properties')->where('slug', $slug)->first();
         $this->price = !is_null($this->product->sale_price) ? $this->product->sale_price : $this->product->price;
         $this->current_quantity = 1;
 
