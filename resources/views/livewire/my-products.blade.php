@@ -1,5 +1,35 @@
 <div>
     <h1 class="text-2xl font-bold">Mis productos</h1>
+    <p class="text-base font-light text-gray-600">Estos son todos los productos cargados en tu Ecommerce.</p>
+
+    <div class="grid grid-cols-3 gap-1 mt-5 w-full">
+      
+      <div class="w-full">
+        <label class=" text-gray-500 py-2">Filtrar por</label>
+        <select wire:model="filter" class="block text-grey-darker border border-gray-200 rounded-lg w-full sm:w-1/5 md:w-2/5 " required="required" name="integration[city_id]" id="integration_city_id">
+            <option value="null">Todos</option>
+            <option value="priceLower">Precio más bajo</option>
+            <option value="priceHigher">Precio más alto</option>
+            <option value="sale">En oferta</option>
+        </select>
+      </div>
+
+      <div class="w-full">
+        <label class="block text-gray-600" for="productName">Nombre</label>
+        <x-jet-input id="productName" type="text" wire:model="productName"/>
+      </div>
+
+      <div class="w-full">
+        <label class=" text-gray-500 py-2">Categorias</label>
+        <select wire:model="category" class="block text-grey-darker border border-gray-200 rounded-lg w-full sm:w-1/5 md:w-2/5 " required="required" name="integration[city_id]" id="integration_city_id">
+            <option value="null">Todas</option>
+            @foreach ($categories as $cat)
+              <option value="{{$cat->id}}">{{$cat->name}}</option>
+            @endforeach
+        </select>
+      </div>
+
+    </div>
 
     <div class="my-10">
         <table class="min-w-full divide-y divide-gray-200">
@@ -41,9 +71,9 @@
                     <span class="text-gray-500 text-sm text-center">({{$this->getStockData($item->data)}})</span>
                 </td>
                 <td>
-                  @if (!empty($item->properties()))
+                  @if (!empty($item->properties))
                   <span class="text-gray-500 text-sm text-center">
-                    {{$this->getPropertiesStr($item->properties()->get())}}
+                    {{$this->getPropertiesStr($item->properties)}}
                   </span>
                   @endif
                 </td>

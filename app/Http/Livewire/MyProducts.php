@@ -5,10 +5,12 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
+use App\Models\Property;
 
 class MyProducts extends Component
 {
-    public $products;
+    public $productName, $filter, $category;
+    public $categories;
 
     public function getPropertiesStr ($properties) :string
     {
@@ -58,9 +60,35 @@ class MyProducts extends Component
         
         if (Auth::user()->id == 1) {
             
-            $this->products = Product::all();
+            $this->categories = Property::all();
+            $products = Product::with('properties');
 
-            return view('livewire.my-products');
+            if (!empty($this->productName)) {
+                $products->where('name', 'like', '%'.$this->productName.'%');
+            }
+
+            if ($this->filter == "sale") {
+                $products->whereNotNull('sale_price');
+            }
+    
+            if ($this->filter == "priceLower") {
+                $products->orderBy('price', 'ASC');
+            }
+    
+            if ($this->filter == "priceHigher") {
+                $products->orderBy('price', 'DESC');
+            }
+
+
+            if (!empty($this->category)) {
+                $products->whereHas('properties', function ($query) {
+                    return $query->where('id', '=', $this->category);
+                });
+            }
+
+            return view('livewire.my-products', [ 
+                'products' => $products->get()
+            ]);
         }
     }
 }
