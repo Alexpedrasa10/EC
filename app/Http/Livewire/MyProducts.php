@@ -9,7 +9,7 @@ use App\Models\Property;
 
 class MyProducts extends Component
 {
-    public $productName, $filter, $category;
+    public $productName, $filter, $category, $productIdEdit;
     public $categories;
 
     public function getPropertiesStr ($properties) :string

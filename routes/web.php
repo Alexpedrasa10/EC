@@ -37,6 +37,12 @@ Route::get('/producto/{slug}', function ($slug) {
     ]);
 })->name('producto');
 
+Route::get('/edit-product/{slug?}', function ($slug = NULL) {
+    return view('edit-product', [ 
+        'slug' => $slug
+    ]);
+})->name('edit-products');
+
 Route::get('/my-products', function () {
     return view('myProducts');
 })->name('myProducts');
