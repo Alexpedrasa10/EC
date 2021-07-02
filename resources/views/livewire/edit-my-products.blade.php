@@ -1,6 +1,6 @@
 <div class="flex bg-gray-200 items-center justify-center p-10">
     <div class="bg-gray-50 rounded-lg shadow-xl p-10 w-full px-5">
-        {{$this->hasSizes}}
+        {{json_encode($this->categories)}}
         <div class="flex justify-center py-5">
             <x-jet-application-mark class="h-14 inline-block" />
         </div>
@@ -49,8 +49,16 @@
             <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">Categorias</label>
             <select x-cloak id="select">
                 @foreach ($properties as $prop)
-                    <option value="{{$prop->id}}">{{$prop->name}}</option>
+                    <option id="{{str_replace(" ", "", $prop->name)}}" wire:click="addProperty({{$prop->id}})" value="{{$prop->id}}">{{$prop->name}}</option>
                 @endforeach
+            </select>
+
+            <select id="selected" style="display: none">
+                @if (!empty($categories))
+                    @foreach ($categories as $prop)
+                        <option value="{{$prop->id}}">{{$prop->name}}</option>
+                    @endforeach
+                @endif
             </select>
             
             <div x-data="dropdown()" x-init="loadOptions()" class="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent">
@@ -180,35 +188,72 @@ function dropdown() {
         open() { this.show = true },
         close() { this.show = false },
         isOpen() { return this.show === true },
-        select(index, event) {
+        select(index, event = null) {
+
+            let optionsSelected = document.getElementById('select').options;
 
             if (!this.options[index].selected) {
 
+
                 this.options[index].selected = true;
-                this.options[index].element = event.target;
+
+                if (event) {
+                    this.options[index].element = event.target;
+                }
+        
                 this.selected.push(index);
 
             } else {
                 this.selected.splice(this.selected.lastIndexOf(index), 1);
                 this.options[index].selected = false
             }
+
+            // Updatea en componente de livewire
+            if (event) {
+                for (let i = 0; i < optionsSelected.length; i++) {
+
+                    if (this.options[index].value == optionsSelected[i].value) {
+                        let opt = document.getElementById(optionsSelected[i].id).click();
+                    }                    
+                }
+            }
         },
         remove(index, option) {
             this.options[option].selected = false;
             this.selected.splice(index, 1);
+
+            let optionsSelected = document.getElementById('select').options;
+
+            for (let i = 0; i < optionsSelected.length; i++) {
+
+                if (this.options[index].value == optionsSelected[i].value) {
+                    let opt = document.getElementById(optionsSelected[i].id).click();
+                }                    
+            }
+
         },
         loadOptions() {
-            console.log(@this);
-            const options = document.getElementById('select').options;
+
+            const options = document.getElementById('select').options, 
+                optionsSelected = document.getElementById('selected').options;
+
             for (let i = 0; i < options.length; i++) {
+
                 this.options.push({
                     value: options[i].value,
                     text: options[i].innerText,
                     selected: options[i].getAttribute('selected') != null ? options[i].getAttribute('selected') : false
                 });
+
+                for (let j = 0; j < optionsSelected.length; j++) {
+                    
+                    if (options[i].value == optionsSelected[j].value) {
+
+                        let index = this.options.length - 1;
+                        this.select(index, null);
+                    }
+                }
             }
-
-
         },
         selectedValues(){
             return this.selected.map((option)=>{

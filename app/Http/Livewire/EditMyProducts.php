@@ -29,6 +29,25 @@ class EditMyProducts extends Component
         $this->URL = str_replace(" ", "", $this->name);
     }
 
+    public function addProperty (int $id)
+    {
+        $property = Property::where('id', $id)->first();
+        $exist = FALSE;
+
+        foreach ($this->categories as $idx => $prop) {
+            
+            if ($prop->id == $id) {
+
+               $exist = TRUE;
+               $this->categories->forget($idx);
+            }
+        }
+
+        if (!$exist) {
+            $this->categories->push($property);
+        }
+    }
+
     public function mount (string $slug = NULL)
     {
         $this->properties = Property::all();
@@ -45,7 +64,7 @@ class EditMyProducts extends Component
             $this->hasSizes = !is_null($this->sizes) ? TRUE : FALSE;
             $this->url_photos = $this->product->url_photos;
             $this->description = $this->product->description;
-            $this->categories = $this->product->properties;
+            $this->categories = $this->product->properties()->get();
         }
     }
 
