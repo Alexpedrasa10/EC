@@ -48,6 +48,34 @@ class EditMyProducts extends Component
         }
     }
 
+    public function incrementSize ($size)
+    {
+        $arr = json_decode(json_encode($this->sizes));
+        foreach ($arr as $s) {
+            
+            if ($s->size == $size) {
+                $s->quantity = intval($s->quantity) + 1;
+                $this->stock += 1;
+            }
+        }
+
+        $this->sizes = $arr;
+    }
+
+    public function decrementSize ($size)
+    {
+        $arr = json_decode(json_encode($this->sizes));
+        foreach ($arr as $s) {
+            
+            if ($s->size == $size) {
+                $s->quantity = intval($s->quantity) - 1;
+                $this->stock -= 1;
+            }
+        }
+
+        $this->sizes = $arr;
+    }
+
     public function mount (string $slug = NULL)
     {
         $this->properties = Property::all();

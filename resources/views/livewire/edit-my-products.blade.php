@@ -40,12 +40,34 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mt-5 mx-7">
             <div class="grid grid-cols-1">
                 <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">Stock</label>
-                @error('stock') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                <input wire:model="stock" class="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" type="numer" placeholder="Ingrese precio del producto" />
+                @if (!$hasSizes)
+                    @error('stock') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                    <input wire:model="stock" class="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" type="numer" placeholder="Ingrese precio del producto" />
+                @else
+                    <input disabled="true" wire:model="stock" class="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" type="numer" placeholder="Ingrese precio del producto" />
+
+                    <h1 class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold mt-5">Talles: </h1>
+                    <p class="text-sm text-gray-500">Para agregar otro talle, haga click aquí.</p>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-5 md:gap-8 mt-5">
+                        @foreach ( json_decode(json_encode($this->sizes)) as $size)
+                            <div class="flex items-center py-2">
+                                <button wire:click="decrementSize('{{$size->size}}')" class="hover:text-black text-gray-500 focus:outline-none focus:text-gray-600" title="Quitar">
+                                    <svg class="h-5 w-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </button>
+                                <span style="display: ruby" class="text-center text-gray-600 text-sm px-2">{{$size->quantity}} en {{$size->size}}</span>
+                                <button wire:click="incrementSize('{{$size->size}}')" class="hover:text-black text-gray-500 focus:outline-none focus:text-gray-600" title="Agregar">
+                                    <svg class="h-5 w-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </button>
+                            </div>
+                            <br>
+                        @endforeach                        
+                    </div>
+                @endif
+
             </div>
         </div>
 
-        <div class="grid grid-cols-1 mt-5 mx-7">
+        <div class="grid grid-cols-1 mt-4 mx-7">
             <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">Categorias</label>
             <select x-cloak id="select">
                 @foreach ($properties as $prop)
