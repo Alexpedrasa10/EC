@@ -5,11 +5,15 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\Product;
 use App\Models\Property;
+use stdClass;
 
 class EditMyProducts extends Component
 {
 
-    public $product, $properties, $hasSizes;
+    public $product, $properties, $hasSizes, $newSize = FALSE;
+
+    // Forms sizes
+    public $size, $qSize;
 
     // Forms inputs
     public $name, $URL, $price, $salePrice, $url_photos, $description, 
@@ -74,6 +78,78 @@ class EditMyProducts extends Component
         }
 
         $this->sizes = $arr;
+    }
+
+    public function checkSize ($update = FALSE)
+    {
+        $size = strtoupper($this->size);
+        $qSize = $this->qSize;
+        $dataSize = json_decode(json_encode($this->sizes));
+        $okSize = TRUE;
+
+        foreach ($dataSize as $s) {
+            
+            if ($s->size == $size) {
+
+                if (!$update) {
+                    $okSize = FALSE;
+                }
+                else {
+
+                    $s->quantity += $qSize;
+                    $this->sizes = $dataSize;
+                    $this->stock += $qSize;
+                    $this->viewNewSize();
+                    $this->toaster("Talle editado", "success");
+                }
+            }
+        }
+
+        return $okSize;
+    }
+
+    public function viewNewSize()
+    {
+        return $this->newSize = !$this->newSize;
+    }
+
+    public function addSize ()
+    {
+        if (!is_null($this->size) && !is_null($this->qSize)) {
+            
+            $size = strtoupper($this->size);
+            $qSize = $this->qSize;
+
+            if ( $this->checkSize() ) {
+                
+                $newSize = new StdClass();
+                $newSize->size = $size;
+                $newSize->quantity = $qSize;
+                $dataSize = $this->sizes;
+                array_push($dataSize, $newSize);
+
+                $this->sizes = $dataSize;
+                $this->stock += $qSize;
+
+                $this->viewNewSize();
+                $this->toaster("Talle agregado", "success");
+            }
+            else {
+                $this->checkSize(TRUE);
+            }
+        }
+        else {
+            $this->toaster("Completa los datos del formulario", "error");
+        }
+    }
+
+
+    public function toaster(string $title, string $type)
+    {
+        $this->dispatchBrowserEvent('alert',[
+            'title' => $title,
+            'type'=> $type, 
+        ]);
     }
 
     public function mount (string $slug = NULL)
