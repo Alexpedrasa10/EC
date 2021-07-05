@@ -35,6 +35,7 @@
                             </button>
                         </div>
                     </div>
+                    @if (isset(json_decode($product->data)->sizes))
                     <div class="flex items-baseline mt-4 mb-6 text-gray-700 dark:text-gray-300">
                         <div class="space-x-2 flex">
                             @foreach (json_decode($product->data)->sizes as $sizes)
@@ -52,6 +53,7 @@
                             Size Guide
                         </a>
                     </div>
+                    @endif
                     <div class="flex mt-6">
                         <button wire:click="addToCart" class="px-8 py-2 w-full mx-1 items-center flex bg-indigo-600 text-white text-sm font-medium rounded hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 shadow-sm">
                             <span class="px-2">

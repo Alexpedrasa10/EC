@@ -1,6 +1,6 @@
 <div class="flex bg-gray-200 items-center justify-center p-10">
     <div class="bg-gray-50 rounded-lg shadow-xl p-10 w-full px-5">
-        {{json_encode($this->categories)}}
+
         <div class="flex justify-center py-5">
             <x-jet-application-mark class="h-14 inline-block" />
         </div>
@@ -39,17 +39,17 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mt-5 mx-7">
             <div class="grid grid-cols-1">
-                <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">Stock</label>
-                @if (!$hasSizes)
+                <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">Stock {{$this->hasSizes}}</label>
+                @if (!$this->hasSizes)
                     @error('stock') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                    <input wire:model="stock" class="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" type="numer" placeholder="Ingrese precio del producto" />
+                    <input wire:model="stock" class="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" type="numer" placeholder="Ingrese stock del producto" />
                 @else
-                    <input disabled="true" wire:model="stock" class="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" type="numer" placeholder="Ingrese precio del producto" />
+                    <input disabled="true" wire:model="stock" class="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" type="numer" placeholder="Ingrese stock del producto" />
 
                     <h1 class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold mt-5">Talles: </h1>
                     <p wire:click="viewNewSize" class="text-sm text-gray-500 cursor-pointer">Para agregar otro talle, haga click aquí. {{$this->newSize}}</p>
                     @if ($this->newSize)
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5 mt-5 bg-gray-50 rounded-sm shadow-sm p-10">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5 mt-5 bg-gray-50 rounded-md shadow-md p-10">
                                 <div class="grid col-span-full md:col-span-1 lg:col-span-1">
                                     <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">Talle</label>
                                     <input wire:model="size" class="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" maxlength="5" placeholder="Ingrese talle" />
@@ -59,7 +59,7 @@
                                     <input wire:model="qSize" class="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" type="numer" placeholder="Ingrese cantidad" />
                                 </div>
                                 <div class="grid col-span-full">
-                                    <button wire:click="addSize" class="flex items-center justify-center px-4 py-2 border border-indigo-50 rounded-md shadow-sm text-sm font-medium text-indigo-600 bg-white hover:bg-indigo-50">Agregar talle</button>
+                                    <button wire:click="addSize" class="flex items-center justify-center px-4 py-2 border border-indigo-50 rounded-md shadow-sm text-sm font-medium text-purple-600 bg-white hover:bg-indigo-50">Agregar talle</button>
                                 </div>
                             </div>
                     @endif
@@ -185,8 +185,9 @@
         </div>
     
         <div class='flex items-center justify-center  md:gap-8 gap-4 pt-5 pb-5'>
-            <button class='w-auto bg-gray-500 hover:bg-gray-700 rounded-lg shadow-xl font-medium text-white px-4 py-2'>Cancel</button>
-            <button class='w-auto bg-purple-500 hover:bg-purple-700 rounded-lg shadow-xl font-medium text-white px-4 py-2'>Create</button>
+            <button wire:click="editProduct" class="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-gray-50 bg-indigo-500 hover:bg-indigo-800">
+                {{ is_null($this->product) ? 'Crear producto' : 'Editar producto' }}
+            </button>
         </div>
     
     </div>

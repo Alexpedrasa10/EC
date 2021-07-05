@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\Product;
 use App\Models\Property;
+use App\Models\ProductProperties;
 use stdClass;
 
 class EditMyProducts extends Component
@@ -17,13 +18,12 @@ class EditMyProducts extends Component
 
     // Forms inputs
     public $name, $URL, $price, $salePrice, $url_photos, $description, 
-            $categories, $stock, $sizes;
+            $categories, $stock = 0, $sizes;
     
     protected $rules = [
         'name' => 'required|min:6',
         'price' => 'required|numeric',
         'description' => 'required|min:10',
-        'salePrice' => 'numeric',
         'stock' => 'int',
     ];
 
@@ -150,6 +150,113 @@ class EditMyProducts extends Component
             'title' => $title,
             'type'=> $type, 
         ]);
+    }
+
+    public function addProperties (int $idProd)
+    {
+        $categories = $this->categories;
+
+        if (!empty($categories)) {
+            
+            $currentProperties = ProductProperties::where('product_id', $idProd)->get();
+
+            // Agrega las categorias
+            foreach ($categories as $cat) {
+
+                $exist = FALSE;
+                
+                // Verifica que no este
+                if (!empty($currentProperties)) {
+                    
+                    foreach ($currentProperties as $cProp) {
+                        
+                        if ($cProp->property_id == $cat->id) {
+                            $exist = TRUE;
+                        }
+                    }
+                }
+
+                if (!$exist) {
+
+                    $newCat = new ProductProperties;
+                    $newCat->product_id = $idProd;
+                    $newCat->property_id = $cat->id;
+                    $newCat->save();
+                }
+            }
+
+            // Elimina las categorias que ya no estan
+            foreach ($currentProperties as $cProp) {
+                
+                $propId = $cProp->property_id;
+                $stillExist = FALSE;
+
+                foreach ($categories as $cat) {
+                    
+                    if ($cat->id == $cProp->property_id) {
+                        $stillExist = TRUE;
+                    }
+                }
+
+                if (!$stillExist) {
+                    
+                    ProductProperties::where('product_id', $idProd)
+                        ->where('property_id', $cProp->property_id)
+                        ->delete();
+                }
+            }
+        }
+    }
+
+    public function editProduct ()
+    {
+        $this->validate();
+        $isEdit = !is_null($this->product) ? TRUE : FALSE;
+
+        if ($isEdit) {
+            $product = Product::where('id', $this->product->id)->first();
+        }
+        else {
+            $product = new Product();
+        }
+
+        $product->name = $this->name;
+        $product->slug = $this->URL;
+        $product->description = $this->description;
+        $product->price = $this->price;
+
+        // Precio oferta
+        if (!empty($this->salePrice)) {
+            
+            // Verifica que el precio de oferta sea menor al normal
+            if ($this->salePrice < $this->price) {
+                $product->sale_price = $this->salePrice;
+            }
+            else {
+                $this->toaster('El precio de oferta es mayor o igual al del precio normal', 'error');
+                return;
+            }
+        }
+
+        $product->stock = $this->stock;
+        $currentData = !is_null($product->data) ? json_decode($product->data) : new StdClass();
+
+        // Talles
+        if ($this->hasSizes) {
+            $currentData->sizes = $this->sizes;
+        }
+        elseif ($isEdit && !$this->hasSizes && isset($currentData->sizes)){
+            unset($currentData->sizes);
+        }
+
+        if (!empty($currentData)) {
+            $product->data = json_encode($currentData);
+        }
+        
+        $product->save();
+
+        $this->addProperties($product->id);
+        $this->toaster("Producto editado", "success");
     }
 
     public function mount (string $slug = NULL)
