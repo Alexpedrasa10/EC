@@ -39,7 +39,10 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mt-5 mx-7">
             <div class="grid grid-cols-1">
-                <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">Stock {{$this->hasSizes}}</label>
+                <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">Stock</label>
+                <span x-data="{ 'sizes' : @entangle('hasSizes') }" @click="sizes = !sizes" class="text-xs text-gray-500 cursor-pointer">
+                    {{ $this->hasSizes ? 'Haz click aquí para eliminar los talles' : 'Haz click aquí para agregar talles'}}
+                </span>
                 @if (!$this->hasSizes)
                     @error('stock') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     <input wire:model="stock" class="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" type="numer" placeholder="Ingrese stock del producto" />

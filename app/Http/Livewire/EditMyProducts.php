@@ -208,6 +208,31 @@ class EditMyProducts extends Component
         }
     }
 
+    public function checkStock ()
+    {
+        $ok = FALSE;
+
+        if ($this->hasSizes) {
+            
+            $sizes = json_decode(json_encode($this->sizes));
+            $qSizesTotal = 0;
+            $stock = $this->stock;
+
+            foreach ($sizes as $s) {
+                $qSizesTotal += $s->quantity;
+            }
+
+            if ($qSizesTotal == $stock) {
+                $ok = TRUE;
+            }
+            else {
+                $this->stock = $qSizesTotal;
+            }
+        }
+
+        return $ok;
+    }
+
     public function editProduct ()
     {
         $this->validate();
@@ -238,19 +263,26 @@ class EditMyProducts extends Component
             }
         }
 
-        $product->stock = $this->stock;
-        $currentData = !is_null($product->data) ? json_decode($product->data) : new StdClass();
+        if ( $this->checkStock() ) {
+            
+            $product->stock = $this->stock;
+            $currentData = !is_null($product->data) ? json_decode($product->data) : new StdClass();
 
-        // Talles
-        if ($this->hasSizes) {
-            $currentData->sizes = $this->sizes;
-        }
-        elseif ($isEdit && !$this->hasSizes && isset($currentData->sizes)){
-            unset($currentData->sizes);
-        }
+            // Talles
+            if ($this->hasSizes) {
+                $currentData->sizes = $this->sizes;
+            }
+            elseif ($isEdit && !$this->hasSizes && isset($currentData->sizes)){
+                unset($currentData->sizes);
+            }
 
-        if (!empty($currentData)) {
-            $product->data = json_encode($currentData);
+            if (!empty($currentData)) {
+                $product->data = json_encode($currentData);
+            }
+        }
+        else {
+            $this->toaster('La suma de la cantidad de los talles no coincide con la cantidad del stock. Ya se corrigió automáticamente.','error');
+            return;
         }
         
         $product->save();
