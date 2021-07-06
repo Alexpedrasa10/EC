@@ -15,13 +15,14 @@ class Producto extends Component
 {
     public $product, $current_quantity, $current_size, $price;
     
-    public $user, $cart, $cartProduct;
+    public $user, $cart, $cartProduct, $productsRelations;
     
     public function mount($slug)
     {
         $this->product = Product::with('properties')->where('slug', $slug)->first();
         $this->price = !is_null($this->product->sale_price) ? $this->product->sale_price : $this->product->price;
         $this->current_quantity = 1;
+        $this->productsRelations = $this->getProductsRelations();
 
         if ( Auth::user() ) {
 
@@ -35,6 +36,45 @@ class Producto extends Component
                     ->first();
             }
         }
+    }
+
+    public function getProductsRelations ()
+    {
+        $data = json_decode($this->product->data);
+        $res = array();
+
+        if ( isset($data->relations) ) {
+            
+            $relations = $data->relations;
+
+            foreach ($relations as $prod) {
+
+                $productRelationated = Product::where('id', $prod->product_id)->first();
+                
+                if (!empty($relations)) {
+                    array_push($res, $productRelationated);
+                }
+            }
+        }
+        else {
+            
+            // Hay q mejorar esto
+            $productRelationated = Product::with('properties')
+                ->whereHas('properties', function ($query) {
+                    return $query->where('id', '=', 3);
+                })
+                ->limit(5)
+                ->get();
+
+            if (!empty($productRelationated)) {
+                
+                foreach ($productRelationated as $prod) {
+                    array_push($res, $prod);
+                }
+            }
+        }
+
+        return $res;
     }
 
     public function checkQuantity()
