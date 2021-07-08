@@ -11,14 +11,14 @@ use stdClass;
 class EditMyProducts extends Component
 {
 
-    public $product, $properties, $hasSizes, $newSize = FALSE;
+    public $product, $properties, $products, $hasSizes, $newSize = FALSE;
 
     // Forms sizes
     public $size, $qSize;
 
     // Forms inputs
     public $name, $URL, $price, $salePrice, $url_photos, $description, 
-            $categories, $stock = 0, $sizes;
+            $categories, $stock = 0, $sizes, $productsRelationed;
     
     protected $rules = [
         'name' => 'required|min:6',
@@ -52,6 +52,24 @@ class EditMyProducts extends Component
         }
     }
 
+    public function addProduct (int $id)
+    {
+        $product = Product::select('id','name', 'slug')->where('id', $id)->first();
+        $exist = FALSE;
+
+        foreach ($this->productsRelationed as $idx => $prod) {
+            
+            if ($prod['id'] == $id) {
+               $exist = TRUE;
+               array_splice($this->productsRelationed, $idx, 1);
+            }
+        }
+
+        if (!$exist) {
+            array_push($this->productsRelationed, $product);
+        }
+    }
+
     public function incrementSize ($size)
     {
         $arr = json_decode(json_encode($this->sizes));
@@ -71,7 +89,7 @@ class EditMyProducts extends Component
         $arr = json_decode(json_encode($this->sizes));
         foreach ($arr as $s) {
             
-            if ($s->size == $size) {
+            if ($s->size == $size && $s->quantity > 0) {
                 $s->quantity = intval($s->quantity) - 1;
                 $this->stock -= 1;
             }
@@ -291,9 +309,30 @@ class EditMyProducts extends Component
         $this->toaster("Producto editado", "success");
     }
 
+    public function getProductsRelationated ()
+    {
+        $data = json_decode($this->product->data);
+        $res = array();
+
+        if (isset($data->relations)) {
+            
+            foreach ($data->relations as $prod) {
+                
+                $product = Product::select('id','name','slug')->where('id', $prod->product_id)->first();
+
+                if (!empty($product)) {
+                    array_push($res, $product);
+                }
+            }
+        }
+
+        return $res;
+    }
+
     public function mount (string $slug = NULL)
     {
         $this->properties = Property::all();
+        $this->products = Product::all();
 
         if (!is_null($slug)) {
 
@@ -308,6 +347,7 @@ class EditMyProducts extends Component
             $this->url_photos = $this->product->url_photos;
             $this->description = $this->product->description;
             $this->categories = $this->product->properties()->get();
+            $this->productsRelationed = $this->getProductsRelationated();
         }
     }
 

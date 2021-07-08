@@ -16,7 +16,7 @@
                 <input wire:model="URL" disabled class="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" type="text" placeholder="Input 2" />
             </div>
         </div>
-    
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mt-5 mx-7">
             <div class="grid grid-cols-1">
                 <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">Precio</label>
@@ -35,6 +35,94 @@
             <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">Descripción</label>
             @error('description') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             <textarea wire:model="description" class="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" type="textarea" placeholder="Ingresar descripción"></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 mt-4 mx-7">
+            <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">Productos relacionados</label>
+            <select x-cloak id="selectProducts">
+                @foreach ($products as $prod)
+                    <option id="{{$prod->id}}" wire:click="addProduct({{$prod->id}})" value="{{$prod->id}}">{{$prod->name}}</option>
+                @endforeach
+            </select>
+
+            <select id="selectedProducts" style="display: none">
+                @if (!empty($productsRelationed))
+                    @foreach (json_decode(json_encode($productsRelationed)) as $prod)
+                        <option value="{{$prod->id}}">{{$prod->name}}</option>
+                    @endforeach
+                @endif
+            </select>
+            
+            <div x-data="dropdownProducts()" x-init="loadOptions()" class="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent">
+                <input name="values" type="hidden" x-bind:value="selectedValues()">
+                <div class="inline-block relative w-full">
+                    <div class="flex flex-col items-center relative">
+                        <div x-on:click="open" class="w-full">
+                            <div class="my-2 p-1 flex border border-gray-50 bg-white rounded">
+                                <div class="flex flex-auto flex-wrap">
+                                    <template x-for="(option,index) in selected" :key="options[option].value">
+                                        <div class="flex justify-center items-center m-1 font-medium py-1 px-1 bg-white rounded border">
+                                            <div class="text-xs font-normal leading-none max-w-full flex-initial x-model=" options[option] x-text="options[option].text"></div>
+                                            <div class="flex flex-auto flex-row-reverse">
+                                                <div x-on:click.stop="remove(index,option)">
+                                                    <svg class="fill-current h-4 w-4 " role="button" viewBox="0 0 20 20">
+                                                    <path d="M14.348,14.849c-0.469,0.469-1.229,0.469-1.697,0L10,11.819l-2.651,3.029c-0.469,0.469-1.229,0.469-1.697,0
+                                                            c-0.469-0.469-0.469-1.229,0-1.697l2.758-3.15L5.651,6.849c-0.469-0.469-0.469-1.228,0-1.697s1.228-0.469,1.697,0L10,8.183
+                                                            l2.651-3.031c0.469-0.469,1.228-0.469,1.697,0s0.469,1.229,0,1.697l-2.758,3.152l2.758,3.15
+                                                            C14.817,13.62,14.817,14.38,14.348,14.849z" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <div x-show="selected.length == 0" class="flex-1">
+                                        <input  x-bind:value="selectedValues()">
+                                    </div>
+                                </div>
+                                <div class="text-gray-200 w-8 py-1 pl-2 pr-1 border-l flex items-center border-gray-200 svelte-1l8159u">
+                        
+                                    <button type="button" x-show="isOpen() === true" x-on:click="open" class="cursor-pointer w-6 h-6 text-gray-600 outline-none focus:outline-none">
+                                        <svg version="1.1" class="fill-current h-4 w-4" viewBox="0 0 20 20">
+                                            <path d="M17.418,6.109c0.272-0.268,0.709-0.268,0.979,0s0.271,0.701,0,0.969l-7.908,7.83
+                                                c-0.27,0.268-0.707,0.268-0.979,0l-7.908-7.83c-0.27-0.268-0.27-0.701,0-0.969c0.271-0.268,0.709-0.268,0.979,0L10,13.25
+                                                L17.418,6.109z" />
+                                        </svg>                                    </button>
+                                    <button type="button" x-show="isOpen() === false" @click="close" class="cursor-pointer w-6 h-6 text-gray-600 outline-none focus:outline-none">
+                                        <svg class="fill-current h-4 w-4" viewBox="0 0 20 20">
+                                            <path d="M2.582,13.891c-0.272,0.268-0.709,0.268-0.979,0s-0.271-0.701,0-0.969l7.908-7.83
+                                                c0.27-0.268,0.707-0.268,0.979,0l7.908,7.83c0.27,0.268,0.27,0.701,0,0.969c-0.271,0.268-0.709,0.268-0.978,0L10,6.75L2.582,13.891z
+                                                " />
+                                        </svg>
+                                    </button>
+
+                                </div>
+                        </div>
+                    </div>
+                    <div class="w-full px-4">
+                        <div x-show.transition.origin.top="isOpen()" class="absolute shadow top-100 bg-white z-40 w-full left-0 rounded max-h-select" x-on:click.away="close">
+                            <div class="flex flex-col w-full overflow-y-auto h-64">
+                                <template x-for="(option,index) in options" :key="option" class="overflow-auto">
+                                    <div class="cursor-pointer w-full border-gray-100 rounded-t border-b hover:bg-gray-100" @click="select(index,$event)">
+                                        <div class="flex w-full items-center p-2 pl-2 border-transparent border-l-2 relative">
+                                            <div class="w-full items-center flex justify-between">
+                                                <div class="mx-2 leading-6" x-model="option" x-text="option.text"></div>
+                                                    <div x-show="option.selected">
+                                                        <svg class="svg-icon" viewBox="0 0 20 20">
+                                                            <path fill="none" d="M7.197,16.963H7.195c-0.204,0-0.399-0.083-0.544-0.227l-6.039-6.082c-0.3-0.302-0.297-0.788,0.003-1.087
+                                                                C0.919,9.266,1.404,9.269,1.702,9.57l5.495,5.536L18.221,4.083c0.301-0.301,0.787-0.301,1.087,0c0.301,0.3,0.301,0.787,0,1.087
+                                                                L7.741,16.738C7.596,16.882,7.401,16.963,7.197,16.963z"></path>
+                                                        </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mt-5 mx-7">
@@ -87,13 +175,13 @@
 
         <div class="grid grid-cols-1 mt-4 mx-7">
             <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">Categorias</label>
-            <select x-cloak id="select">
+            <select x-cloak id="selectProperties">
                 @foreach ($properties as $prop)
                     <option id="{{str_replace(" ", "", $prop->name)}}" wire:click="addProperty({{$prop->id}})" value="{{$prop->id}}">{{$prop->name}}</option>
                 @endforeach
             </select>
 
-            <select id="selected" style="display: none">
+            <select id="selectedProperties" style="display: none">
                 @if (!empty($categories))
                     @foreach ($categories as $prop)
                         <option value="{{$prop->id}}">{{$prop->name}}</option>
@@ -101,7 +189,7 @@
                 @endif
             </select>
             
-            <div x-data="dropdown()" x-init="loadOptions()" class="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent">
+            <div x-data="dropdownProperties()" x-init="loadOptions()" class="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent">
                 <input name="values" type="hidden" x-bind:value="selectedValues()">
                 <div class="inline-block relative w-full">
                     <div class="flex flex-col items-center relative">
@@ -221,7 +309,7 @@
 
 <script>
 
-function dropdown() {
+function dropdownProperties() {
     return {
         options: [],
         selected: [],
@@ -231,7 +319,7 @@ function dropdown() {
         isOpen() { return this.show === true },
         select(index, event = null) {
 
-            let optionsSelected = document.getElementById('select').options;
+            let optionsSelected = document.getElementById('selectProperties').options;
 
             if (!this.options[index].selected) {
 
@@ -263,7 +351,7 @@ function dropdown() {
             this.options[option].selected = false;
             this.selected.splice(index, 1);
 
-            let optionsSelected = document.getElementById('select').options;
+            let optionsSelected = document.getElementById('selectProperties').options;
 
             for (let i = 0; i < optionsSelected.length; i++) {
 
@@ -275,15 +363,100 @@ function dropdown() {
         },
         loadOptions() {
 
-            const options = document.getElementById('select').options, 
-                optionsSelected = document.getElementById('selected').options;
+            const options = document.getElementById('selectProperties').options, 
+                optionsSelected = document.getElementById('selectedProperties').options;
 
             for (let i = 0; i < options.length; i++) {
 
                 this.options.push({
                     value: options[i].value,
                     text: options[i].innerText,
-                    selected: options[i].getAttribute('selected') != null ? options[i].getAttribute('selected') : false
+                    selected: options[i].getAttribute('selectedProperties') != null ? options[i].getAttribute('selectedProperties') : false
+                });
+
+                for (let j = 0; j < optionsSelected.length; j++) {
+                    
+                    if (options[i].value == optionsSelected[j].value) {
+
+                        let index = this.options.length - 1;
+                        this.select(index, null);
+                    }
+                }
+            }
+        },
+        selectedValues(){
+            return this.selected.map((option)=>{
+                return this.options[option].value;
+            })
+        }
+    }
+}
+
+function dropdownProducts() {
+    return {
+        options: [],
+        selected: [],
+        show: false,
+        open() { this.show = true },
+        close() { this.show = false },
+        isOpen() { return this.show === true },
+        select(index, event = null) {
+
+            let optionsSelected = document.getElementById('selectProducts').options;
+
+            if (!this.options[index].selected) {
+
+                this.options[index].selected = true;
+
+                if (event) {
+                    this.options[index].element = event.target;
+                }
+        
+                this.selected.push(index);
+
+            } else {
+                this.selected.splice(this.selected.lastIndexOf(index), 1);
+                this.options[index].selected = false
+            }
+
+            // Updatea en componente de livewire
+            if (event) {
+                for (let i = 0; i < optionsSelected.length; i++) {
+
+                    if (this.options[index].value == optionsSelected[i].value) {
+                        console.log(optionsSelected[i])
+                        let opt = document.getElementById(optionsSelected[i].id).click();
+                    }                    
+                }
+            }
+        },
+        remove(index, option) {
+
+            this.options[option].selected = false;
+            this.selected.splice(index, 1);
+
+            let optionsSelected = document.getElementById('selectProducts').options;
+
+            for (let i = 0; i < optionsSelected.length; i++) {
+
+                if (this.options[option].value == optionsSelected[i].value) {
+                    let opt = document.getElementById(optionsSelected[i].id).click();
+                    console.log(optionsSelected[i]);
+                }                    
+            }
+
+        },
+        loadOptions() {
+
+            const options = document.getElementById('selectProducts').options, 
+                optionsSelected = document.getElementById('selectedProducts').options;
+
+            for (let i = 0; i < options.length; i++) {
+
+                this.options.push({
+                    value: options[i].value,
+                    text: options[i].innerText,
+                    selected: options[i].getAttribute('selectedProducts') != null ? options[i].getAttribute('selectedProducts') : false
                 });
 
                 for (let j = 0; j < optionsSelected.length; j++) {
