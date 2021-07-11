@@ -251,6 +251,21 @@ class EditMyProducts extends Component
         return $ok;
     }
 
+    public function getArayProducts ()
+    {
+        $products = $this->productsRelationed;
+        $res = array();
+
+        foreach ($products as $prod) {
+            
+            $d = new stdClass();
+            $d->product_id = $prod['id'];
+            array_push($res, $d);
+        }
+
+        return $res;
+    }
+
     public function editProduct ()
     {
         $this->validate();
@@ -294,6 +309,12 @@ class EditMyProducts extends Component
                 unset($currentData->sizes);
             }
 
+            // Productos relacionados
+            if (!empty($this->productsRelationed)) {
+                $currentData->relations = $this->getArayProducts();
+            }
+
+            // Guarda el data
             if (!empty($currentData)) {
                 $product->data = json_encode($currentData);
             }
