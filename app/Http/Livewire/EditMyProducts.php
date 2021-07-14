@@ -7,9 +7,15 @@ use App\Models\Product;
 use App\Models\Property;
 use App\Models\ProductProperties;
 use stdClass;
+use Livewire\WithFileUploads;
+use App\Models\PhotoProduct;
 
 class EditMyProducts extends Component
 {
+
+    // Upload product img
+    use WithFileUploads;
+    public $photos = [];
 
     public $product, $properties, $products, $hasSizes, $newSize = FALSE;
 
@@ -326,6 +332,17 @@ class EditMyProducts extends Component
         
         $product->save();
 
+        // Almacena las fotos
+        foreach ($this->photos as $photo) {
+            
+            $photo->store('photos_img');
+
+            PhotoProduct::create([
+                'product_id' => $product->id,
+                'filename' => $photo->hashName(),
+            ]);
+        }
+
         $this->addProperties($product->id);
         $this->toaster("Producto editado", "success");
     }
@@ -357,7 +374,7 @@ class EditMyProducts extends Component
 
         if (!is_null($slug)) {
 
-            $this->product = Product::with('properties')->where('slug', $slug)->first();
+            $this->product = Product::with('properties', 'photos')->where('slug', $slug)->first();
             $this->name = $this->product->name;
             $this->URL = $this->product->slug;
             $this->price = $this->product->price;

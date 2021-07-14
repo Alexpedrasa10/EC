@@ -37,7 +37,7 @@ Route::get('/producto/{slug}', function ($slug) {
     ]);
 })->name('producto');
 
-Route::get('/edit-product/{slug?}', function ($slug = NULL) {
+Route::middleware(['auth:sanctum', 'verified'])->get('/edit-product/{slug?}', function ($slug = NULL) {
     return view('edit-product', [ 
         'slug' => $slug
     ]);
