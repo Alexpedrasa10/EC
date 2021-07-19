@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Laravel\Socialite\Facades\Socialite;
+use App\Models\User;
+use Carbon\Carbon;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -46,3 +48,24 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/edit-product/{slug?}', fu
 Route::get('/my-products', function () {
     return view('myProducts');
 })->name('myProducts');
+
+
+// Login with other social networks 
+
+Route::get('/auth/{driver}', function ($driver) {
+    return Socialite::driver($driver)->redirect();
+})->name('ashe');
+
+Route::get('/auth/{driver}/callback', function ($driver) {
+
+    $user = Socialite::driver($driver)->user();
+
+    $auth = User::firstOrCreate([
+        'name' => $user->getName(),
+        'email' => !is_null($user->getEmail()) ? $user->getEmail() : 'queculiau@gmail.com',
+        'current_team_id'=> 2
+    ]);
+
+    Auth::login($auth);
+    return view('dashboard');
+});

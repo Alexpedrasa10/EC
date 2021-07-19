@@ -17,7 +17,7 @@
 
             <div>
                 <x-jet-label for="email" value="{{ __('Email') }}" />
-                <x-jet-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
+                <x-jet-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />
             </div>
 
             <div class="mt-4">
@@ -37,6 +37,16 @@
                     <span class="text-center">
                         {{ __('Log in') }}
                     </span>
+                </x-jet-button>
+            </div>
+
+            <br>
+
+            <div>
+                <x-jet-button class="mt-5 inline-block w-full rounded-sm shadow-lg bg-blue-600 text-center">
+                    <a href="{{ route('ashe', ['driver' => "facebook"]) }}" class="text-center">
+                        {{ __('Ingresar con Facebook') }}
+                    </a>
                 </x-jet-button>
             </div>
 

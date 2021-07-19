@@ -23,7 +23,7 @@ class Producto extends Component
         $this->price = !is_null($this->product->sale_price) ? $this->product->sale_price : $this->product->price;
         $this->current_quantity = 1;
         $this->productsRelations = $this->getProductsRelations();
-
+        dump( Auth::user() );
         if ( Auth::user() ) {
 
             $this->user = User::where('id', Auth::user()->id)->first();
