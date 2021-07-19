@@ -88,7 +88,15 @@
                     </x-jet-dropdown>
                 </div>
             </div>
-
+            @else
+            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                <x-jet-button class="my-3 inline-block w-full rounded-sm shadow-lg bg-blue-600 hover:bg-blue-800 text-center">
+                    <a href="{{ route('ashe', ['driver' => "facebook"]) }}" class="text-center">
+                        {{ __('Ingresar con Facebook') }}
+                    </a>
+                </x-jet-button>
+            </div>
+            @endauth
             <!-- Hamburger -->
             <div class="-mr-2 flex items-center sm:hidden">
                 <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition">
@@ -98,7 +106,7 @@
                     </svg>
                 </button>
             </div>
-            @endauth
+            
             
         </div>
     </div>
@@ -115,8 +123,6 @@
         </div>
 
         @auth
-            
-        
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="flex items-center px-4">
