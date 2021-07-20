@@ -90,6 +90,11 @@
             </div>
             @else
             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                <x-jet-button class="my-3 inline-block transition ease-in duration-200 rounded-sm shadow-lg bg-red-600 hover:bg-red-800 text-center">
+                    <a href="{{ route('ashe', ['driver' => "google"]) }}" class="text-center">
+                        {{ __('Ingresar con Google') }}
+                    </a>
+                </x-jet-button>
                 <x-jet-button class="my-3 inline-block transition ease-in duration-200 rounded-sm shadow-lg bg-blue-600 hover:bg-blue-800 text-center">
                     <a href="{{ route('ashe', ['driver' => "facebook"]) }}" class="text-center">
                         {{ __('Ingresar con Facebook') }}
