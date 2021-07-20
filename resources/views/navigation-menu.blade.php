@@ -16,11 +16,11 @@
                         {{ __('Dashboard') }}
                     </x-jet-nav-link>
 
-                    <x-jet-nav-link href="{{ route('productos') }}/MEN" :active="request()->is('productos')">
+                    <x-jet-nav-link href="{{ route('MEN') }}" :active="request()->is('MEN')">
                         {{ __('Hombre') }}
                     </x-jet-nav-link>
 
-                    <x-jet-nav-link href="{{ route('productos') }}/WOMEN" :active="request()->routeIs('productos')">
+                    <x-jet-nav-link href="{{ route('WOMEN') }}" :active="request()->routeIs('WOMEN')">
                         {{ __('Mujer') }}
                     </x-jet-nav-link>
                 </div>
