@@ -10,9 +10,7 @@ class Pay
     public function createOrder($preOrder)
     {
         $allowedPaymentMethods = config('payment-methods.enabled');
-    
-        // $order = $this->setUpOrder($preOrder);
-    
+        
         // $this->notify($order);
     
         $url = $this->generatePaymentGateway(
@@ -28,6 +26,22 @@ class Pay
     {
         $method = new Mercadopago();
         return $method->setupPaymentAndGetRedirectURL($order);
+    }
+
+    public static function paySucess ($data)
+    {
+        // Actualiza el estado del carrito
+        $cart = UserCart::where('id', $data->external_reference)->first();
+        $cart->buy = TRUE;
+        $cart->save();
+
+        // Resta el stock
+        //$this->updateStock($cart);
+
+        // Guardar datos proveniente del checkout
+        
+
+        return view('dashboard');
     }
 
 

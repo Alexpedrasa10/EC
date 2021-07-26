@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Auth;
 class Mercadopago
 {
 
+  protected $user;
+
   public function __construct()
   {
 
@@ -22,36 +24,36 @@ class Mercadopago
       config("payment-methods.mercadopago.secret")
     );
 
-  }
+    $this->user = Auth::user();
 
+  }
     
- public function setupPaymentAndGetRedirectURL($order): string
+  public function setupPaymentAndGetRedirectURL($order): string
   {
-     # Create a preference object
-     $preference = new Preference();
+
+    # Create a preference object
+    $preference = new Preference();
 
     # Add items
     $preference->items = $this->getItems($order);
 
-
     # Create a payer object
-    //$preference->payer = $this->getPayer();
+    $preference->payer = $this->getPayer();
 
-    //   # Save External Reference
-    //   $preference->external_reference = $order->id;
+    //# Save External Reference
+    $preference->external_reference = $this->user->cart()->first()->id;
 
-      $preference->back_urls = [
-        "success" => route('dashboard'),
-        "pending" => route('dashboard'),
-        "failure" => route('dashboard'),
-      ];
+    $preference->back_urls = [
+      "success" => route('success'),
+      "pending" => route('dashboard'),
+      "failure" => route('dashboard'),
+    ];
         
-     $preference->auto_return = "approved";
-    //   $preference->notification_url = route('dashboard');
-    //   //dump($preference);
+    $preference->auto_return = "approved";
+    //$preference->notification_url = route('dashboard');
 
-      # Save and POST preference
-      $preference->save();
+    # Save and POST preference
+    $preference->save();
 
     if (config('payment-methods.use_sandbox')) {
       return $preference->sandbox_init_point;
@@ -83,8 +85,8 @@ class Mercadopago
   {
 
     $payer = new Payer();
-    $payer->name = Auth::user()->name;
-    $payer->email = Auth::user()->email;
+    $payer->name = $this->user->name;
+    $payer->email = $this->user->email;
     
     return $payer;
   }
