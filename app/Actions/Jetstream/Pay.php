@@ -3,6 +3,9 @@
 namespace App\Actions\Jetstream;
 
 use \App\PaymentMethods\Mercadopago;
+use App\Models\UserCart;
+use App\Models\Order;
+use App\Models\Product;
 
 class Pay
 {
@@ -36,12 +39,53 @@ class Pay
         $cart->save();
 
         // Resta el stock
-        //$this->updateStock($cart);
+        self::updateStock($cart);
 
         // Guardar datos proveniente del checkout
+        Order::create([
+            'method_id' => 1, // Luego hacer dinamico con un helper
+            'user_cart_id' => $cart->id,
+            'status_id' => 2,
+            'payment_id' => $data->payment_id
+        ]);
         
-
         return view('dashboard');
+    }
+
+    public static function updateStock (UserCart $cart)
+    {
+        $products = $cart->products()->get();
+
+        foreach ($products as $prod) {
+            
+            $qDiscount = $prod->quantity;
+            $data = json_decode($prod->data);
+
+            $product = Product::where('id', $prod->product_id)->first();
+            $stockSizes = json_decode($product->data);
+
+            $product->stock -= $qDiscount;
+
+            // Updatea stock de talles
+            if (!empty($stockSizes) && isset($stockSizes->sizes)) {
+                
+                foreach ($data as $d) {
+                    
+                    $qDis = $d->quantity;
+                    $sDis = $d->size;
+
+                    foreach ($stockSizes->sizes as $size) {
+                        
+                        if ($size->size == $sDis) {
+                            $size->quantity -= $qDis;
+                        }
+                    }
+                }
+            }
+
+            $product->data = json_encode($stockSizes);
+            $product->save();
+        }
     }
 
 
