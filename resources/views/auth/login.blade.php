@@ -33,7 +33,7 @@
             </div>
 
             <div >
-                <x-jet-button class="mt-5 inline-block w-full rounded-lg shadow-lg text-center">
+                <x-jet-button class="mt-5 inline-block bg-indigo-600 hover:bg-indigo-800 w-full rounded-lg shadow-lg text-center">
                     <span class="text-center">
                         {{ __('Log in') }}
                     </span>

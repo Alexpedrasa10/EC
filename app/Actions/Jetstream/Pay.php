@@ -87,6 +87,4 @@ class Pay
             $product->save();
         }
     }
-
-
 }
