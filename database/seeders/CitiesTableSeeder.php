@@ -15,7 +15,6 @@ class CitiesTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('cities')->delete();
 
         $cities= [
             ['province_id'=>2, 'name'=>'CIUDAD DE BUENOS AIRES', 'department'=>NULL, 'latitude'=>-34.6132917290185, 'longitude'=>-58.3887517365082],

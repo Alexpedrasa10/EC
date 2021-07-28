@@ -15,8 +15,6 @@ class ProvincesTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('cities')->delete();
-        DB::table('provinces')->delete();
 
         $provinces = [
             ['id' => 2, 'cod' => 'CABA', 'name' => 'CIUDAD AUTÓNOMA DE BUENOS AIRES'],
