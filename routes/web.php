@@ -60,6 +60,10 @@ Route::get('/my-products', function () {
     return view('myProducts');
 })->name('myProducts');
 
+Route::get('/checkout-payment', function () {
+    return view('checkout-payment');
+})->name('checkout');
+
 
 // Login with other social networks 
 

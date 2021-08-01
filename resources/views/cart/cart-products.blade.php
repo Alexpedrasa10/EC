@@ -1,6 +1,8 @@
 <div class="container">
-  <h2 class="text-3xl font-bold dark:text-black">Mi carrito</h2>
-  <p class="text-base font-light text-gray-600">Estos son todos los productos en tu carrito de compras.</p>
+  <h2 class="text-2xl font-bold dark:text-black">Mi carrito de compras</h2>
+  <p class="text-sm font-light text-gray-600">Estos son todos los productos en tu carrito de compras.</p>
+  
+  <!-- Tabla -->
   <div class="flex flex-col mt-5">
     <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
       <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -44,7 +46,7 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowraps">              
                   @foreach ( $this->getSizes($item->data) as $order)
-                  <div class="flex items-center py-2">
+                      <div class="flex items-center py-2">
                         <button wire:click="decrement( {{$item->id}}, '{{$order->size}}' )" class="hover:text-black text-gray-500 focus:outline-none focus:text-gray-600" title="Quitar">
                           <svg class="h-5 w-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </button>
@@ -73,27 +75,30 @@
         </div>
       </div>
     </div>
-
-    <div class="flex justify-end py-2">
-      <div class="container mt-5 float-right">
-        <h1 class="antialiased text-1xl font-bold uppercase text-right">Total a pagar : 
-          <br>
-          <p class="text-black text-3xl lining-nums slashed-zero">
-            ${{$cart->amount}}
-          </p>
-        </h1>
-        <div class="float-right">
-          <button class="w-full my-2 flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm text-gray-50 font-black bg-blue-600 hover:bg-blue-800" wire:click="paymentMercadopago">
-            Procesar pago
-          </button>
-          <button class="w-full my-2 flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm text-gray-50 font-black bg-red-600 hover:bg-red-800" wire:click="cancelCart">
-            Cancelar compra
-          </button>
-        </div>
-      </div>
-    </div>
-
   </div>
+
+  <div class="py-2">
+    <div class="container mt-5">
+      <h1 class="antialiased text-1xl font-bold uppercase ">Total a pagar : 
+        <br>
+        <p class="text-green-700 text-2xl font-bold lining-nums slashed-zero">
+          ${{$cart->amount}}
+        </p>
+      </h1>
+    </div>
+  </div>
+
+  <div class="container my-5 text-center">
+    <x-jet-button  class=" duration-200 bg-blue-600 hover:bg-blue-800 ease-in-out">
+        <a href="{{ route('checkout') }}">Terminar compra</a>
+    </x-jet-button>
+    <x-jet-button wire:click="cancelCart" class=" duration-200 bg-red-600 hover:bg-red-800 ease-in-out">
+        Cancelar compra
+    </x-jet-button>
+  </div>
+
+  <!-- Envio -->
+  {{--  --}}
 
   <!--Modal para confirmar la eliminación de un producto-->
   @if ($confirmDeleteProduct)
