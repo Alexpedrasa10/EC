@@ -18,7 +18,7 @@ class CreateUserAdressesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('province_id');
-            $table->unsignedBigInteger('city_id');
+            $table->unsignedBigInteger('city_id')->nullable();
             $table->decimal('zip_code');
             $table->longText('adress');
             $table->jsonb('data')->nullable();
