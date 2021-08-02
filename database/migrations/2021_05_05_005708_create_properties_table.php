@@ -19,6 +19,7 @@ class CreatePropertiesTable extends Migration
             $table->string('code');
             $table->string('name');
             $table->boolean('for_products')->default(true);
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }
