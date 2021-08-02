@@ -2,10 +2,11 @@
 
 namespace App\Actions\Jetstream;
 
-use \App\PaymentMethods\Mercadopago;
+use App\PaymentMethods\Mercadopago;
 use App\Models\UserCart;
 use App\Models\Order;
 use App\Models\Product;
+use Helper;
 
 class Pay
 {
@@ -13,13 +14,10 @@ class Pay
     public function createOrder($preOrder)
     {
         $allowedPaymentMethods = config('payment-methods.enabled');
-        
+
         // $this->notify($order);
     
-        $url = $this->generatePaymentGateway(
-            //$request->get('payment_method'), 
-            $preOrder
-        );
+        $url = $this->generatePaymentGateway($preOrder);
     
         return redirect()->to($url);
     }
@@ -27,8 +25,13 @@ class Pay
 
     protected function generatePaymentGateway($order) : string
     {
-        $method = new Mercadopago();
-        return $method->setupPaymentAndGetRedirectURL($order);
+        $methodName = Helper::getPropertiesById($order->method_id)->name;
+        $method = Helper::cleanNamespace("App\PaymentMethods\{$methodName}");
+
+        if (class_exists($method)) {
+            $generatePayment = new $method;
+            return $generatePayment->setupPaymentAndGetRedirectURL();
+        }
     }
 
     public static function paySucess ($data)
@@ -41,13 +44,12 @@ class Pay
         // Resta el stock
         self::updateStock($cart);
 
-        // Guardar datos proveniente del checkout
-        Order::create([
-            'method_id' => 1, // Luego hacer dinamico con un helper
-            'user_cart_id' => $cart->id,
-            'status_id' => 2,
-            'payment_id' => $data->payment_id
-        ]);
+        // Actualiza orden
+        $order = $cart->order->first();
+        $order->payment_id = $data->payment_id;
+        $order->save();
+
+        //dump($data); Falta guardar la demas info en el data de la orden
         
         return view('dashboard');
     }

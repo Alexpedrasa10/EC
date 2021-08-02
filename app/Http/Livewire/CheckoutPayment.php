@@ -11,10 +11,13 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use App\Actions\Jetstream\Pay; 
 use stdClass;
+use Helper;
+use App\Models\Order;
+use App\Models\UserAdress;
 
 class CheckoutPayment extends Component
 {   
-    public $user, $cart, $products;
+    public $user, $cart, $products, $paymentMethods;
 
     public $provinces, $cities;
 
@@ -23,7 +26,7 @@ class CheckoutPayment extends Component
 
     protected $rules = [
         'province' => 'required|int',
-        'ciudad' => 'required|int',
+        'city' => 'int',
         'adress' => 'required|min:10',
     ];
 
@@ -38,12 +41,77 @@ class CheckoutPayment extends Component
         $this->cities = City::where('province_id', $provinceId)->get();
     }
 
+    public function pay ($methodId)
+    {
+        $this->validate();
+
+        if ($this->checkAdress()) {
+            
+            // Guardamos la direccion del pedido
+            $newAdress = UserAdress::firstOrCreate([
+                'user_id' => $this->user->id,
+                'province_id' => $this->province,
+                'city_id' => $this->city,
+                'zip_code' => $this->zipCode,
+                'adress' => $this->adress,
+                'references' => $this->references
+            ]);
+
+            $order = $this->cart->order()->first();
+
+            // Crea o actualiza la orden
+            if (!empty($hasOrder)) {
+                
+                $order->method_id = $methodId;
+                $order->adress_id = $newAdress->id;
+                $order->status_id = Helper::getProperties('OSTA', 'PROC', false)->id;
+                $order->save();
+            }
+            else {
+
+                $order = Order::create([
+                    'user_cart_id' => $this->cart->id,
+                    'method_id' => $methodId,
+                    'adress_id' => $newAdress->id,
+                    'status_id' =>  Helper::getProperties('OSTA', 'PROC', false)->id
+                ]);
+            }
+
+            $pay = new Pay();
+            $pay->createOrder($order);
+        }
+    }
+
+    public function checkAdress() :bool
+    {
+        $province = Province::where('id', $this->province)->first();
+        $hasCities = $province->cities()->get();
+        $ok = false;
+
+        if (!empty($hasCities)) {
+            
+            foreach ($hasCities as $city) {
+                
+                if ($city->id == $this->city) {
+                    $ok = true;
+                }
+            }
+        }
+        else {
+            $this->city = null;
+            $ok = true;
+        }
+
+        return $ok;
+    }
+
     public function mount()
     {
         $this->user = User::where('id', Auth::user()->id)->first();
         $this->cart = $this->user->cart()->first();
         $this->products = CartProduct::with('product')->where('user_cart_id', $this->cart->id)->get();
         $this->provinces = Province::all();
+        $this->paymentMethods = Helper::getPaymentMethods();
     }
 
     public function render()

@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Helper;
+use App\Models\UserCart;
 
 class Test extends Command
 {
@@ -40,7 +41,7 @@ class Test extends Command
     {
         dump('nashe');
 
-        $brr = Helper::getProperties('CAT');
-        dump($brr);
+        $brr = UserCart::find(1);
+        dump($brr->order()->first());
     }
 }

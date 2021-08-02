@@ -29,4 +29,9 @@ class UserCart extends Model
         return $this->HasMany(CartProduct::class, 'user_cart_id', 'id');
     }
 
+    public function order()
+    {
+        return $this->hasOne(Order::class);
+    }
+
 }

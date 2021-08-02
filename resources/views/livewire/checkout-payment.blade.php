@@ -22,6 +22,7 @@
                                             </option>
                                         @endforeach
                                     </select>
+                                    @error('province') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                                 </div>
                               </div>
                                   
@@ -46,35 +47,37 @@
                                     <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-city">
                                     Dirección
                                     </label>
-                                    <input wire:model="adress" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-city" type="text" placeholder="Albuquerque">
+                                    <input wire:model="adress" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-city" type="text" placeholder="Ej. Av Las Malvinas 247">
+                                    @error('adress') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0 py-5">
                                     <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-zip">
                                     Código postal
                                     </label>
-                                    <input wire:model="zipCode" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-zip" type="text" placeholder="90210">
+                                    <input wire:model="zipCode" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-zip" type="text" placeholder="Ej. 5000">
+                                    @error('zipCode') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0 py-5">
                                     <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-zip">
                                     Piso <span class="text-xs text-gray-500">(Opcional)</span>
                                     </label>
-                                    <input wire:model="piso" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-zip" type="text" placeholder="90210">
+                                    <input wire:model="piso" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-zip" type="text" placeholder="Ej. 2">
                                 </div>
                                 <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0 py-5">
                                     <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-zip">
                                     Dpto <span class="text-xs text-gray-500">(Opcional)</span>
                                     </label>
-                                    <input wire:model="departmento" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-zip" type="text" placeholder="90210">
+                                    <input wire:model="departmento" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-zip" type="text" placeholder="Ej. A45">
                                 </div>
                                 <div class="w-full px-3 mb-6 md:mb-0 py-5">
                                     <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-city">
                                     Referencias <span class="text-xs text-gray-500">(Opcional)</span>
                                     </label>
-                                    <input wire:model="references" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-city" type="text" placeholder="Albuquerque">
+                                    <input wire:model="references" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-city" type="text" placeholder="Ej. Casa con rejas blancas">
                                 </div>
                                 </div>
                     </div>
-                    <div class="w-full mb-8 flex-shrink-0 order-1 lg:w-1/2 lg:mb-0 lg:order-2">
+                    <div class="w-full mb-8 flex-shrink-0 order-1 lg:w-1/2 lg:mb-0 lg:order-2 p-3">
                         <h5 class="text-gray-900 text-xl">Mi orden</h5>
                         <div class="container py-2 flex flex-col mx-auto w-full items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow">
                             @foreach ($products as $item)
@@ -107,12 +110,26 @@
                                 </li>
                             </ul>
                             @endforeach
+                            <ul>
+                                <li class="text-xl text-gray-900 font-bold">
+                                   Total :  ${{$cart->amount}}
+                                </li>
+                            </ul>
                         </div>
     
                     </div>
                 </div>
             </div>
+            <div class="container mx-auto px-6 w-full">
+                    <p class="text-gray-800 text-medium py-3">Para finalizar, elige un método de pago: </p>
+                    @foreach ($paymentMethods as $method)
+                        <x-jet-button class="bg-blue-600 hover:bg-blue-900" title="{{$method->name}}">
+                            <a wire:click="pay({{$method->id}})" >
+                                {{$method->name}}
+                            </a>
+                        </x-jet-button>
+                    @endforeach
+            </div>
         </main>
-    
     </div>
 </div>

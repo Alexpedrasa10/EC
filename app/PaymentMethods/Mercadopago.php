@@ -11,11 +11,12 @@ use MercadoPago\Payment;
 use MercadoPago\Preference;
 use MercadoPago\SDK;
 use Illuminate\Support\Facades\Auth;
+use App\Models\CartProduct;
 
 class Mercadopago
 {
 
-  protected $user;
+  protected $user, $cart, $products;
 
   public function __construct()
   {
@@ -25,23 +26,24 @@ class Mercadopago
     );
 
     $this->user = Auth::user();
-
+    $this->cart = $this->user->cart()->first();
+    $this->products = CartProduct::with('product')->where('user_cart_id', $this->cart->id)->get();
   }
     
-  public function setupPaymentAndGetRedirectURL($order): string
+  public function setupPaymentAndGetRedirectURL(): string
   {
 
     # Create a preference object
     $preference = new Preference();
 
     # Add items
-    $preference->items = $this->getItems($order);
+    $preference->items = $this->getItems();
 
     # Create a payer object
     $preference->payer = $this->getPayer();
 
-    //# Save External Reference
-    $preference->external_reference = $this->user->cart()->first()->id;
+    # Save External Reference
+    $preference->external_reference = $this->cart->id;
 
     $preference->back_urls = [
       "success" => route('success'),
@@ -63,17 +65,17 @@ class Mercadopago
   }
 
 
-  protected function getItems($items)
+  protected function getItems()
   {
 
     $allItems = array();
 
-    foreach ($items as $i) {
+    foreach ($this->products as $i) {
       
       $item = new Item();
-      $item->title = $i->name;
+      $item->title = $i->product->name;
       $item->quantity = $i->quantity;
-      $item->unit_price = $i->unit_price;
+      $item->unit_price = is_null($i->product->sale_price) ? $i->product->price : $i->product->sale_price;
       $item->currency_id = 'ARS';
       array_push($allItems, $item);
     }

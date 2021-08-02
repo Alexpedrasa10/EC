@@ -24,5 +24,27 @@ class Helper
         return $response;
     }
 
+    public static function getPaymentMethods()
+    {
+        $response = Property::where('category', "PMET")
+            ->where('active', true)
+            ->where('for_products', false)
+            ->get();
+        
+        return $response;
+    }
+
+    public static function getPropertiesById (int $id)
+    {
+        return $response = Property::where('id', $id)->first();
+    }
+
+    public static function cleanNamespace ($str)
+    {
+        $res = str_replace("{","",$str);
+        $res =  str_replace("}","",$res);
+        return $res;
+    }
+
 
 }
