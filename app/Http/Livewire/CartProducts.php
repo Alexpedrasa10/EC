@@ -177,19 +177,6 @@ class CartProducts extends Component
         ]);
     }
 
-    
-
-    // Pagar producto
-    public function paymentMercadopago(Pay $MP)
-    {
-        $product = $this->user->products()->select('cart_products.*')
-        ->addSelect('p.name as name', 'p.price as unit_price', 'cart_products.data as data',
-         'p.id as product_id')
-        ->leftjoin('products as p', 'p.id', '=', 'cart_products.product_id')->get();
-
-        $MP->createOrder($product);
-    }
-
     public function getSizes ($data)
     {
         return json_decode($data);

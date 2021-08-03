@@ -45,11 +45,11 @@ class Pay
         self::updateStock($cart);
 
         // Actualiza orden
-        $order = $cart->order->first();
+        $order = $cart->order()->first();
+        $order->data = json_encode($data->all());
+        $order->status_id = Helper::getProperties('OSTA', 'SUCC', false)->id;
         $order->payment_id = $data->payment_id;
         $order->save();
-
-        //dump($data); Falta guardar la demas info en el data de la orden
         
         return view('dashboard');
     }
@@ -87,6 +87,15 @@ class Pay
 
             $product->data = json_encode($stockSizes);
             $product->save();
+        }
+    }
+
+    public static function getData($data)
+    {
+        $data = new stdClass();
+
+        foreach ($data as $key => $value) {
+            # code...
         }
     }
 }
