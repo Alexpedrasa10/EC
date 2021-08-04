@@ -89,13 +89,4 @@ class Pay
             $product->save();
         }
     }
-
-    public static function getData($data)
-    {
-        $data = new stdClass();
-
-        foreach ($data as $key => $value) {
-            # code...
-        }
-    }
 }
