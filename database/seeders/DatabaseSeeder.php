@@ -16,8 +16,8 @@ class DatabaseSeeder extends Seeder
         $this->call(Teams::class);
         $this->call(UserAdmin::class);
         $this->call(PROOB::class);
-        $this->call(PropertiesSystem::class);
         $this->call(Properties::class);
+        $this->call(PropertiesSystem::class);
         $this->call(ProvincesTableSeeder::class);
         $this->call(CitiesTableSeeder::class);
     }
