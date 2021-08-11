@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Helper;
 use App\Models\UserCart;
+use GuzzleHttp\Client;
+use App\PaymentMethods\Bitcoin;
 
 class Test extends Command
 {
@@ -40,8 +42,8 @@ class Test extends Command
     public function handle()
     {
         dump('nashe');
-
-        $brr = UserCart::find(1);
-        dump($brr->order()->first());
+        $btc = new Bitcoin();
+        $btc->run();
+        
     }
 }
