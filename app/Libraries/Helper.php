@@ -24,6 +24,16 @@ class Helper
         return $response;
     }
 
+    public static function getLoginMethods()
+    {
+        $response = Property::where('category', "MLOG")
+            ->where('active', true)
+            ->where('for_products', false)
+            ->get();
+    
+        return $response;
+    }
+
     public static function getPaymentMethods()
     {
         $response = Property::where('category', "PMET")
