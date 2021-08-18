@@ -65,17 +65,18 @@ class Bitcoin
         //$generateInvoice = $this->call("POST", $path, true, $body);
 
         //PRUEBA
-        $pathbalance = "balances";
+        $pathbalance = "balances/bch";
         $balance = $this->call("GET", $pathbalance, true);
     }
 
     public function call ($method, $path, $private = false, $body = null)
     {
-        $fullPath = "{$this->url}{$path}";
-        $client = new Client();
+        $fullPath = "{$this->url}{$path}.json";
+        dump($fullPath);
 
         if ($private) {
 
+            // Get data for auth
             $nonce = $this->getNonce();
             $path = "/api/v2/" .$path;
             $sign = $this->getSign($method, $path, $nonce, $body);
@@ -85,17 +86,31 @@ class Bitcoin
                 'X-SBTC-SIGNATURE' => $sign,
             );
 
-            $request = new RequestAshe($method, $fullPath, [
-                'X-SBTC-APIKEY' => $this->api_key,
-                'X-SBTC-NONCE' => $nonce,
-                'X-SBTC-SIGNATURE' => $sign,
-            ]);
-            dump($request);
-            $call = $client->send($request);
+            $ch = curl_init($fullPath);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-            dump($call);
+            if ($method == "POST") {
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt( $ch, CURLOPT_POSTFIELDS, $body );
+            }
+
+            curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+            //dd($ch);
+
+            $o2r = (object)[
+                'response' => curl_exec($ch),
+                'responseCode' => curl_getinfo($ch, CURLINFO_HTTP_CODE),
+                'nashe' => curl_getinfo($ch,   CURLINFO_HTTPAUTH_AVAIL)
+            ];
+
+
+            curl_close($ch);
+
+            dd($o2r);
         }
         else {
+
+            $client = new Client();
             $call = $client->$method($fullPath);
         }
 
@@ -127,7 +142,7 @@ class Bitcoin
         dump($msg);
         $sign = hash_hmac("sha384", $msg, $this->secret);
 
-        return bin2hex($sign);
+        return $sign;
     }
 
     public function getPayloadInvoice($amount)
@@ -136,7 +151,6 @@ class Bitcoin
         $data->amount_satoshis = $amount;
         $data->currency = "BTC";
         $data->memo = "Anashe";
-        //$data->expiry_seconds = $amount;
 
         return json_encode($data);
     }
