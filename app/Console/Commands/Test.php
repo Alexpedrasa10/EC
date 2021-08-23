@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Helper;
 use App\Models\UserCart;
+use App\Models\PhotoProduct;
+use App\Models\Product;
 use GuzzleHttp\Client;
 use App\PaymentMethods\Bitcoin;
 
@@ -41,9 +43,11 @@ class Test extends Command
      */
     public function handle()
     {
-        dump('nashe');
-        $btc = new Bitcoin();
-        $btc->run();
+        $photo = PhotoProduct::find(1);
+
+        dump($photo->product()->first());
         
+        $product = Product::find(1);
+        dump($product->photos()->get());
     }
 }

@@ -14,9 +14,11 @@ class CreatePhotoProductsTable extends Migration
     public function up()
     {
         Schema::create('photo_products', function (Blueprint $table) {
+
             $table->id();
-            $table->unsignedBigInteger('product_id');
             $table->text('filename')->nullable(true);
+            $table->string('url');
+            $table->unsignedBigInteger('product_id')->nullable(true);
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products');

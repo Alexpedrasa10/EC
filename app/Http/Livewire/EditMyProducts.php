@@ -282,6 +282,30 @@ class EditMyProducts extends Component
         return $res;
     }
 
+    public function storePhotos ($id)
+    {
+        foreach ($this->photos as $photo) {
+            
+            $path = Storage::disk('dropbox')->putFileAs(
+                '/', 
+                $photo, 
+                $photo->getClientOriginalName()
+            );
+
+            // Creamos el enlace publico en dropbox 
+            $response = $this->dropbox->createSharedLinkWithSettings(
+                $path,
+                ["requested_visibility" => "public"]
+            );
+
+            PhotoProduct::create([
+                'product_id' => $id,
+                'filename' => $photo->hashName(),
+                'url' => $response['url']
+            ]);
+        }
+    }
+
     public function editProduct ()
     {
         $this->validate();
@@ -343,39 +367,8 @@ class EditMyProducts extends Component
         $product->save();
 
         // Almacena las fotos
-        foreach ($this->photos as $photo) {
-            
-
-            // Guardamos el archivo indicando el driver y el método putFileAs el cual recibe
-            // el directorio donde será almacenado, el archivo y el nombre.
-            // ¡No olvides validar todos estos datos antes de guardar el archivo!
-            $path = Storage::disk('dropbox')->putFileAs(
-                '/', 
-                $photo, 
-                $photo->getClientOriginalName()
-            );
-
-            dump($path);
-
-            // Creamos el enlace publico en dropbox utilizando la propiedad dropbox
-            // definida en el constructor de la clase y almacenamos la respuesta.
-            $response = $this->dropbox->createSharedLinkWithSettings(
-                $path,
-                ["requested_visibility" => "public"]
-            );
-
-            dump($response);
-
-            // $storage_path = Storage::path($photo->path());
-            // //$contents = file_get_contents($storage_path);
-            // $upload = Storage::disk('dropbox')->put($photo->path(), $photo);
-            // dump($upload);
-
-
-            // PhotoProduct::create([
-            //     'product_id' => $product->id,
-            //     'filename' => $photo->hashName(),
-            // ]);
+        if (!empty($this->photos)) {
+            $this->storePhotos($product->id);
         }
 
         $this->addProperties($product->id);
