@@ -9,6 +9,10 @@ use App\Models\ProductProperties;
 use stdClass;
 use Livewire\WithFileUploads;
 use App\Models\PhotoProduct;
+use Storage;
+use League\Flysystem\Filesystem;
+use Spatie\Dropbox\Client;
+use Spatie\FlysystemDropbox\DropboxAdapter;
 
 class EditMyProducts extends Component
 {
@@ -16,6 +20,7 @@ class EditMyProducts extends Component
     // Upload product img
     use WithFileUploads;
     public $photos = [];
+    private $dropbox;
 
     public $product, $properties, $products, $hasSizes, $newSize = FALSE;
 
@@ -32,6 +37,11 @@ class EditMyProducts extends Component
         'description' => 'required|min:10',
         'stock' => 'int',
     ];
+
+    public function __construct ()
+    {
+        $this->dropbox = Storage::disk('dropbox')->getDriver()->getAdapter()->getClient();   
+    }
 
     public function updated($propertyName)
     {
@@ -335,12 +345,37 @@ class EditMyProducts extends Component
         // Almacena las fotos
         foreach ($this->photos as $photo) {
             
-            $photo->store('photos_img');
 
-            PhotoProduct::create([
-                'product_id' => $product->id,
-                'filename' => $photo->hashName(),
-            ]);
+            // Guardamos el archivo indicando el driver y el método putFileAs el cual recibe
+            // el directorio donde será almacenado, el archivo y el nombre.
+            // ¡No olvides validar todos estos datos antes de guardar el archivo!
+            $path = Storage::disk('dropbox')->putFileAs(
+                '/', 
+                $photo, 
+                $photo->getClientOriginalName()
+            );
+
+            dump($path);
+
+            // Creamos el enlace publico en dropbox utilizando la propiedad dropbox
+            // definida en el constructor de la clase y almacenamos la respuesta.
+            $response = $this->dropbox->createSharedLinkWithSettings(
+                $path,
+                ["requested_visibility" => "public"]
+            );
+
+            dump($response);
+
+            // $storage_path = Storage::path($photo->path());
+            // //$contents = file_get_contents($storage_path);
+            // $upload = Storage::disk('dropbox')->put($photo->path(), $photo);
+            // dump($upload);
+
+
+            // PhotoProduct::create([
+            //     'product_id' => $product->id,
+            //     'filename' => $photo->hashName(),
+            // ]);
         }
 
         $this->addProperties($product->id);
@@ -391,6 +426,7 @@ class EditMyProducts extends Component
 
     public function render()
     {
+        $this->dropbox = Storage::disk('dropbox')->getDriver()->getAdapter()->getClient();   
         return view('livewire.edit-my-products');
     }
 }

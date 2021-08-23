@@ -267,7 +267,16 @@
         
     
         <div class="grid grid-cols-1 mt-5 mx-7">
-        <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold mb-1">Subir fotos</label>
+            <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold mb-1">Subir fotos</label>
+            <div class="grid grid-cols-6 mt-5 p-2">
+                @if (!empty($photos))
+                
+                    @foreach ($photos as $photo)
+                        <img class="w-40" src="{{ $photo->temporaryUrl() }}">
+                    @endforeach
+                    
+                @endif
+            </div>
             <div class='flex items-center justify-center w-full'>
                 <label class='flex flex-col border-4 border-dashed w-full h-32 hover:bg-gray-100 hover:border-purple-300 group'>
                     <div class='flex flex-col items-center justify-center pt-7'>
