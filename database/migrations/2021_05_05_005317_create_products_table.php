@@ -14,6 +14,7 @@ class CreateProductsTable extends Migration
     public function up()
     {
         Schema::create('products', function (Blueprint $table) {
+            
             $table->id();
             $table->string('name');
             $table->string('slug');
@@ -24,7 +25,7 @@ class CreateProductsTable extends Migration
             $table->string('code')->nullable();
             $table->jsonb('data')->nullable();
             $table->string('url_photos');
-            $table->boolean('is_active');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

@@ -263,6 +263,9 @@ class EditMyProducts extends Component
                 $this->stock = $qSizesTotal;
             }
         }
+        else {
+            $ok = true;
+        }
 
         return $ok;
     }
@@ -289,7 +292,7 @@ class EditMyProducts extends Component
             $path = Storage::disk('dropbox')->putFileAs(
                 '/', 
                 $photo, 
-                $photo->getClientOriginalName()
+                $photo->hashName()
             );
 
             // Creamos el enlace publico en dropbox 
@@ -363,7 +366,8 @@ class EditMyProducts extends Component
             $this->toaster('La suma de la cantidad de los talles no coincide con la cantidad del stock. Ya se corrigió automáticamente.','error');
             return;
         }
-        
+
+        $product->url_photos = 'ashe';
         $product->save();
 
         // Almacena las fotos
