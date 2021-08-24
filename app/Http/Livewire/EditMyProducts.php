@@ -9,6 +9,10 @@ use App\Models\ProductProperties;
 use stdClass;
 use Livewire\WithFileUploads;
 use App\Models\PhotoProduct;
+use Storage;
+use League\Flysystem\Filesystem;
+use Spatie\Dropbox\Client;
+use Spatie\FlysystemDropbox\DropboxAdapter;
 
 class EditMyProducts extends Component
 {
@@ -16,6 +20,7 @@ class EditMyProducts extends Component
     // Upload product img
     use WithFileUploads;
     public $photos = [];
+    private $dropbox;
 
     public $product, $properties, $products, $hasSizes, $newSize = FALSE;
 
@@ -32,6 +37,11 @@ class EditMyProducts extends Component
         'description' => 'required|min:10',
         'stock' => 'int',
     ];
+
+    public function __construct ()
+    {
+        $this->dropbox = Storage::disk('dropbox')->getDriver()->getAdapter()->getClient();   
+    }
 
     public function updated($propertyName)
     {
@@ -253,6 +263,9 @@ class EditMyProducts extends Component
                 $this->stock = $qSizesTotal;
             }
         }
+        else {
+            $ok = true;
+        }
 
         return $ok;
     }
@@ -270,6 +283,30 @@ class EditMyProducts extends Component
         }
 
         return $res;
+    }
+
+    public function storePhotos ($id)
+    {
+        foreach ($this->photos as $photo) {
+            
+            $path = Storage::disk('dropbox')->putFileAs(
+                '/', 
+                $photo, 
+                $photo->hashName()
+            );
+
+            // Creamos el enlace publico en dropbox 
+            $response = $this->dropbox->createSharedLinkWithSettings(
+                $path,
+                ["requested_visibility" => "public"]
+            );
+
+            PhotoProduct::create([
+                'product_id' => $id,
+                'filename' => $photo->hashName(),
+                'url' => $response['url']
+            ]);
+        }
     }
 
     public function editProduct ()
@@ -329,18 +366,13 @@ class EditMyProducts extends Component
             $this->toaster('La suma de la cantidad de los talles no coincide con la cantidad del stock. Ya se corrigió automáticamente.','error');
             return;
         }
-        
+
+        $product->url_photos = 'ashe';
         $product->save();
 
         // Almacena las fotos
-        foreach ($this->photos as $photo) {
-            
-            $photo->store('photos_img');
-
-            PhotoProduct::create([
-                'product_id' => $product->id,
-                'filename' => $photo->hashName(),
-            ]);
+        if (!empty($this->photos)) {
+            $this->storePhotos($product->id);
         }
 
         $this->addProperties($product->id);
@@ -391,6 +423,7 @@ class EditMyProducts extends Component
 
     public function render()
     {
+        $this->dropbox = Storage::disk('dropbox')->getDriver()->getAdapter()->getClient();   
         return view('livewire.edit-my-products');
     }
 }

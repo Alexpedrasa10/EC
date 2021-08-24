@@ -1,10 +1,6 @@
 <div class="flex bg-gray-200 items-center justify-center p-10">
     <div class="bg-gray-50 rounded-lg shadow-xl p-10 w-full px-5">
-        @foreach ($product->photos as $item)
-        <span class="text-sm">        {{ Storage::url("photos_img/{$item->filename}") }}
-        </span>
-        <img src="{{ Storage::url("photos_img/{$item->filename}") }}"/>
-        @endforeach
+
         <div class="flex justify-center py-5">
             <x-jet-application-mark class="h-14 inline-block" />
         </div>
@@ -264,22 +260,39 @@
                 </div>
             </div>
         </div>
+
+        @if ($product && $product->photos)
+        <div class="grid grid-cols-1 mt-5 mx-7">
+            <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold mb-1">Fotos</label>
+            @foreach ($product->photos as $item)
+                <img class="w-40" src="{{ Storage::disk('dropbox')->url("$item->filename") }}"/>
+            @endforeach
+        </div>
+        @endif
         
     
         <div class="grid grid-cols-1 mt-5 mx-7">
-        <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold mb-1">Subir fotos</label>
+            <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold mb-1">Subir fotos</label>
+                @if (!empty($photos))
+                    <div class="grid grid-cols-6 mt-5 p-2">
+                        @foreach ($photos as $photo)
+                            <img class="w-40" src="{{ $photo->temporaryUrl() }}">
+                        @endforeach
+                    </div>
+
+                @endif
             <div class='flex items-center justify-center w-full'>
                 <label class='flex flex-col border-4 border-dashed w-full h-32 hover:bg-gray-100 hover:border-purple-300 group'>
                     <div class='flex flex-col items-center justify-center pt-7'>
                     <svg class="w-10 h-10 text-purple-400 group-hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    <p class='lowercase text-sm text-gray-400 group-hover:text-purple-600 pt-1 tracking-wider'>Select a photo</p>
+                    <p class='lowercase text-sm text-gray-400 group-hover:text-purple-600 pt-1 tracking-wider'>Agregar fotos</p>
                     </div>
                     <input type='file' class="hidden" wire:model="photos" multiple />
                 </label>
             </div>
         </div>
     
-        <div class='flex items-center justify-center  md:gap-8 gap-4 pt-5 pb-5'>
+        <div class='flex items-center justify-center  md:gap-8 gap-4 pt-9 pb-5'>
             <button wire:click="editProduct" class="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-gray-50 bg-indigo-500 hover:bg-indigo-800">
                 {{ is_null($this->product) ? 'Crear producto' : 'Editar producto' }}
             </button>

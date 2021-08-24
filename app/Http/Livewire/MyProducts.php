@@ -32,26 +32,30 @@ class MyProducts extends Component
 
     public function getStockData ($data)
     {
-        if (!is_null($data)) {
+        if (!is_null($data) && !empty($data)) {
 
-            $sizes = json_decode($data)->sizes;
-            $qSizes = count($sizes);
-            $res = "";
+            $sizes = isset(json_decode($data)->sizes) ? json_decode($data)->sizes : null ;
+
+            if ($sizes) {
+                
+                $qSizes = count($sizes);
+                $res = "";
+        
+                foreach ($sizes as $idx => $size) {
     
-            foreach ($sizes as $idx => $size) {
-
-                if ($size->quantity > 0) {
-
-                    if ( ($qSizes - 1) != $idx ) {
-                        $res = $res." {$size->quantity} en {$size->size},";       
-                    }
-                    else{
-                        $res = $res." y {$size->quantity} en {$size->size}";       
+                    if ($size->quantity > 0) {
+    
+                        if ( ($qSizes - 1) != $idx ) {
+                            $res = $res." {$size->quantity} en {$size->size},";       
+                        }
+                        else{
+                            $res = $res." y {$size->quantity} en {$size->size}";       
+                        }
                     }
                 }
+        
+                return $res;   
             }
-    
-            return $res;
         }
     }
 
