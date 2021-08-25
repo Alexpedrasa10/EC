@@ -4,7 +4,7 @@
             <div class="md:flex">
                 <div class="w-full h-2/3">
                     <img class="w-full rounded-md object-cover max-w-lg mx-auto" 
-                    src="{{$product->url_photos}}" alt="{{$product->name}}">
+                    src="{{ Storage::disk('dropbox')->url("{$product->photos()->first()->filename}") }}" alt="{{$product->name}}">
                 </div>
                 <div class="w-full mt-1 max-w-lg mx-auto md:ml-8 md:mt-0 md:w-1/2">
                     <h3 class="text-gray-900 uppercase font-black text-4xl">{{$product->name}}</h3>
@@ -79,11 +79,10 @@
             </div>
             <div class="mt-16">
                 <h3 class="text-gray-600 text-2xl font-medium">Productos relacionados</h3>
-                <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6">
+                {{-- <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6">
                     @foreach (json_decode(json_encode($this->productsRelations)) as $item)
                         <div class="w-full max-w-sm mx-auto rounded-md shadow-md overflow-hidden">
-                            <div class="flex items-end justify-end h-56 w-full bg-cover" style="background-image: url('{{$item->url_photos}}')">
-                            </div>
+                            <img src="" alt="">
                         <div class="px-5 py-3">
                             <a href="/producto/{{$item->slug}}" class="text-gray-700 font-bold uppercase block">{{$item->name}}</a>
                             @if (is_null($item->sale_price))
@@ -99,7 +98,7 @@
                         </div>
                     </div>
                     @endforeach
-                </div>
+                </div> --}}
             </div>
         </div>
     </main>

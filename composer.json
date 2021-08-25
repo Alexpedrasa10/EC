@@ -20,6 +20,7 @@
         "livewire/livewire": "^2.4",
         "mercadopago/dx-php": "^2.2",
         "nesbot/carbon": "^2.50",
+        "orangehill/iseed": "^3.0",
         "spatie/flysystem-dropbox": "1.2.3",
         "spatie/laravel-backup": "^7.6"
     },
