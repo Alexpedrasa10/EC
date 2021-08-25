@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\Product;
 
 class PhotoProductsTableSeeder extends Seeder
 {
@@ -119,6 +120,13 @@ class PhotoProductsTableSeeder extends Seeder
                 'updated_at' => '2021-08-24 23:56:30',
             ),
         ));
+
+        $products = Product::all();
+
+        foreach ($products as $item) {
+            $item->photo_id = $item->id;
+            $item->save();
+        }
         
         
     }

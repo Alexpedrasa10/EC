@@ -31,6 +31,11 @@ class Product extends Model
         return $this->HasManyThrough(Property::class, ProductProperties::class, 'product_id', 'id', 'id', 'property_id');
     }
 
+    public function photo ()
+    {
+        return $this->hasOne(PhotoProduct::class, 'id', 'photo_id');
+    }
+
     public function photos () :HasMany
     {
         return $this->HasMany(PhotoProduct::class, 'product_id', 'id');

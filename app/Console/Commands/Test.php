@@ -43,11 +43,8 @@ class Test extends Command
      */
     public function handle()
     {
-        $photo = PhotoProduct::find(1);
-
-        dump($photo->product()->first());
         
         $product = Product::find(1);
-        dump($product->photos()->get());
+        dump($product->photo()->first());
     }
 }
