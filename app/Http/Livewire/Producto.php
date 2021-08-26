@@ -239,35 +239,14 @@ class Producto extends Component
         }
     }
 
-    public function getOrder()
-    {
-        $arr = array();
-
-        $order = new stdClass();
-        $order->id = $this->product->id;
-        $order->name = $this->product->name ." (talle {$this->current_size})";
-        $order->unit_price = $this->price;
-        $order->quantity = $this->current_quantity;
-        $order->size = $this->current_size;
-        array_push($arr, $order);
-
-        return $arr;
-    }
-
-    public function pay (Pay $pay)
-    {
-        if (!empty($this->current_size)) {
-            $order = $this->getOrder();
-            $pay->createOrder($order);        
-        }
-        else{
-            $this->toaster("Debes elegir un talle", "error");
-        }
-    }
-
     public function getAmount ()
     {
         return $this->current_quantity * $this->price;
+    }
+
+    public function productHasSizes()
+    {
+        return isset(json_decode($this->product->data)->sizes) ? true : false;
     }
 
     public function addToCart ()
@@ -278,7 +257,7 @@ class Producto extends Component
             $cart = $this->cart;
             $product = $this->product;
 
-            if ( !is_null($this->current_size) ) {
+            if ( !is_null($this->current_size) || !$this->productHasSizes() ) {
             
                 if (!empty($cart)){
 

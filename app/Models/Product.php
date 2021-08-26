@@ -25,6 +25,14 @@ class Product extends Model
         'sale_price',
         'data',
     ];
+
+    protected $appends = ['photo'];
+
+    public function getPhotoAttribute()
+    {
+        return $this->photo()->first();
+    }
+
     
     public function properties(): HasManyThrough
     {
