@@ -184,7 +184,11 @@
             <select id="selectedProperties" style="display: none">
                 @if (!empty($categories))
                     @foreach ($categories as $prop)
-                        <option value="{{$prop->id}}">{{$prop->name}}</option>
+                        @if (gettype($prop) != 'array')
+                            <option value="{{$prop->id}}">{{$prop->name}}</option>
+                        @else 
+                            <option value="{{$prop['id']}}">{{$prop['name']}}</option>
+                        @endif
                     @endforeach
                 @endif
             </select>

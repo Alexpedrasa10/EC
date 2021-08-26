@@ -50,7 +50,7 @@
                 </div>
                 <div class="flex items-baseline mt-4 mb-6 text-gray-700 dark:text-gray-300">
                     <div class="space-x-2 flex">
-                        @if (!empty($item->data))
+                        @if (!empty($item->data) && isset(json_decode($item->data)->sizes))
                             @foreach (json_decode($item->data)->sizes as $sizes)
                                 @if ($sizes->quantity > 0)
                                     <button type="button" wire:click="setProductSizes( {{$item->id}}, '{{$sizes->size}}' )">

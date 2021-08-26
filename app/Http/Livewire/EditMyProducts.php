@@ -54,17 +54,38 @@ class EditMyProducts extends Component
         $property = Property::where('id', $id)->first();
         $exist = FALSE;
 
-        foreach ($this->categories as $idx => $prop) {
-            
-            if ($prop->id == $id) {
 
-               $exist = TRUE;
-               $this->categories->forget($idx);
+        if (!empty($this->categories)) {
+            
+            foreach ($this->categories as $idx => $prop) {
+
+                if (gettype($this->categories) == 'array') {
+                    
+                    if ($prop['id'] == $id) {
+    
+                        $exist = TRUE;
+                        unset($this->categories[$idx]);
+                    }
+                }
+                else {
+
+                    if ($prop->id == $id) {
+    
+                        $exist = TRUE;
+                        $this->categories->forget($idx);
+                    }
+                }
             }
         }
 
         if (!$exist) {
-            $this->categories->push($property);
+
+            if (!is_null($this->product)) {
+                $this->categories->push($property);
+            }
+            else {
+                $this->categories[] = $property;
+            }
         }
     }
 
@@ -73,16 +94,19 @@ class EditMyProducts extends Component
         $product = Product::select('id','name', 'slug')->where('id', $id)->first();
         $exist = FALSE;
 
-        foreach ($this->productsRelationed as $idx => $prod) {
+        if (!empty($this->productsRelationed)) {
             
-            if ($prod['id'] == $id) {
-               $exist = TRUE;
-               array_splice($this->productsRelationed, $idx, 1);
+            foreach ($this->productsRelationed as $idx => $prod) {
+            
+                if ($prod['id'] == $id) {
+                   $exist = TRUE;
+                   array_splice($this->productsRelationed, $idx, 1);
+                }
             }
         }
 
         if (!$exist) {
-            array_push($this->productsRelationed, $product);
+            $this->productsRelationed[] = $product;
         }
     }
 
@@ -214,7 +238,7 @@ class EditMyProducts extends Component
 
                     $newCat = new ProductProperties;
                     $newCat->product_id = $idProd;
-                    $newCat->property_id = $cat->id;
+                    $newCat->property_id = gettype($cat) != 'array' ? $cat->id : $cat['id'];
                     $newCat->save();
                 }
             }
@@ -273,7 +297,7 @@ class EditMyProducts extends Component
     public function getArayProducts ()
     {
         $products = $this->productsRelationed;
-        $res = array();
+        $res = [];
 
         foreach ($products as $prod) {
             
@@ -367,7 +391,6 @@ class EditMyProducts extends Component
             return;
         }
 
-        $product->url_photos = 'ashe';
         $product->save();
 
         // Almacena las fotos
@@ -416,7 +439,7 @@ class EditMyProducts extends Component
             $this->hasSizes = !is_null($this->sizes) ? TRUE : FALSE;
             $this->url_photos = $this->product->url_photos;
             $this->description = $this->product->description;
-            $this->categories = $this->product->properties()->get();
+            $this->categories = !empty($this->product->properties()->get()) ? $this->product->properties()->get() : new Collection;
             $this->productsRelationed = $this->getProductsRelationated();
         }
     }

@@ -65,7 +65,7 @@ class MyProducts extends Component
         if (Auth::user()->id == 1) {
             
             $this->categories = Property::all();
-            $products = Product::with('properties');
+            $products = Product::with('properties', 'photo');
 
             if (!empty($this->productName)) {
                 $products->where('name', 'like', '%'.$this->productName.'%');
