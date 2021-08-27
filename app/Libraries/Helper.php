@@ -24,6 +24,11 @@ class Helper
         return $response;
     }
 
+    public static function getAllPropertiesProducts ()
+    {
+        return Property::where('for_products', true)->where('active', true)->get();
+    }
+
     public static function getLoginMethods()
     {
         $response = Property::where('category', "MLOG")

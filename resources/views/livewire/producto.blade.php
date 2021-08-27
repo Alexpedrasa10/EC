@@ -2,7 +2,7 @@
     <main class="my-8">
         <div class="container mx-auto px-6">
             <div class="md:flex">
-                <div class="w-full h-2/3">
+                <div class="sm:w-2/3 h-3/5 w-full">
                     <img class="w-full rounded-md object-cover max-w-lg mx-auto" 
                     src="{{ Storage::disk('dropbox')->url("{$product->photos()->first()->filename}") }}" alt="{{$product->name}}">
                 </div>
@@ -55,19 +55,11 @@
                     </div>
                     @endif
                     <div class="flex mt-6">
-                        <button wire:click="addToCart" class="px-8 py-2 w-full mx-1 items-center flex bg-indigo-600 text-white text-sm font-medium rounded hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 shadow-sm">
+                        <button wire:click="addToCart" class="text-center px-8 py-2 w-full mx-1 items-center flex bg-indigo-600 text-white text-sm font-medium rounded hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700 shadow-sm" style="display: block ruby">
                             <span class="px-2">
                                 <svg class="h-4 w-4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                             </span>
                             Agregar al carrito
-                        </button>
-                        <button wire:click="pay" class="px-8 py-2 w-full mx-1 text-center items-center flex bg-gray-100 text-black text-sm font-medium rounded hover:bg-gray-300 focus:outline-none focus:bg-gray-300 shadow-sm">
-                            <span class="px-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                  </svg>
-                            </span>
-                            Comprar
                         </button>
                     </div>
                     @if ($cartProduct)
@@ -78,13 +70,13 @@
                 </div>
             </div>
             <div class="mt-16">
-                <h3 class="text-gray-600 text-2xl font-medium">Productos relacionados</h3>
-                {{-- <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6">
+                <h3 class="text-gray-800 text-base font-bold">También te puede interesar</h3>
+                <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6">
                     @foreach (json_decode(json_encode($this->productsRelations)) as $item)
-                        <div class="w-full max-w-sm mx-auto rounded-md shadow-md overflow-hidden">
-                            <img src="" alt="">
+                    <div class="w-full max-w-sm mx-auto rounded-md shadow-md overflow-hidden">
+                            <img class="h-80 w-full" src="{{ Storage::disk('dropbox')->url("{$item->photo->filename}") }}"" alt="{{$item->name}}">
                         <div class="px-5 py-3">
-                            <a href="/producto/{{$item->slug}}" class="text-gray-700 font-bold uppercase block">{{$item->name}}</a>
+                            <a href="/producto/{{$item->slug}}" class="text-gray-700 font-bold uppercase block hover:text-indigo-600">{{$item->name}}</a>
                             @if (is_null($item->sale_price))
                                 <span class="text-indigo-600 mt-3 text-1xl font-bold">
                                     ${{$item->price}}
@@ -98,7 +90,7 @@
                         </div>
                     </div>
                     @endforeach
-                </div> --}}
+                </div>
             </div>
         </div>
     </main>

@@ -13,6 +13,7 @@ use Storage;
 use League\Flysystem\Filesystem;
 use Spatie\Dropbox\Client;
 use Spatie\FlysystemDropbox\DropboxAdapter;
+use Helper;
 
 class EditMyProducts extends Component
 {
@@ -424,8 +425,8 @@ class EditMyProducts extends Component
 
     public function mount (string $slug = NULL)
     {
-        $this->properties = Property::all();
-        $this->products = Product::all();
+        $this->properties = Helper::getAllPropertiesProducts();
+        $this->products =  Product::all();
 
         if (!is_null($slug)) {
 
@@ -446,7 +447,6 @@ class EditMyProducts extends Component
 
     public function render()
     {
-        $this->dropbox = Storage::disk('dropbox')->getDriver()->getAdapter()->getClient();   
         return view('livewire.edit-my-products');
     }
 }
