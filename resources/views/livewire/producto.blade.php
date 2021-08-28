@@ -2,9 +2,23 @@
     <main class="my-8">
         <div class="container mx-auto px-6">
             <div class="md:flex">
-                <div class="sm:w-2/3 h-3/5 w-full">
+
+                <div class="sm:w-1/12 sm:h-/12 w-7/12 h-7/12 inline-flex sm:block">
+
+                    @foreach ($photos as $item)
+                        <div class="cursor-pointer mt-3" wire:click="setPhoto('{{$item->filename}}')">
+                            <img class="w-full rounded-md object-cover max-w-lg mx-auto" 
+                                src="{{ Storage::disk('dropbox')->url("{$item->filename}") }}" 
+                                alt="{{$product->name}}">
+                        </div>
+                    @endforeach
+                    
+                </div>
+
+                <div class="sm:w-6/12 h-5/6 w-full">
                     <img class="w-full rounded-md object-cover max-w-lg mx-auto" 
-                    src="{{ Storage::disk('dropbox')->url("{$product->photos()->first()->filename}") }}" alt="{{$product->name}}">
+                        src="{{ Storage::disk('dropbox')->url("{$url}") }}" 
+                        alt="{{$product->name}}">
                 </div>
                 <div class="w-full mt-1 max-w-lg mx-auto md:ml-8 md:mt-0 md:w-1/2">
                     <h3 class="text-gray-900 uppercase font-black text-4xl">{{$product->name}}</h3>
@@ -69,29 +83,31 @@
                     @endif
                 </div>
             </div>
-            <div class="mt-16">
-                <h3 class="text-gray-800 text-base font-bold">También te puede interesar</h3>
-                <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6">
-                    @foreach (json_decode(json_encode($this->productsRelations)) as $item)
-                    <div class="w-full max-w-sm mx-auto rounded-md shadow-md overflow-hidden">
-                            <img class="h-80 w-full" src="{{ Storage::disk('dropbox')->url("{$item->photo->filename}") }}"" alt="{{$item->name}}">
-                        <div class="px-5 py-3">
-                            <a href="/producto/{{$item->slug}}" class="text-gray-700 font-bold uppercase block hover:text-indigo-600">{{$item->name}}</a>
-                            @if (is_null($item->sale_price))
-                                <span class="text-indigo-600 mt-3 text-1xl font-bold">
-                                    ${{$item->price}}
-                                </span>
-                            @else
-                                <span class="text-indigo-600 mt-3 text-1xl font-bold">
-                                    ${{$item->sale_price}}
-                                    <p class="text-red-500 text-sm line-through inline-block">${{$item->price}}</p>
-                                </span>
-                            @endif
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-            </div>
         </div>
     </main>
+    <div class="mt-20">
+        <h3 class="text-gray-800 text-base font-bold">También te puede interesar</h3>
+        <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-6">
+            @foreach (json_decode(json_encode($this->productsRelations)) as $item)
+            <div class="w-full max-w-sm mx-auto rounded-md shadow-md overflow-hidden">
+               <a href="/producto/{{$item->slug}}">
+                    <img class="h-80 w-full" src="{{ Storage::disk('dropbox')->url("{$item->photo->filename}") }}"" alt="{{$item->name}}">
+                    <div class="px-5 py-3">
+                        <a href="/producto/{{$item->slug}}" class="text-gray-700 font-bold uppercase block hover:text-indigo-600">{{$item->name}}</a>
+                        @if (is_null($item->sale_price))
+                            <span class="text-indigo-600 mt-3 text-1xl font-bold">
+                                ${{$item->price}}
+                            </span>
+                        @else
+                            <span class="text-indigo-600 mt-3 text-1xl font-bold">
+                                ${{$item->sale_price}}
+                                <p class="text-red-500 text-sm line-through inline-block">${{$item->price}}</p>
+                            </span>
+                        @endif
+                    </div>
+               </a>
+            </div>
+            @endforeach
+        </div>
+    </div>
 </div>

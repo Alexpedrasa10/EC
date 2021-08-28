@@ -13,13 +13,15 @@ use App\Models\CartProduct;
 
 class Producto extends Component
 {
-    public $product, $current_quantity, $current_size, $price;
+    public $product, $photos, $url, $current_quantity, $current_size, $price;
     
     public $user, $cart, $cartProduct, $productsRelations;
     
     public function mount($slug)
     {
         $this->product = Product::with('properties')->where('slug', $slug)->first();
+        $this->photos = $this->product->photos()->get();
+        $this->url = $this->product->photo->filename;
         $this->price = !is_null($this->product->sale_price) ? $this->product->sale_price : $this->product->price;
         $this->current_quantity = 1;
         $this->productsRelations = $this->getProductsRelations();
@@ -35,6 +37,15 @@ class Producto extends Component
                     ->where('user_cart_id', $this->cart->id)
                     ->first();
             }
+        }
+    }
+
+    public function setPhoto($url)
+    {
+        if ($url != $this->url) {
+            
+            $this->url = $url;
+            $this->render();
         }
     }
 
