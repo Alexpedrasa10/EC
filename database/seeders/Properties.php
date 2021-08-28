@@ -56,6 +56,66 @@ class Properties extends Seeder
             'name' => 'Remera'
         ]);
 
+        DB::table('properties')->insert([
+            'category' => 'CAT',
+            'code' => 'HYPE',
+            'name' => 'Hype'
+        ]);
+
+        DB::table('properties')->insert([
+            'category' => 'BRAND',
+            'code' => 'PSG',
+            'name' => 'Paris Saint-Germain'
+        ]);
+
+        DB::table('properties')->insert([
+            'category' => 'BRAND',
+            'code' => 'NIKE',
+            'name' => 'Nike'
+        ]);
+
+        DB::table('properties')->insert([
+            'category' => 'BRAND',
+            'code' => 'ADIDAS',
+            'name' => 'Adidas'
+        ]);
+
+        DB::table('properties')->insert([
+            'category' => 'BRAND',
+            'code' => 'PUMA',
+            'name' => 'Puma',
+        ]);
+
+        DB::table('properties')->insert([
+            'category' => 'BRAND',
+            'code' => 'GUCCI',
+            'name' => 'Gucci',
+        ]);
+
+        DB::table('properties')->insert([
+            'category' => 'BRAND',
+            'code' => 'NORTHFACE',
+            'name' => 'North Face',
+        ]);
+
+        DB::table('properties')->insert([
+            'category' => 'BRAND',
+            'code' => 'BURBERRY',
+            'name' => 'Burberry',
+        ]);
+
+        DB::table('properties')->insert([
+            'category' => 'BRAND',
+            'code' => 'JORDAN',
+            'name' => 'Jordan'
+        ]);
+
+        DB::table('properties')->insert([
+            'category' => 'SUBCAT',
+            'code' => ' SNEAKER',
+            'name' => 'Sneaker'
+        ]);
+
         // Tabla Pivot
         DB::table('product_properties')->insert([
             'product_id' => 1,

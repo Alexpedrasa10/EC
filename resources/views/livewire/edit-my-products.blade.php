@@ -301,8 +301,14 @@
                 {{ is_null($this->product) ? 'Crear producto' : 'Editar producto' }}
             </button>
         </div>
-    
+
+        @if ($this->product)
+            <div class="py-5 px-3">
+                <a href="{{ route('producto', ['slug' => "{$this->product->slug}"]) }}" class="text-sm font-medium hover:text-indigo-700">Ver Producto</a>
+            </div>
+        @endif
     </div>
+    
 </div>
 
 
