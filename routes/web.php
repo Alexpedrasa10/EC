@@ -82,5 +82,5 @@ Route::get('/auth/{driver}/callback', function ($driver) {
     ]);
 
     Auth::login($auth);
-    return view('dashboard');
+    return redirect()->back();
 });
