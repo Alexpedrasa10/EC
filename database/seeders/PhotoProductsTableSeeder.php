@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Product;
 
 class PhotoProductsTableSeeder extends Seeder
 {
@@ -119,14 +118,34 @@ class PhotoProductsTableSeeder extends Seeder
                 'created_at' => '2021-08-24 23:56:30',
                 'updated_at' => '2021-08-24 23:56:30',
             ),
+            11 => 
+            array (
+                'id' => 12,
+                'filename' => '03j8qzYpiIhI49DoLcvXCnQbq6fUse9dni12g4Pu.jpg',
+                'url' => 'https://www.dropbox.com/s/oa7mkretqjncgg0/03j8qzYpiIhI49DoLcvXCnQbq6fUse9dni12g4Pu.jpg?dl=0',
+                'product_id' => 12,
+                'created_at' => '2021-08-28 00:18:36',
+                'updated_at' => '2021-08-28 00:18:36',
+            ),
+            12 => 
+            array (
+                'id' => 13,
+                'filename' => '8948WvhH57ApObbVglBFJqLaXmdFpi6cUQl7dAyq.jpg',
+                'url' => 'https://www.dropbox.com/s/5sjqitq02c22c6s/8948WvhH57ApObbVglBFJqLaXmdFpi6cUQl7dAyq.jpg?dl=0',
+                'product_id' => 13,
+                'created_at' => '2021-08-28 19:48:37',
+                'updated_at' => '2021-08-28 19:48:37',
+            ),
+            13 => 
+            array (
+                'id' => 14,
+                'filename' => '22D5ohaaPVXCZMLkYs89AwIeXMP648TGqUCIQv7l.jpg',
+                'url' => 'https://www.dropbox.com/s/tykiosom28w229o/22D5ohaaPVXCZMLkYs89AwIeXMP648TGqUCIQv7l.jpg?dl=0',
+                'product_id' => 14,
+                'created_at' => '2021-08-28 20:02:34',
+                'updated_at' => '2021-08-28 20:02:34',
+            ),
         ));
-
-        $products = Product::all();
-
-        foreach ($products as $item) {
-            $item->photo_id = $item->id;
-            $item->save();
-        }
         
         
     }
