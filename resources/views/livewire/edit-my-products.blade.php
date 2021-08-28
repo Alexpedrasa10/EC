@@ -127,8 +127,8 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mt-5 mx-7">
             <div class="grid grid-cols-1">
-                <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">Stock</label>
-                <span x-data="{ 'sizes' : @entangle('hasSizes') }" @click="sizes = !sizes" class="text-xs text-gray-500 cursor-pointer">
+                <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">Stock {{$this->hasSizes}}</label>
+                <span wire:click="hasSizes()" class="text-xs text-gray-500 cursor-pointer">
                     {{ $this->hasSizes ? 'Haz click aquí para eliminar los talles' : 'Haz click aquí para agregar talles'}}
                 </span>
                 @if (!$this->hasSizes)
@@ -138,7 +138,7 @@
                     <input disabled="true" wire:model="stock" class="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" type="numer" placeholder="Ingrese stock del producto" />
 
                     <h1 class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold mt-5">Talles: </h1>
-                    <p wire:click="viewNewSize" class="text-sm text-gray-500 cursor-pointer">Para agregar otro talle, haga click aquí. {{$this->newSize}}</p>
+                    <p wire:click="viewNewSize" class="text-sm text-gray-500 cursor-pointer">Para agregar otro talle, haga click aquí.</p>
                     @if ($this->newSize)
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5 mt-5 bg-gray-50 rounded-md shadow-md p-10">
                                 <div class="grid col-span-full md:col-span-1 lg:col-span-1">
@@ -155,18 +155,20 @@
                             </div>
                     @endif
                     <div class="grid grid-cols-2 md:grid-cols-8 gap-10 md:gap-20 lg:gap-20 my-5">
-                        @foreach ( json_decode(json_encode($this->sizes)) as $size)
-                            <div class="flex items-center py-2">
-                                <button wire:click="decrementSize('{{$size->size}}')" class="hover:text-black text-gray-500 focus:outline-none focus:text-gray-600" title="Quitar">
-                                    <svg class="h-5 w-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                </button>
-                                <span style="display: block ruby" class="text-center text-gray-600 text-sm px-2">{{$size->quantity}} en {{$size->size}}</span>
-                                <button wire:click="incrementSize('{{$size->size}}')" class="hover:text-black text-gray-500 focus:outline-none focus:text-gray-600" title="Agregar">
-                                    <svg class="h-5 w-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                </button>
-                            </div>
-                            <br>
-                        @endforeach  
+                        @if (!empty($this->sizes))
+                            @foreach ( json_decode(json_encode($this->sizes)) as $size)
+                                <div class="flex items-center py-2">
+                                    <button wire:click="decrementSize('{{$size->size}}')" class="hover:text-black text-gray-500 focus:outline-none focus:text-gray-600" title="Quitar">
+                                        <svg class="h-5 w-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    </button>
+                                    <span style="display: block ruby" class="text-center text-gray-600 text-sm px-2">{{$size->quantity}} en {{$size->size}}</span>
+                                    <button wire:click="incrementSize('{{$size->size}}')" class="hover:text-black text-gray-500 focus:outline-none focus:text-gray-600" title="Agregar">
+                                        <svg class="h-5 w-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    </button>
+                                </div>
+                                <br>
+                            @endforeach 
+                        @endif 
                     </div>
                 @endif
 

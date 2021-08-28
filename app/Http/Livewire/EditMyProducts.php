@@ -23,7 +23,7 @@ class EditMyProducts extends Component
     public $photos = [];
     private $dropbox;
 
-    public $product, $properties, $products, $hasSizes, $newSize = FALSE;
+    public $product, $properties, $products, $hasSizes = false, $newSize = FALSE;
 
     // Forms sizes
     public $size, $qSize;
@@ -146,25 +146,33 @@ class EditMyProducts extends Component
         $dataSize = json_decode(json_encode($this->sizes));
         $okSize = TRUE;
 
-        foreach ($dataSize as $s) {
+        if (!empty($dataSize)) {
+
+            foreach ($dataSize as $s) {
             
-            if ($s->size == $size) {
-
-                if (!$update) {
-                    $okSize = FALSE;
-                }
-                else {
-
-                    $s->quantity += $qSize;
-                    $this->sizes = $dataSize;
-                    $this->stock += $qSize;
-                    $this->viewNewSize();
-                    $this->toaster("Talle editado", "success");
+                if ($s->size == $size) {
+    
+                    if (!$update) {
+                        $okSize = FALSE;
+                    }
+                    else {
+    
+                        $s->quantity += $qSize;
+                        $this->sizes = $dataSize;
+                        $this->stock += $qSize;
+                        $this->viewNewSize();
+                        $this->toaster("Talle editado", "success");
+                    }
                 }
             }
         }
 
         return $okSize;
+    }
+
+    public function hasSizes()
+    {
+        $this->hasSizes = !$this->hasSizes;
     }
 
     public function viewNewSize()
@@ -184,7 +192,7 @@ class EditMyProducts extends Component
                 $newSize = new StdClass();
                 $newSize->size = $size;
                 $newSize->quantity = $qSize;
-                $dataSize = $this->sizes;
+                $dataSize = !is_null($this->sizes) ? $this->sizes : array();
                 array_push($dataSize, $newSize);
 
                 $this->sizes = $dataSize;
@@ -310,7 +318,7 @@ class EditMyProducts extends Component
         return $res;
     }
 
-    public function storePhotos ($id)
+    public function storePhotos ($product)
     {
         foreach ($this->photos as $photo) {
             
@@ -326,11 +334,17 @@ class EditMyProducts extends Component
                 ["requested_visibility" => "public"]
             );
 
-            PhotoProduct::create([
-                'product_id' => $id,
+            $ph = PhotoProduct::create([
+                'product_id' => $product->id,
                 'filename' => $photo->hashName(),
                 'url' => $response['url']
             ]);
+
+            if (is_null($product->photo_id)) {
+                
+                $product->photo_id = $ph->id;
+                $product->save();
+            }
         }
     }
 
@@ -396,7 +410,7 @@ class EditMyProducts extends Component
 
         // Almacena las fotos
         if (!empty($this->photos)) {
-            $this->storePhotos($product->id);
+            $this->storePhotos($product);
         }
 
         $this->addProperties($product->id);
@@ -426,7 +440,6 @@ class EditMyProducts extends Component
     public function mount (string $slug = NULL)
     {
         $this->properties = Helper::getAllPropertiesProducts();
-        $this->products =  Product::all();
 
         if (!is_null($slug)) {
 
@@ -443,6 +456,12 @@ class EditMyProducts extends Component
             $this->categories = !empty($this->product->properties()->get()) ? $this->product->properties()->get() : new Collection;
             $this->productsRelationed = $this->getProductsRelationated();
         }
+        else {
+            $this->hasSizes = false;
+        }
+
+        $this->products =  !is_null($this->product) ? Product::where('id', '<>', $this->product->id)->get() : Product::all();
+
     }
 
     public function render()

@@ -1,6 +1,8 @@
 <div class="my-15 w-full">
     <h1 class="text-2xl font-bold">Mis productos</h1>
-    <p class="text-base font-light text-gray-600">Estos son todos los productos cargados en tu Ecommerce.</p>
+    <p class="text-base font-light text-gray-600">Estos son todos los productos cargados en tu Ecommerce. <br>
+      <span class="font-black"><a href="{{ route('edit-products') }}" >Para agregar un nuevo producto, haz click aquí.</a></span>
+    </p>
 
     <div class="grid grid-cols-3 gap-1 mt-5 w-full">
       
