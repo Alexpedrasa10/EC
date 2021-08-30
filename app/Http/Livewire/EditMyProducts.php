@@ -20,10 +20,10 @@ class EditMyProducts extends Component
 
     // Upload product img
     use WithFileUploads;
-    public $photos = [];
+    public $photos = [], $confirmDetelePhoto = false, $photoToDeleted;
     private $dropbox;
 
-    public $product, $properties, $products, $hasSizes = false, $newSize = FALSE;
+    public $product, $properties, $products, $coverPhoto, $hasSizes = false, $newSize = FALSE;
 
     // Forms sizes
     public $size, $qSize;
@@ -318,6 +318,49 @@ class EditMyProducts extends Component
         return $res;
     }
 
+    public function setCoverPhoto($id)
+    {
+        $this->coverPhoto = $id;
+    }
+
+    public function cancel()
+    {
+        $this->photoToDeleted = null;
+        $this->confirmDetelePhoto = false;
+    }
+
+    public function confirmDetelePhoto(PhotoProduct $file)
+    {
+        if (count($this->product->photos()->get()) != 1) {
+
+            if ($file->id != $this->coverPhoto) {
+                
+                $this->photoToDeleted = $file;
+                $this->confirmDetelePhoto = true;
+            }
+            else {
+                $this->toaster('No puedes eliminar la foto de portada del producto', 'error');
+            }
+        }
+        else {
+            $this->toaster('No puedes eliminar la única foto del producto', 'error');
+        }
+    }
+
+    public function destroy()
+    {
+        $this->dropbox->delete($this->photoToDeleted->filename);
+        $this->photoToDeleted->delete();
+        $this->toaster("Foto eliminada", "success");
+        $this->cancel();
+        $this->render();
+    }
+
+    public function download($filename)
+    {
+        return Storage::disk('dropbox')->download($filename);
+    }
+
     public function storePhotos ($product)
     {
         foreach ($this->photos as $photo) {
@@ -364,6 +407,7 @@ class EditMyProducts extends Component
         $product->slug = $this->URL;
         $product->description = $this->description;
         $product->price = $this->price;
+        $product->photo_id = $this->coverPhoto;
 
         // Precio oferta
         if (!empty($this->salePrice)) {
@@ -444,6 +488,7 @@ class EditMyProducts extends Component
         if (!is_null($slug)) {
 
             $this->product = Product::with('properties', 'photos')->where('slug', $slug)->first();
+            $this->coverPhoto = $this->product->photo_id;
             $this->name = $this->product->name;
             $this->URL = $this->product->slug;
             $this->price = $this->product->price;
@@ -451,7 +496,6 @@ class EditMyProducts extends Component
             $this->stock = intval($this->product->stock);
             $this->sizes = isset(json_decode($this->product->data)->sizes) ? json_decode($this->product->data)->sizes : NULL;
             $this->hasSizes = !is_null($this->sizes) ? TRUE : FALSE;
-            $this->url_photos = $this->product->url_photos;
             $this->description = $this->product->description;
             $this->categories = !empty($this->product->properties()->get()) ? $this->product->properties()->get() : new Collection;
             $this->productsRelationed = $this->getProductsRelationated();
