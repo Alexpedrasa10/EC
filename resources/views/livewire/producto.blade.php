@@ -1,5 +1,5 @@
 <div>
-    <main class="my-8">
+    <main class="my-2">
         <div class="container mx-auto px-6">
             <div class="md:flex">
 
