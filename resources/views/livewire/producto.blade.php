@@ -3,17 +3,24 @@
         <div class="container mx-auto px-6">
             <div class="md:flex">
 
-                <div class="sm:w-1/12 sm:h-/12 w-7/12 h-7/12 inline-flex sm:block">
-
-                    @foreach ($photos as $item)
-                        <div class="cursor-pointer mt-3" wire:click="setPhoto('{{$item->filename}}')">
-                            <img class="w-full rounded-md object-cover max-w-lg mx-auto" 
-                                src="{{ Storage::disk('dropbox')->url("{$item->filename}") }}" 
-                                alt="{{$product->name}}">
-                        </div>
-                    @endforeach
+                @if (count($photos) > 1)
                     
-                </div>
+                    <div class="sm:w-1/12 sm:h-1/12 w-4/12 h-4/12 inline-flex sm:block">
+
+                        @foreach ($photos as $item)
+                            <div class="cursor-pointer mt-3" wire:click="setPhoto('{{$item->filename}}')">
+                                <img class="w-full rounded-md object-cover max-w-lg mx-auto" 
+                            <img class="w-full rounded-md object-cover max-w-lg mx-auto" 
+                                <img class="w-full rounded-md object-cover max-w-lg mx-auto" 
+                                    src="{{ Storage::disk('dropbox')->url("{$item->filename}") }}" 
+                                src="{{ Storage::disk('dropbox')->url("{$item->filename}") }}" 
+                                    src="{{ Storage::disk('dropbox')->url("{$item->filename}") }}" 
+                                    alt="{{$product->name}}">
+                            </div>
+                        @endforeach
+                        
+                    </div>
+                @endif
 
                 <div class="sm:w-6/12 h-5/6 w-full">
                     <img class="w-full rounded-md object-cover max-w-lg mx-auto" 

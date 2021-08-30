@@ -45,7 +45,7 @@ class Producto extends Component
         if ($url != $this->url) {
             
             $this->url = $url;
-            $this->render();
+            $this->hydrate();
         }
     }
 
