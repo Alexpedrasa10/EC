@@ -30,7 +30,7 @@ class Mercadopago
     $this->products = CartProduct::with('product')->where('user_cart_id', $this->cart->id)->get();
   }
     
-  public function setupPaymentAndGetRedirectURL(): string
+  public function run(): string
   {
 
     # Create a preference object

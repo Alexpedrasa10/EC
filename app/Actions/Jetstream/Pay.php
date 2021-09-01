@@ -7,37 +7,51 @@ use App\Models\UserCart;
 use App\Models\Order;
 use App\Models\Product;
 use Helper;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class Pay
 {
     
-    public function createOrder($preOrder)
+    public function createOrder(Order $order)
     {
         $allowedPaymentMethods = config('payment-methods.enabled');
 
-        // $this->notify($order);
+        // $method = $order->method()->first();
+
+        // if (!$this->verifyPaymentMethosAvalaible($method, $allowedPaymentMethods)) {
+        //     $url = $this->generatePaymentGateway($order);
+        // }
     
-        $url = $this->generatePaymentGateway($preOrder);
+        $url = $this->generatePaymentGateway($order);
     
         return redirect()->to($url);
     }
 
 
-    protected function generatePaymentGateway($order) : string
+    protected function generatePaymentGateway(Order $order) : string
     {
         $methodName = Helper::getPropertiesById($order->method_id)->name;
         $method = Helper::cleanNamespace("App\PaymentMethods\{$methodName}");
 
         if (class_exists($method)) {
             $generatePayment = new $method;
-            return $generatePayment->setupPaymentAndGetRedirectURL();
+            return $generatePayment->run();
         }
     }
 
     public static function paySucess ($data)
     {
+        dump($data);
         // Actualiza el estado del carrito
-        $cart = UserCart::where('id', $data->external_reference)->first();
+        if ($data->external_reference) {
+            $cart = UserCart::where('id', $data->external_reference)->first();
+        }
+        else {
+            $user = User::where('id', Auth::user()->id)->first();
+            $cart = $user->cart()->first();
+        }
+
         $cart->buy = TRUE;
         $cart->save();
 
@@ -48,10 +62,10 @@ class Pay
         $order = $cart->order()->first();
         $order->data = json_encode($data->all());
         $order->status_id = Helper::getProperties('OSTA', 'SUCC', false)->id;
-        $order->payment_id = $data->payment_id;
+        $order->payment_id = $data->payment_id; //cambiar esto hacerlo segun el pay meth
         $order->save();
         
-        return view('dashboard');
+        return view('dashboard'); //cambiar esto
     }
 
     public static function updateStock (UserCart $cart)

@@ -4,7 +4,8 @@ return [
 
     'enabled' => [
         'mercadopago',
-        'bitcoin'
+        'bitcoin',
+        'paypal'
     ],
 
     'use_sandbox' => env('SANDBOX_GATEWAYS', true),
@@ -21,6 +22,20 @@ return [
         'market' => env('BUDA_MARKET'),
         'key' => env('BUDA_API_KEY'),
         'secret' => env('BUDA_SECRET')
+    ],
+    'paypal' => [
+        'display' => 'paypal',
+        'app' => env('PAYPAL_APP'),
+        'account' => env('PAYPAL_SANDBOX_ACCOUNT'),
+        'client_id' => env('PAYPAL_CLIENT_ID'),
+        'secret' => env('PAYPAL_SECRET'),
+        'settings' => [
+            'mode' => 'sandbox', //dsp hacelo bien pajin
+            'http.ConnectionTimeout' => 30,
+            'log.LogEnabled' => true,
+            'log.Filename' => storage_path('logs/paypal.log'),
+            'log.LogLevel' => 'ERROR'
+        ],
     ],
 
 ];
