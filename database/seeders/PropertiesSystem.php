@@ -19,21 +19,18 @@ class PropertiesSystem extends Seeder
             'category' => 'PMET',
             'code' => 'MLA',
             'name' => 'Mercadopago',
-            'for_products' => False
         ]);
 
         DB::table('properties')->insert([
             'category' => 'OSTA',
             'code' => 'PROC',
             'name' => 'Procesando',
-            'for_products' => False
         ]);
 
         DB::table('properties')->insert([
             'category' => 'OSTA',
             'code' => 'SUCC',
             'name' => 'Pago con éxito',
-            'for_products' => False
         ]);
 
         $propFB = new Stdclass();
@@ -43,7 +40,6 @@ class PropertiesSystem extends Seeder
             'category' => 'MLOG',
             'code' => 'FB',
             'name' => 'Facebook',
-            'for_products' => False,
             'data' => json_encode($propFB)
         ]);
 
@@ -54,7 +50,6 @@ class PropertiesSystem extends Seeder
             'category' => 'MLOG',
             'code' => 'GLE',
             'name' => 'Google',
-            'for_products' => False,
             'data' => json_encode($propGO)
         ]);
     }

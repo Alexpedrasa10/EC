@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\CartProduct;
 use App\Models\Product;
 use App\Models\Property;
+use App\Models\Category;
 use App\Models\User;
 use App\Models\UserCart;
 use Illuminate\Support\Facades\Auth;
@@ -242,10 +243,10 @@ class Products extends Component
 
     public function getFilteredProducts ()
     {
-        $products = Product::with('properties');
+        $products = Product::with('categories');
         
         if (!empty($this->category)) {
-            $products->whereHas('properties', function ($query) {
+            $products->whereHas('categories', function ($query) {
                 return $query->where('id', '=', $this->category->id);
             });
         }
@@ -287,7 +288,7 @@ class Products extends Component
 
     public function mount ($category)
     {
-        $this->category = Property::where('code', $category)->first();
+        $this->category = Category::where('code', $category)->first();
     }
 
     public function render()

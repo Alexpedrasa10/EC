@@ -34,9 +34,9 @@ class Product extends Model
     }
 
     
-    public function properties(): HasManyThrough
+    public function categories(): HasManyThrough
     {
-        return $this->HasManyThrough(Property::class, ProductProperties::class, 'product_id', 'id', 'id', 'property_id');
+        return $this->HasManyThrough(Category::class, ProductCategory::class, 'product_id', 'id', 'id', 'category_id');
     }
 
     public function photo ()

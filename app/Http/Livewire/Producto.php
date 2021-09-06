@@ -19,7 +19,7 @@ class Producto extends Component
     
     public function mount($slug)
     {
-        $this->product = Product::with('properties')->where('slug', $slug)->first();
+        $this->product = Product::with('categories')->where('slug', $slug)->first();
         $this->photos = $this->product->photos()->get();
         $this->url = $this->product->photo->filename;
         $this->price = !is_null($this->product->sale_price) ? $this->product->sale_price : $this->product->price;
@@ -70,8 +70,8 @@ class Producto extends Component
         else {
             
             // Hay q mejorar esto
-            $productRelationated = Product::with('properties')
-                ->whereHas('properties', function ($query) {
+            $productRelationated = Product::with('categories')
+                ->whereHas('categories', function ($query) {
                     return $query->where('id', '=', 3);
                 })
                 ->limit(5)

@@ -199,7 +199,7 @@ class ProductsTableSeeder extends Seeder
             array (
                 'id' => 12,
                 'name' => 'Camiseta PSG Visitante 21/22',
-                'slug' => 'CamisetaPSGVisitante2122',
+                'slug' => 'CamisetaPSGVisitante21-22',
                 'description' => 'Camiseta suplente del Paris Saint-Germain para la temporada 2021/22.',
                 'stock' => '10.00',
                 'price' => 12000.0,
@@ -209,7 +209,7 @@ class ProductsTableSeeder extends Seeder
                 'photo_id' => 12,
                 'is_active' => 1,
                 'created_at' => '2021-08-28 00:18:33',
-                'updated_at' => '2021-08-28 00:24:18',
+                'updated_at' => '2021-09-06 23:05:16',
             ),
             12 => 
             array (
@@ -233,15 +233,15 @@ class ProductsTableSeeder extends Seeder
                 'name' => 'Camiseta PSG Jordan - Champions 2020',
                 'slug' => 'CamisetaPSGJordan-Champions2020',
                 'description' => 'Camiseta PSG en colaboración con Jordan utilizada en todos los partidos de UEFA Champions League de la temporada 2020 en la que el equipo parisino llegó a la final.',
-                'stock' => '24.00',
+                'stock' => '18.00',
                 'price' => 8500.0,
                 'sale_price' => 7500.0,
                 'code' => NULL,
-                'data' => '{"sizes": [{"size": "L", "quantity": "14"}, {"size": "S", "quantity": "6"}, {"size": "M", "quantity": "4"}], "relations": [{"product_id": 1}, {"product_id": 13}, {"product_id": 12}, {"product_id": 3}]}',
-                'photo_id' => 14,
+                'data' => '{"sizes": [{"size": "L", "quantity": 12}, {"size": "S", "quantity": 2}, {"size": "M", "quantity": "4"}], "relations": [{"product_id": 1}, {"product_id": 13}, {"product_id": 12}, {"product_id": 3}]}',
+                'photo_id' => 15,
                 'is_active' => 1,
                 'created_at' => '2021-08-28 20:02:31',
-                'updated_at' => '2021-08-28 20:02:34',
+                'updated_at' => '2021-09-06 02:22:09',
             ),
         ));
         

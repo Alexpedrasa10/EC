@@ -145,6 +145,33 @@ class PhotoProductsTableSeeder extends Seeder
                 'created_at' => '2021-08-28 20:02:34',
                 'updated_at' => '2021-08-28 20:02:34',
             ),
+            14 => 
+            array (
+                'id' => 15,
+                'filename' => 'XdKRj6NbC2J1lnNsc2Gt5vlyVTRI9wJmLEeQS67n.jpg',
+                'url' => 'https://www.dropbox.com/s/2td921hmxwnnkak/XdKRj6NbC2J1lnNsc2Gt5vlyVTRI9wJmLEeQS67n.jpg?dl=0',
+                'product_id' => 14,
+                'created_at' => '2021-09-06 02:21:59',
+                'updated_at' => '2021-09-06 02:21:59',
+            ),
+            15 => 
+            array (
+                'id' => 16,
+                'filename' => 'Xz4KV7Ikz4HPdsnuuciHN1lCVZOgEtFKBZJYL8fw.jpg',
+                'url' => 'https://www.dropbox.com/s/y2ge1qa54j8d5l3/Xz4KV7Ikz4HPdsnuuciHN1lCVZOgEtFKBZJYL8fw.jpg?dl=0',
+                'product_id' => 12,
+                'created_at' => '2021-09-06 23:04:58',
+                'updated_at' => '2021-09-06 23:04:58',
+            ),
+            16 => 
+            array (
+                'id' => 17,
+                'filename' => 'PKL9FTjgL1N9jI317MxbyfSpPdG9rqmHonm9msds.jpg',
+                'url' => 'https://www.dropbox.com/s/csfe5ded55o5x3b/PKL9FTjgL1N9jI317MxbyfSpPdG9rqmHonm9msds.jpg?dl=0',
+                'product_id' => 12,
+                'created_at' => '2021-09-06 23:05:01',
+                'updated_at' => '2021-09-06 23:05:01',
+            ),
         ));
         
         

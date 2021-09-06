@@ -19,7 +19,6 @@ class PaypalMethod extends Seeder
             'category' => 'PMET',
             'code' => 'PYP',
             'name' => 'Paypal',
-            'for_products' => False
         ]);
     }
 }

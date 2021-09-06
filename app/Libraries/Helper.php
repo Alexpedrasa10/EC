@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Property;
+use App\Models\Category;
 
 class Helper 
 {
@@ -10,30 +11,27 @@ class Helper
         if (is_null($code)) {
             
             $response = Property::where('category', $category)
-                ->where('for_products', $forProducts)
                 ->get();
         }
         else {
 
             $response = Property::where('category', $category)
                 ->where('code', $code)
-                ->where('for_products', $forProducts)
                 ->first();
         }
 
         return $response;
     }
 
-    public static function getAllPropertiesProducts ()
+    public static function getAllCategories ()
     {
-        return Property::where('for_products', true)->where('active', true)->get();
+        return Category::where('active', true)->get();
     }
 
     public static function getLoginMethods()
     {
         $response = Property::where('category', "MLOG")
             ->where('active', true)
-            ->where('for_products', false)
             ->get();
     
         return $response;
@@ -43,7 +41,6 @@ class Helper
     {
         $response = Property::where('category', "PMET")
             ->where('active', true)
-            ->where('for_products', false)
             ->get();
         
         return $response;

@@ -5,7 +5,8 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\Product;
 use App\Models\Property;
-use App\Models\ProductProperties;
+use App\Models\Category;
+use App\Models\ProductCategory;
 use stdClass;
 use Livewire\WithFileUploads;
 use App\Models\PhotoProduct;
@@ -52,7 +53,7 @@ class EditMyProducts extends Component
 
     public function addProperty (int $id)
     {
-        $property = Property::where('id', $id)->first();
+        $property = Category::where('id', $id)->first();
         $exist = FALSE;
 
 
@@ -225,7 +226,7 @@ class EditMyProducts extends Component
 
         if (!empty($categories)) {
             
-            $currentProperties = ProductProperties::where('product_id', $idProd)->get();
+            $currentProperties = ProductCategory::where('product_id', $idProd)->get();
 
             // Agrega las categorias
             foreach ($categories as $cat) {
@@ -237,7 +238,7 @@ class EditMyProducts extends Component
                     
                     foreach ($currentProperties as $cProp) {
                         
-                        if ($cProp->property_id == $cat->id) {
+                        if ($cProp->category_id == $cat->id) {
                             $exist = TRUE;
                         }
                     }
@@ -245,9 +246,9 @@ class EditMyProducts extends Component
 
                 if (!$exist) {
 
-                    $newCat = new ProductProperties;
+                    $newCat = new ProductCategory;
                     $newCat->product_id = $idProd;
-                    $newCat->property_id = gettype($cat) != 'array' ? $cat->id : $cat['id'];
+                    $newCat->category_id = gettype($cat) != 'array' ? $cat->id : $cat['id'];
                     $newCat->save();
                 }
             }
@@ -255,20 +256,20 @@ class EditMyProducts extends Component
             // Elimina las categorias que ya no estan
             foreach ($currentProperties as $cProp) {
                 
-                $propId = $cProp->property_id;
+                $propId = $cProp->category_id;
                 $stillExist = FALSE;
 
                 foreach ($categories as $cat) {
                     
-                    if ($cat->id == $cProp->property_id) {
+                    if ($cat->id == $cProp->category_id) {
                         $stillExist = TRUE;
                     }
                 }
 
                 if (!$stillExist) {
                     
-                    ProductProperties::where('product_id', $idProd)
-                        ->where('property_id', $cProp->property_id)
+                    ProductCategory::where('product_id', $idProd)
+                        ->where('category_id', $cProp->category_id)
                         ->delete();
                 }
             }
@@ -483,11 +484,11 @@ class EditMyProducts extends Component
 
     public function mount (string $slug = NULL)
     {
-        $this->properties = Helper::getAllPropertiesProducts();
+        $this->properties = Helper::getAllCategories();
 
         if (!is_null($slug)) {
 
-            $this->product = Product::with('properties', 'photos')->where('slug', $slug)->first();
+            $this->product = Product::with('categories', 'photos')->where('slug', $slug)->first();
             $this->coverPhoto = $this->product->photo_id;
             $this->name = $this->product->name;
             $this->URL = $this->product->slug;
@@ -497,7 +498,7 @@ class EditMyProducts extends Component
             $this->sizes = isset(json_decode($this->product->data)->sizes) ? json_decode($this->product->data)->sizes : NULL;
             $this->hasSizes = !is_null($this->sizes) ? TRUE : FALSE;
             $this->description = $this->product->description;
-            $this->categories = !empty($this->product->properties()->get()) ? $this->product->properties()->get() : new Collection;
+            $this->categories = !empty($this->product->categories()->get()) ? $this->product->categories()->get() : new Collection;
             $this->productsRelationed = $this->getProductsRelationated();
         }
         else {
