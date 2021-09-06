@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-class ProductPropertiesTableSeeder extends Seeder
+class ProductCategoriesTableSeeder extends Seeder
 {
 
     /**
