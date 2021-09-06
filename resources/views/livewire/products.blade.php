@@ -19,7 +19,7 @@
         @foreach ($products as $item)
         <div class="flex bg-white dark:bg-gray-800 rounded-sm shadow-md hover:shadow-lg py-4">
             <div class="flex-none w-48 relative">
-                <img src="{{ Storage::disk('dropbox')->url("{$item->photo->filename}") }}" alt="shopping image" class="absolute rounded-lg inset-0 w-full h-full object-cover"/>
+                <img src="{{ Storage::disk('dropbox')->url("{$item->photo->filename}") }}" alt="{{$item->name}}" class="absolute rounded-lg inset-0 w-full h-full object-cover"/>
             </div>
             
             <form class="flex-auto px-1">
