@@ -8,6 +8,8 @@ return [
         'paypal'
     ],
 
+    'default_asset' => env('DEFAULT_ASSET'),
+
     'use_sandbox' => env('SANDBOX_GATEWAYS', true),
 
     'mercadopago' => [

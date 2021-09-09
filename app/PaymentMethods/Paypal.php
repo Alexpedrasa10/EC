@@ -36,7 +36,7 @@ class Paypal
         $this->order = $this->cart->order()->first();
     }
 
-    public function run()
+    public function generatePayment()
     {
         $request = new OrdersCreateRequest();
         $request->prefer('return=representation');
@@ -47,6 +47,10 @@ class Paypal
         $response = $client->execute($request);
 
         if ($response->statusCode == 201) {
+
+            $this->order->payment_id = $response->result->id;
+            $this->order->save();
+            
             return $response->result->links[1]->href;
         }        
     }
@@ -58,7 +62,7 @@ class Paypal
             'intent' => 'CAPTURE',
             'application_context' =>
                 array(
-                    'return_url' => route('success'),
+                    'return_url' => route('paySuccess'),
                     'cancel_url' => 'https://example.com/cancel'
                 ),
             'purchase_units' =>
@@ -68,7 +72,7 @@ class Paypal
                             'amount' =>
                                 array(
                                     'currency_code' => 'USD',
-                                    'value' => intval(($this->cart->amount / 180))
+                                    'value' => $this->order->total_amount
                                 )
                         )
                 )

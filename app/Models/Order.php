@@ -9,6 +9,7 @@ class Order extends Model
 {
     use HasFactory;
 
+    protected $table = 'orders';
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +22,38 @@ class Order extends Model
         'adress_id',
         'status_id',
         'data',
-        'payment_id'
+        'payment_id',
+        'asset_id',
+        'total_amount'
     ];
+
+    public function cart ()
+    {
+        return $this->hasOne(UserCart::class, 'id', 'user_cart_id');
+    }
+
+    public function method ()
+    {
+        return $this->hasOne(Property::class, 'id', 'method_id');
+    }
+
+    public function adress ()
+    {
+        return $this->hasOne(UserAdress::class, 'id', 'adress_id');
+    }
+
+    public function status ()
+    {
+        return $this->hasOne(Property::class, 'id', 'status_id');
+    }
+
+    public function asset ()
+    {
+        return $this->hasOne(Property::class, 'id', 'asset_id');
+    }
+
+    public function user ()
+    {
+        return $this->hasOneThrough(User::class, UserCart::class, 'id', 'id', 'user_cart_id', 'user_id');
+    }
 }

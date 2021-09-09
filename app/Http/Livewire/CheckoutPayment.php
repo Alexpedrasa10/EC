@@ -58,13 +58,18 @@ class CheckoutPayment extends Component
             ]);
 
             $order = $this->cart->order()->first();
+            $statusOrder = Helper::getProperties('OSTA', 'PROC')->id;
+            $assetId = Helper::getAssetId($methodId);
+            $totalAmount = Helper::getTotalAmount($this->cart->amount, $methodId, $assetId);
 
             // Crea o actualiza la orden
-            if (!empty($hasOrder)) {
+            if (!empty($order)) {
                 
                 $order->method_id = $methodId;
                 $order->adress_id = $newAdress->id;
-                $order->status_id = Helper::getProperties('OSTA', 'PROC', false)->id;
+                $order->status_id = $statusOrder;
+                $order->asset_id = $assetId;
+                $order->total_amount = $totalAmount;
                 $order->save();
             }
             else {
@@ -73,7 +78,9 @@ class CheckoutPayment extends Component
                     'user_cart_id' => $this->cart->id,
                     'method_id' => $methodId,
                     'adress_id' => $newAdress->id,
-                    'status_id' =>  Helper::getProperties('OSTA', 'PROC', false)->id
+                    'status_id' => $statusOrder,
+                    'asset_id' => $assetId,
+                    'total_amount' => $totalAmount
                 ]);
             }
 

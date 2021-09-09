@@ -30,7 +30,7 @@ class Mercadopago
     $this->products = CartProduct::with('product')->where('user_cart_id', $this->cart->id)->get();
   }
     
-  public function run(): string
+  public function generatePayment(): string
   {
 
     # Create a preference object
@@ -46,7 +46,7 @@ class Mercadopago
     $preference->external_reference = $this->cart->id;
 
     $preference->back_urls = [
-      "success" => route('success'),
+      "success" => route('paySuccess'),
       "pending" => route('dashboard'),
       "failure" => route('dashboard'),
     ];

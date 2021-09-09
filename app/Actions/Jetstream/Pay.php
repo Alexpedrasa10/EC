@@ -36,20 +36,20 @@ class Pay
 
         if (class_exists($method)) {
             $generatePayment = new $method;
-            return $generatePayment->run();
+            return $generatePayment->generatePayment();
         }
     }
 
     public static function paySucess ($data)
     {
-        dump($data);
         // Actualiza el estado del carrito
         if ($data->external_reference) {
             $cart = UserCart::where('id', $data->external_reference)->first();
         }
         else {
-            $user = User::where('id', Auth::user()->id)->first();
-            $cart = $user->cart()->first();
+            
+            $order = Order::where('payment_id', $data->token)->first();
+            $cart = $order->cart()->first();
         }
 
         $cart->buy = TRUE;
@@ -61,8 +61,12 @@ class Pay
         // Actualiza orden
         $order = $cart->order()->first();
         $order->data = json_encode($data->all());
-        $order->status_id = Helper::getProperties('OSTA', 'SUCC', false)->id;
-        $order->payment_id = $data->payment_id; //cambiar esto hacerlo segun el pay meth
+        $order->status_id = Helper::getProperties('OSTA', 'SUCC')->id;
+
+        if (is_null($order->payment_id)) {
+            $order->payment_id = $data->payment_id;
+        }
+        
         $order->save();
         
         return view('dashboard'); //cambiar esto

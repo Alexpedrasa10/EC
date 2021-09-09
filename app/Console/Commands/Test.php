@@ -5,10 +5,10 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Helper;
 use App\Models\UserCart;
-use App\Models\PhotoProduct;
+use App\Models\Order;
 use App\Models\Product;
 use GuzzleHttp\Client;
-use App\PaymentMethods\Bitcoin;
+use App\Services\ConvertApi;
 
 class Test extends Command
 {
@@ -44,7 +44,7 @@ class Test extends Command
     public function handle()
     {
         
-        $product = Product::find(1);
-        dump($product->photo()->first());
+        $order = Order::where('id', 5)->first();
+        dump($order->user()->first());
     }
 }
