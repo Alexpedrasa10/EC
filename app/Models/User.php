@@ -66,6 +66,11 @@ class User extends AuthUser
         return $this->hasOne(UserCart::class, 'user_id', 'id')->whereNull('user_cart.buy')->whereNull('user_cart.canceled');
     }
 
+    public function adress ()
+    {
+        return $this->hasMany(UserAdress::class, 'user_id', 'id');
+    }
+
     public function allCarts () :HasMany
     {
         return $this->HasMany(UserCart::class);

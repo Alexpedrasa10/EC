@@ -24,4 +24,24 @@ class UserAdress extends Model
         'adress',
         'references',
     ];
+
+    public function province ()
+    {
+        return $this->hasOne(Province::class, 'id', 'province_id');
+    }
+
+    public function provinceName ()
+    {
+        return $this->province->first()->name;
+    }
+
+    public function city ()
+    {
+        return $this->hasOne(City::class, 'id', 'city_id');
+    }
+
+    public function cityName ()
+    {
+        return $this->city->first()->name;
+    }
 }
