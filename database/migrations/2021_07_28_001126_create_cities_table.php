@@ -23,6 +23,7 @@ class CreateCitiesTable extends Migration
             $table->timestamps();
 
             $table->foreign('province_id')->references('id')->on('provinces');
+            $table->index(array('province_id'), 'cities_index');
 		});
     }
 

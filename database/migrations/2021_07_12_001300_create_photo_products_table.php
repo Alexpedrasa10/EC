@@ -22,6 +22,7 @@ class CreatePhotoProductsTable extends Migration
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products');
+            $table->index(array('product_id'), 'product_photo_index');
         });
     }
 

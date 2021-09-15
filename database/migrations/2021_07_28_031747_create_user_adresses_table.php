@@ -28,6 +28,9 @@ class CreateUserAdressesTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('province_id')->references('id')->on('provinces');
             $table->foreign('city_id')->references('id')->on('cities');
+
+            $table->index(array('user_id', 'province_id', 'city_id'), 'user_adresses_index');
+
         });
     }
 

@@ -22,6 +22,8 @@ class CreateCategoriesTable extends Migration
             $table->jsonb('data')->nullable(true);
             $table->boolean('active')->default(true);
             $table->timestamps();
+
+            $table->index(array('category', 'code'), 'categories_index');
         });
     }
 

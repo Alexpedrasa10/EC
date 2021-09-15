@@ -26,6 +26,8 @@ class CreateProductsTable extends Migration
             $table->jsonb('data')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
+
+            $table->index(array('slug', 'code'), 'product_index');
         });
     }
 

@@ -17,6 +17,8 @@ class SetPhotoProduct extends Migration
 
             $table->unsignedBigInteger('photo_id')->after('data')->nullable(true);
             $table->foreign('photo_id')->references('id')->on('photo_products');
+
+            $table->index(array('photo_id'), 'photo_product_index');
         });
     }
 

@@ -45,7 +45,7 @@ class Producto extends Component
         if ($url != $this->url) {
             
             $this->url = $url;
-            $this->hydrate();
+            $this->render();
         }
     }
 
@@ -373,6 +373,8 @@ class Producto extends Component
 
     public function render()
     {
-        return view('livewire.producto');
+        return view('livewire.producto',[
+            'url' => $this->url,
+        ]);
     }
 }

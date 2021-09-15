@@ -22,6 +22,7 @@ class CreateUserCartsTable extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
+            $table->index(array('user_id'), 'user_cart_index');
         });
     }
 

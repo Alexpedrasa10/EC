@@ -31,6 +31,8 @@ class Orders extends Migration
             $table->foreign('asset_id')->references('id')->on('properties');
             $table->foreign('method_id')->references('id')->on('properties');
             $table->foreign('adress_id')->references('id')->on('user_adresses');
+
+            $table->index(array('method_id', 'user_cart_id', 'adress_id', 'status_id'), 'order_index');
         });
     }
 
