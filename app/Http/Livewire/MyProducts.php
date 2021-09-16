@@ -6,6 +6,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
 use App\Models\Property;
+use Helper;
 
 class MyProducts extends Component
 {
@@ -64,7 +65,7 @@ class MyProducts extends Component
         
         if (Auth::user()->id == 1) {
             
-            $this->categories = Property::all();
+            $this->categories = Helper::getAllCategories();
             $products = Product::with('categories', 'photo');
 
             if (!empty($this->productName)) {
@@ -84,7 +85,8 @@ class MyProducts extends Component
             }
 
 
-            if (!empty($this->category)) {
+            if (!empty($this->category) && !is_null($this->category)) {
+
                 $products->whereHas('categories', function ($query) {
                     return $query->where('id', '=', $this->category);
                 });

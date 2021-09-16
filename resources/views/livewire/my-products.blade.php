@@ -77,7 +77,7 @@
                 <td>
                   @if (!empty($item->properties))
                   <span class="text-gray-500 text-sm text-center">
-                    {{$this->getPropertiesStr($item->properties)}}
+                    {{$this->getPropertiesStr($item->categories)}}
                   </span>
                   @endif
                 </td>
