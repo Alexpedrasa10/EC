@@ -44,7 +44,7 @@
 
             <div>
                 <x-jet-button class="mt-5 inline-block w-full rounded-sm shadow-lg bg-blue-600 text-center">
-                    <a href="{{ route('ashe', ['driver' => "facebook"]) }}" class="text-center">
+                    <a href="{{ route('socialite', ['driver' => "facebook"]) }}" class="text-center">
                         {{ __('Ingresar con Facebook') }}
                     </a>
                 </x-jet-button>

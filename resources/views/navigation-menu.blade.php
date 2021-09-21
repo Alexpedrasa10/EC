@@ -95,7 +95,7 @@
                 @foreach (\Helper::getLoginMethods() as $log)
                     <x-jet-button 
                         class="{{json_decode($log->data)->class}}">
-                        <a href="{{ route('ashe', ['driver' => "{$log->name}"]) }}" class="text-center">
+                        <a href="{{ route('socialite', ['driver' => "{$log->name}"]) }}" class="text-center">
                             {{ __('Ingresar con ') }} {{$log->name}}
                         </a>
                     </x-jet-button>
