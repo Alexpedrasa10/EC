@@ -4,8 +4,97 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b961089850cd5fec1e7c2c969f7d520d",
+    "content-hash": "35fcfcfaa58724c12c1eb1245764fe65",
     "packages": [
+        {
+            "name": "alejoasotelo/andreani",
+            "version": "v0.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/alejoasotelo/andreani-sdk-rest.git",
+                "reference": "0bb6fb50aa9fb9ea57d201e329d8dca36573675f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/alejoasotelo/andreani-sdk-rest/zipball/0bb6fb50aa9fb9ea57d201e329d8dca36573675f",
+                "reference": "0bb6fb50aa9fb9ea57d201e329d8dca36573675f",
+                "shasum": ""
+            },
+            "require": {
+                "andreani/sdk-php": "~1.5",
+                "joomla/http": "~1.0",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "joomla/registry": "~1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AlejoASotelo\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alejo Sotelo",
+                    "email": "soporte@alejosotelo.com.ar",
+                    "homepage": "https://alejosotelo.com.ar",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Librer\u0000a para conectar con la Api REST de Andreani.",
+            "homepage": "https://github.com/alejoasotelo/andreani-sdk-rest",
+            "keywords": [
+                "andreani",
+                "andreani webservice",
+                "api",
+                "api andreani",
+                "api rest andreani",
+                "carrier",
+                "rest",
+                "webservice"
+            ],
+            "support": {
+                "issues": "https://github.com/alejoasotelo/andreani-sdk-rest/issues",
+                "source": "https://github.com/alejoasotelo/andreani-sdk-rest/tree/v0.8.1"
+            },
+            "time": "2021-09-02T18:46:26+00:00"
+        },
+        {
+            "name": "andreani/sdk-php",
+            "version": "v1.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eandreani/sdk-php.git",
+                "reference": "3fe5738ec9c2ddbc34e850bd8e89d730772ef167"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eandreani/sdk-php/zipball/3fe5738ec9c2ddbc34e850bd8e89d730772ef167",
+                "reference": "3fe5738ec9c2ddbc34e850bd8e89d730772ef167",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Andreani": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Unlicense"
+            ],
+            "description": "SDK de Andreani para PHP",
+            "support": {
+                "issues": "https://github.com/eandreani/sdk-php/issues",
+                "source": "https://github.com/eandreani/sdk-php/tree/master"
+            },
+            "time": "2018-01-10T16:29:22+00:00"
+        },
         {
             "name": "asm89/stack-cors",
             "version": "v2.0.3",
@@ -2134,6 +2223,102 @@
                 }
             ],
             "time": "2020-06-13T08:05:20+00:00"
+        },
+        {
+            "name": "joomla/http",
+            "version": "1.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/joomla-framework/http.git",
+                "reference": "336243b2e6b135d19213e0847282d87d55658c8d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/joomla-framework/http/zipball/336243b2e6b135d19213e0847282d87d55658c8d",
+                "reference": "336243b2e6b135d19213e0847282d87d55658c8d",
+                "shasum": ""
+            },
+            "require": {
+                "joomla/uri": "~1.0",
+                "php": ">=5.3.10|>=7.0"
+            },
+            "require-dev": {
+                "joomla/test": "~1.0",
+                "phpunit/phpunit": "~4.8|~5.0",
+                "squizlabs/php_codesniffer": "1.*"
+            },
+            "suggest": {
+                "joomla/registry": "Registry can be used as an alternative to using an array for the package options."
+            },
+            "type": "joomla-package",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Joomla\\Http\\": "src/",
+                    "Joomla\\Http\\Tests\\": "Tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "description": "Joomla HTTP Package",
+            "homepage": "https://github.com/joomla-framework/http",
+            "keywords": [
+                "framework",
+                "http",
+                "joomla"
+            ],
+            "support": {
+                "issues": "https://github.com/joomla-framework/http/issues",
+                "source": "https://github.com/joomla-framework/http/tree/master"
+            },
+            "time": "2016-03-01T17:48:32+00:00"
+        },
+        {
+            "name": "joomla/uri",
+            "version": "1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/joomla-framework/uri.git",
+                "reference": "980e532e4235bb8f1ada15b28822abbeb171da3f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/joomla-framework/uri/zipball/980e532e4235bb8f1ada15b28822abbeb171da3f",
+                "reference": "980e532e4235bb8f1ada15b28822abbeb171da3f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.10"
+            },
+            "type": "joomla-package",
+            "autoload": {
+                "psr-4": {
+                    "Joomla\\Uri\\": "src/",
+                    "Joomla\\Uri\\Tests\\": "Tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "description": "Joomla Uri Package",
+            "homepage": "https://github.com/joomla-framework/uri",
+            "keywords": [
+                "framework",
+                "joomla",
+                "uri"
+            ],
+            "support": {
+                "issues": "https://github.com/joomla-framework/uri/issues",
+                "source": "https://github.com/joomla-framework/uri/tree/master"
+            },
+            "time": "2014-02-09T02:57:17+00:00"
         },
         {
             "name": "laravel/fortify",
