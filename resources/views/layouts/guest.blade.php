@@ -15,10 +15,36 @@
 
         <!-- Scripts -->
         <script src="{{ mix('js/app.js') }}" defer></script>
+        <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.3/dist/alpine.min.js" defer></script>
+
     </head>
     <body>
-        <div class="font-sans text-gray-900 antialiased">
-            {{ $slot }}
-        </div>
+        {{ $slot }}
+
+        @livewireScripts
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <script>
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                showCloseButton: false,
+                timer: 2000,
+                timerProgressBar:true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            window.addEventListener('alert',({detail:{type,text,title}})=>{
+                Toast.fire({
+                    title:title,
+                    text:text,
+                    icon:type,
+                })
+            })
+
+        </script>
     </body>
 </html>

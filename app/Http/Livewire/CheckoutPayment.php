@@ -17,7 +17,7 @@ use App\Models\UserAdress;
 
 class CheckoutPayment extends Component
 {   
-    public $user, $cart, $products, $paymentMethods;
+    public $user, $cart, $products, $paymentMethods, $steps = 1, $userAddress;
 
     public $provinces, $cities;
 
@@ -43,12 +43,45 @@ class CheckoutPayment extends Component
 
     public function pay ($methodId)
     {
+        $order = $this->cart->order()->first();
+        $statusOrder = Helper::getProperties('OSTA', 'PROC')->id;
+        $assetId = Helper::getAssetId($methodId);
+        $totalAmount = Helper::getTotalAmount($this->cart->amount, $methodId, $assetId);
+
+        // Crea o actualiza la orden
+        if (!empty($order)) {
+            
+            $order->method_id = $methodId;
+            $order->adress_id = $this->userAddress->id;
+            $order->status_id = $statusOrder;
+            $order->asset_id = $assetId;
+            $order->total_amount = $totalAmount;
+            $order->save();
+        }
+        else {
+
+            $order = Order::create([
+                'user_cart_id' => $this->cart->id,
+                'method_id' => $methodId,
+                'adress_id' => $this->userAddress->id,
+                'status_id' => $statusOrder,
+                'asset_id' => $assetId,
+                'total_amount' => $totalAmount
+            ]);
+        }
+
+        $pay = new Pay();
+        $pay->createOrder($order);
+    }
+
+    public function saveAddress ()
+    {
         $this->validate();
 
         if ($this->checkAdress()) {
             
             // Guardamos la direccion del pedido
-            $newAdress = UserAdress::firstOrCreate([
+            $this->userAddress = UserAdress::firstOrCreate([
                 'user_id' => $this->user->id,
                 'province_id' => $this->province,
                 'city_id' => $this->city,
@@ -57,36 +90,17 @@ class CheckoutPayment extends Component
                 'references' => $this->references
             ]);
 
-            $order = $this->cart->order()->first();
-            $statusOrder = Helper::getProperties('OSTA', 'PROC')->id;
-            $assetId = Helper::getAssetId($methodId);
-            $totalAmount = Helper::getTotalAmount($this->cart->amount, $methodId, $assetId);
-
-            // Crea o actualiza la orden
-            if (!empty($order)) {
-                
-                $order->method_id = $methodId;
-                $order->adress_id = $newAdress->id;
-                $order->status_id = $statusOrder;
-                $order->asset_id = $assetId;
-                $order->total_amount = $totalAmount;
-                $order->save();
-            }
-            else {
-
-                $order = Order::create([
-                    'user_cart_id' => $this->cart->id,
-                    'method_id' => $methodId,
-                    'adress_id' => $newAdress->id,
-                    'status_id' => $statusOrder,
-                    'asset_id' => $assetId,
-                    'total_amount' => $totalAmount
-                ]);
-            }
-
-            $pay = new Pay();
-            $pay->createOrder($order);
+            $this->steps = 2;
+            $this->toaster('Dirección guardada', 'success');
         }
+    }
+
+    public function toaster(string $title, string $type)
+    {
+        $this->dispatchBrowserEvent('alert',[
+            'title' => $title,
+            'type'=> $type, 
+        ]);
     }
 
     public function checkAdress() :bool
@@ -112,13 +126,38 @@ class CheckoutPayment extends Component
         return $ok;
     }
 
+    public function checkUserAddress ()
+    {
+        $uAddress = $this->user->adress()->first();
+
+        if (!empty($uAddress)) {
+            
+            /*
+             'user_id' => $this->user->id,
+                'province_id' => $this->province,
+                'city_id' => $this->city,
+                'zip_code' => $this->zipCode,
+                'adress' => $this->adress,
+                'references' => $this->references
+                 */
+            $this->province = $uAddress->province_id;
+            $this->city = $uAddress->city_id;
+            $this->zipCode = $uAddress->zip_code;
+            $this->adress = $uAddress->adress;
+            $this->references = $uAddress->references;
+            $this->userAddress = $uAddress;
+        }
+    }
+
     public function mount()
     {
-        $this->user = User::where('id', Auth::user()->id)->first();
+        $this->user = User::whereId(Auth::user()->id)->first();
         $this->cart = $this->user->cart()->first();
         $this->products = CartProduct::with('product')->where('user_cart_id', $this->cart->id)->get();
         $this->provinces = Province::all();
         $this->paymentMethods = Helper::getPaymentMethods();
+        
+        if ($this->user) $this->checkUserAddress();
     }
 
     public function render()
