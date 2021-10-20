@@ -2,16 +2,12 @@
 
 namespace App\PaymentMethods;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CartProduct;
 use App\Models\User;
 use GuzzleHttp\Client;
 use Helper;
 use stdClass;
-use GuzzleHttp\RequestOptions;
-use GuzzleHttp\Psr7\Request as RequestAshe;
-
 class Bitcoin
 {
 
@@ -31,18 +27,28 @@ class Bitcoin
         //$this->user = Auth::user();
         $this->user = User::find(2);
         $this->cart = $this->user->cart()->first();
-        $this->products = CartProduct::with('product')->where('user_cart_id', $this->cart->id)->get();
+        //$this->products = CartProduct::with('product')->where('user_cart_id', $this->cart->id)->get();
     }
     
+
+    /**
+     * Método principal para generar invoice lightining
+     * @return mixed
+     */
     public function run()
     {
         $amount_satoshis = $this->getAmountBTC();
-        dump($amount_satoshis);
+
         $invoice_lightining = $this->generateInvoice($amount_satoshis);
 
-        return $amount_satoshis;
+        return $invoice_lightining;
     }
 
+
+    /**
+    * Método para convertir precio en ARS al valor del BTC actual
+    * @return mixed
+    */
     public function getAmountBTC()
     {
         // Call API for quote
@@ -51,28 +57,38 @@ class Bitcoin
 
         // Set amounts
         $lastQuote = $getFullQuote->response->ticker->last_price[0];
-        $arsAmount = $this->cart->amount;
+        $arsAmount = 35000; //to do
         $totalAmount = $arsAmount / $lastQuote;
 
         return $totalAmount;
     }
 
+    /**
+    * Método para generar invoice lightinig
+    * @param $amount
+    * @return mixed
+    */
     public function generateInvoice ($amount)
     {
-        // Call API for generate invoice
         $path = "lightning_network_invoices";
         $body = $this->getPayloadInvoice($amount);
-        //$generateInvoice = $this->call("POST", $path, true, $body);
+        $generateInvoice = $this->call("POST", $path, true, $body);
 
-        //PRUEBA
-        $pathbalance = "balances/bch";
-        $balance = $this->call("GET", $pathbalance, true);
+        return $generateInvoice;
     }
 
+    /**
+     * Enpoint a la API de Buda de forma dinámica
+     * 
+     * @param string $method
+     * @param string $path
+     * @param bool $private
+     * @param string $body
+     * @return mixed
+     */
     public function call ($method, $path, $private = false, $body = null)
     {
-        $fullPath = "{$this->url}{$path}.json";
-        dump($fullPath);
+        $fullPath = "{$this->url}{$path}";
 
         if ($private) {
 
@@ -81,32 +97,30 @@ class Bitcoin
             $path = "/api/v2/" .$path;
             $sign = $this->getSign($method, $path, $nonce, $body);
             $headers = array(
-                'X-SBTC-APIKEY' => $this->api_key,
-                'X-SBTC-NONCE' => $nonce,
-                'X-SBTC-SIGNATURE' => $sign,
+                "X-SBTC-APIKEY:{$this->api_key}",
+                "X-SBTC-NONCE:{$nonce}",
+                "X-SBTC-SIGNATURE:{$sign}",
+                'Content-Type: application/json'
             );
 
             $ch = curl_init($fullPath);
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
             if ($method == "POST") {
+                
                 curl_setopt($ch, CURLOPT_POST, true);
                 curl_setopt( $ch, CURLOPT_POSTFIELDS, $body );
             }
 
             curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-            //dd($ch);
 
-            $o2r = (object)[
+            $res = (object)[
                 'response' => curl_exec($ch),
-                'responseCode' => curl_getinfo($ch, CURLINFO_HTTP_CODE),
-                'nashe' => curl_getinfo($ch,   CURLINFO_HTTPAUTH_AVAIL)
+                'code' => curl_getinfo($ch, CURLINFO_HTTP_CODE),
             ];
 
 
             curl_close($ch);
-
-            dd($o2r);
         }
         else {
 
@@ -129,28 +143,38 @@ class Bitcoin
         return $sec . substr($msec, 2, 3);
     }
 
-    public function getSign($method, $path, $nonce, $body = null)
+    /**
+     * Método para autenticarse a la API de Buda
+     * @param string $method
+     * @param string $path
+     * @param string $nonce
+     * @param string $body
+     * @return mixed     * 
+     */
+    public function getSign(string $method, string $path, string $nonce, string $body = null)
     {
         $components = [$method, $path];
 
-        if (!is_null($body)) {
-            $components[] = base64_encode($body);
-        }
+        if (!is_null($body)) $components[] = base64_encode($body);
 
         $components[] = $nonce;
         $msg = implode(" ", $components);
-        dump($msg);
-        $sign = hash_hmac("sha384", $msg, $this->secret);
 
-        return $sign;
+        return hash_hmac("sha384", $msg, $this->secret);
     }
 
+    
+    /**
+     * Método que devuelve el body para generar invoice
+     * @param $amount
+     * @return string
+     */
     public function getPayloadInvoice($amount)
     {
         $data = new stdClass();
         $data->amount_satoshis = $amount;
         $data->currency = "BTC";
-        $data->memo = "Anashe";
+        $data->memo = "Anashe"; //to do
 
         return json_encode($data);
     }
