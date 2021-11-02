@@ -69,7 +69,7 @@ class Pay
         
         $order->save();
         
-        return view('dashboard'); //cambiar esto
+        return redirect()->to('/');
     }
 
     public static function updateStock (UserCart $cart)
