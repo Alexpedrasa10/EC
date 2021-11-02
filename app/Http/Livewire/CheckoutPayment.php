@@ -74,6 +74,13 @@ class CheckoutPayment extends Component
         $pay->createOrder($order);
     }
 
+    public function getLogo($methodName)
+    {
+        
+        return asset("img/{$methodName}.png");
+    }
+
+
     public function saveAddress ()
     {
         $this->validate();

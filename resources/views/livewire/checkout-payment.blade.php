@@ -103,11 +103,16 @@
                             <div class="container mx-auto px-6 w-full">
                                 <p class="text-gray-800 text-medium py-3">Para finalizar, elige un método de pago: </p>
                                 @foreach ($paymentMethods as $method)
-                                    <x-jet-button class="bg-blue-600 hover:bg-blue-900" title="{{$method->name}}">
-                                        <a wire:click="pay({{$method->id}})" >
-                                            {{$method->name}}
-                                        </a>
-                                    </x-jet-button>
+                                    <div wire:click="pay({{$method->id}})" class="grid col-span-2 bg-gray-100 hover:bg-gray-400 my-5 rounded-xl shadow-sm cursor-pointer border-gray-700 border-2 border-opacity-20 p-5" title="{{$method->name}}">
+                                        <div>
+                                            <img src="{{$this->getLogo($method->name)}}" alt="">
+                                        </div>
+                                        <div>
+                                            <h2 class="text-xl tet-gray-900" >
+                                                {{$method->name}}
+                                            </h2>
+                                        </div>
+                                    </div>
                                 @endforeach
                         </div>
                         </div>
