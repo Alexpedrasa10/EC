@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Foundation\Auth\User as AuthUser;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -84,5 +85,10 @@ class User extends AuthUser
     public function products() :HasManyThrough
     {
         return $this->hasManyThrough(CartProduct::class, UserCart::class, 'user_id', 'user_cart_id', 'id', 'id')->whereNull('user_cart.buy')->whereNull('user_cart.canceled');;
+    }
+
+    public function order () :HasOneThrough
+    {
+        return $this->hasOneThrough(Order::class, UserCart::class)->whereNull('user_cart.buy')->whereNull('user_cart.canceled');
     }
 }

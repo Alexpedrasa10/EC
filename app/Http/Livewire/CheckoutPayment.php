@@ -17,7 +17,7 @@ use App\Models\UserAdress;
 
 class CheckoutPayment extends Component
 {   
-    public $user, $cart, $products, $paymentMethods, $steps = 1, $userAddress;
+    public $user, $cart, $products, $paymentMethods, $steps = 1, $userAddress, $order;
 
     public $provinces, $cities;
 
@@ -95,14 +95,6 @@ class CheckoutPayment extends Component
         }
     }
 
-    public function toaster(string $title, string $type)
-    {
-        $this->dispatchBrowserEvent('alert',[
-            'title' => $title,
-            'type'=> $type, 
-        ]);
-    }
-
     public function checkAdress() :bool
     {
         $province = Province::where('id', $this->province)->first();
@@ -126,23 +118,23 @@ class CheckoutPayment extends Component
         return $ok;
     }
 
-    public function checkUserAddress ()
+    public function toaster(string $title, string $type)
     {
-        $uAddress = $this->user->adress()->first();
+        $this->dispatchBrowserEvent('alert',[
+            'title' => $title,
+            'type'=> $type, 
+        ]);
+    }
+
+    public function checkUserAddress (UserAdress $uAddress = null)
+    {
+        if (is_null($uAddress)) $uAddress = $this->user->adress()->first();
 
         if (!empty($uAddress)) {
-            
-            /*
-             'user_id' => $this->user->id,
-                'province_id' => $this->province,
-                'city_id' => $this->city,
-                'zip_code' => $this->zipCode,
-                'adress' => $this->adress,
-                'references' => $this->references
-                 */
+
             $this->province = $uAddress->province_id;
             $this->city = $uAddress->city_id;
-            $this->zipCode = $uAddress->zip_code;
+            $this->zipCode = (int)$uAddress->zip_code;
             $this->adress = $uAddress->adress;
             $this->references = $uAddress->references;
             $this->userAddress = $uAddress;
@@ -152,12 +144,27 @@ class CheckoutPayment extends Component
     public function mount()
     {
         $this->user = User::whereId(Auth::user()->id)->first();
-        $this->cart = $this->user->cart()->first();
-        $this->products = CartProduct::with('product')->where('user_cart_id', $this->cart->id)->get();
-        $this->provinces = Province::all();
         $this->paymentMethods = Helper::getPaymentMethods();
-        
-        if ($this->user) $this->checkUserAddress();
+
+        if (!is_null($this->user)) {
+            
+            $this->cart = $this->user->cart()->first();
+            $this->order = $this->user->order()->first();
+            $this->products = CartProduct::with('product')->where('user_cart_id', $this->cart->id)->get();
+            $this->provinces = Province::all();
+
+            if (!is_null($this->order) && !is_null($this->order->adress_id)) {
+
+                $this->userAddress = UserAdress::whereId($this->order->adress_id)->first();
+                $this->steps = 2;
+                $this->checkUserAddress($this->userAddress);
+            }
+            else {
+
+                if ($this->order) $this->checkUserAddress();
+            }
+        }
+       
     }
 
     public function render()

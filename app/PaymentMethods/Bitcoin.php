@@ -40,6 +40,7 @@ class Bitcoin
         $amount_satoshis = $this->getAmountBTC();
 
         $invoice_lightining = $this->generateInvoice($amount_satoshis);
+        dump($invoice_lightining);
 
         return $invoice_lightining;
     }

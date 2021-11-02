@@ -7,6 +7,7 @@ use Helper;
 use App\Models\UserCart;
 use App\Models\Order;
 use App\Models\Product;
+use App\PaymentMethods\Bitcoin;
 use GuzzleHttp\Client;
 use App\Services\ConvertApi;
 
@@ -43,8 +44,7 @@ class Test extends Command
      */
     public function handle()
     {
-        
-        $order = Order::where('id', 5)->first();
-        dump($order->user()->first());
+        $btc = new Bitcoin();
+        $btc->run();
     }
 }
