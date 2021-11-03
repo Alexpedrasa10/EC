@@ -40,14 +40,17 @@
                 </x-jet-button>
             </div>
 
-            <br>
+            <hr class="my-8">
 
             <div>
-                <x-jet-button class="mt-5 inline-block w-full rounded-sm shadow-lg bg-blue-600 text-center">
-                    <a href="{{ route('socialite', ['driver' => "facebook"]) }}" class="text-center">
-                        {{ __('Ingresar con Facebook') }}
-                    </a>
-                </x-jet-button>
+                @foreach (\Helper::getLoginMethods() as $log)
+                    <x-jet-button 
+                        class="{{json_decode($log->data)->class}} w-full">
+                        <a href="{{ route('socialite', ['driver' => "{$log->name}"]) }}" class="text-center">
+                            {{ __('Ingresar con ') }} {{$log->name}}
+                        </a>
+                    </x-jet-button>
+                @endforeach
             </div>
 
             <div class="flex items-center justify-end mt-4">

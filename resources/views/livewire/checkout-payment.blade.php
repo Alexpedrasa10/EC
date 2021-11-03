@@ -103,7 +103,7 @@
                             <div class="container mx-auto px-6 w-full">
                                 <p class="text-gray-800 text-medium py-3">Para finalizar, elige un método de pago: </p>
                                 @foreach ($paymentMethods as $method)
-                                    <div wire:click="pay({{$method->id}})" class="grid col-span-2 bg-gray-100 hover:bg-gray-400 my-5 rounded-xl shadow-sm cursor-pointer border-gray-700 border-2 border-opacity-20 p-5" title="{{$method->name}}">
+                                    <div wire:click="pay({{$method->id}})" class="grid col-span-2 bg-gray-100 hover:bg-gray-200 transition ease-in duration-200 my-5 rounded-xl shadow-sm cursor-pointer border-gray-400 border-2 border-opacity-20 p-5" title="{{$method->name}}">
                                         <div>
                                             <img src="{{$this->getLogo($method->name)}}" alt="">
                                         </div>
