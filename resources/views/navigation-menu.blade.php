@@ -8,14 +8,15 @@
         
         $user = App\Models\User::whereId(Auth::user()->id)->first();
         $teamAdmin = App\Models\Team::whereName('Administracion')->first();
+        $isAdmin = $user->belongsToTeam($teamAdmin);
+
     }
 
-    $isAdmin = isset($teamAdmin) ? $user->belongsToTeam($teamAdmin) : null;
 
 @endphp
 
 
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+<nav x-data="{ open: false }" class="bg-white border-b border-gray-100 fixed w-full z-40">
     
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -40,7 +41,7 @@
                         </x-jet-nav-link>
                     @endforeach
 
-                    @if ($isAdmin)
+                    @if (isset($isAdmin) && $isAdmin)
                     <x-jet-nav-link href="{{ route('myProducts') }}">
                         {{ __('Mis Productos') }}
                     </x-jet-nav-link>

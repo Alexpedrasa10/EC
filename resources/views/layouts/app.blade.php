@@ -20,10 +20,9 @@
         <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.3/dist/alpine.min.js" defer></script>
     </head>
     <body class="font-sans antialiased dark:bg-gray-900">
-        <x-jet-banner />
+        @livewire('navigation-menu')
 
-        <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-            @livewire('navigation-menu')
+        <div class="pt-20 bg-gray-50 dark:bg-gray-900">
 
             <!-- Page Content -->
             <main>
