@@ -1,4 +1,22 @@
+@php
+    $navLinks = [
+        ['name' => 'Hombres', 'route' => 'MEN' ],
+        ['name' => 'Mujer', 'route' => 'WOMEN' ],
+    ];
+
+    if (Auth::user()) {
+        
+        $user = App\Models\User::whereId(Auth::user()->id)->first();
+        $teamAdmin = App\Models\Team::whereName('Administracion')->first();
+    }
+
+    $isAdmin = isset($teamAdmin) ? $user->belongsToTeam($teamAdmin) : null;
+
+@endphp
+
+
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+    
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -16,13 +34,17 @@
                         {{ __('Dashboard') }}
                     </x-jet-nav-link>
 
-                    <x-jet-nav-link href="{{ route('MEN') }}" :active="request()->is('MEN')">
-                        {{ __('Hombre') }}
-                    </x-jet-nav-link>
+                    @foreach ($navLinks as $nav)
+                        <x-jet-nav-link href="{{ route($nav['route']) }}" :active="request()->is($nav['route'])">
+                            {{ __($nav['name']) }}
+                        </x-jet-nav-link>
+                    @endforeach
 
-                    <x-jet-nav-link href="{{ route('WOMEN') }}" :active="request()->routeIs('WOMEN')">
-                        {{ __('Mujer') }}
+                    @if ($isAdmin)
+                    <x-jet-nav-link href="{{ route('myProducts') }}">
+                        {{ __('Mis Productos') }}
                     </x-jet-nav-link>
+                    @endif
                 </div>
             </div>
             @auth
@@ -50,10 +72,6 @@
                         </x-slot>
 
                         <x-slot name="content">
-                            <!-- Account Management -->
-                            <div class="block px-4 py-2 text-xs text-gray-400">
-                                {{ __('Manage Account') }}
-                            </div>
 
                             <x-jet-dropdown-link href="{{ route('profile.show') }}">
                                 {{ __('Profile') }}
@@ -127,9 +145,12 @@
             <x-jet-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-jet-responsive-nav-link>
-            {{-- <x-jet-responsive-nav-link href="{{ route('productos') }}/SPORT" :active="request()->routeIs('productos')">
-                {{ __('Productos') }}
-            </x-jet-responsive-nav-link> --}}
+            
+            @foreach ($navLinks as $nav)
+            <x-jet-responsive-nav-link href="{{ route($nav['route']) }}" :active="request()->is($nav['route'])">
+                {{ __($nav['name']) }}
+            </x-jet-responsive-nav-link>
+        @endforeach
         </div>
 
         @auth
