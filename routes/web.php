@@ -26,7 +26,7 @@ Route::get('/cart', function () {
 })->name('cart');
 
 // Dinamic
-Route::get('/productos', function ($category = NULL) {
+Route::get('/productos/{category?}', function ($category = NULL) {
     return view('productos', [ 
         'category' => $category
     ]);
