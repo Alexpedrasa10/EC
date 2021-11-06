@@ -24,7 +24,7 @@ class CreateProductsTable extends Migration
             $table->float('sale_price')->nullable();
             $table->string('code')->nullable();
             $table->jsonb('data')->nullable();
-            $table->integer('photo_id');
+            $table->integer('photo_id')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 

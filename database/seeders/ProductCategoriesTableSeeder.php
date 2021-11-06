@@ -29,7 +29,7 @@ class ProductCategoriesTableSeeder extends Seeder
             1 => 
             array (
                 'product_id' => 1,
-                'category_id' => 1,
+                'category_id' => 2,
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
@@ -43,7 +43,7 @@ class ProductCategoriesTableSeeder extends Seeder
             3 => 
             array (
                 'product_id' => 2,
-                'category_id' => 4,
+                'category_id' => 5,
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
@@ -64,21 +64,21 @@ class ProductCategoriesTableSeeder extends Seeder
             6 => 
             array (
                 'product_id' => 3,
-                'category_id' => 1,
+                'category_id' => 2,
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
             7 => 
             array (
                 'product_id' => 3,
-                'category_id' => 4,
+                'category_id' => 5,
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
             8 => 
             array (
                 'product_id' => 4,
-                'category_id' => 1,
+                'category_id' => 2,
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
@@ -99,7 +99,7 @@ class ProductCategoriesTableSeeder extends Seeder
             11 => 
             array (
                 'product_id' => 5,
-                'category_id' => 4,
+                'category_id' => 5,
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
@@ -113,14 +113,14 @@ class ProductCategoriesTableSeeder extends Seeder
             13 => 
             array (
                 'product_id' => 6,
-                'category_id' => 1,
+                'category_id' => 2,
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
             14 => 
             array (
                 'product_id' => 6,
-                'category_id' => 4,
+                'category_id' => 5,
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
@@ -134,7 +134,7 @@ class ProductCategoriesTableSeeder extends Seeder
             16 => 
             array (
                 'product_id' => 7,
-                'category_id' => 4,
+                'category_id' => 5,
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
@@ -148,7 +148,7 @@ class ProductCategoriesTableSeeder extends Seeder
             18 => 
             array (
                 'product_id' => 1,
-                'category_id' => 4,
+                'category_id' => 5,
                 'created_at' => '2021-08-28 00:06:52',
                 'updated_at' => '2021-08-28 00:06:52',
             ),
@@ -169,7 +169,7 @@ class ProductCategoriesTableSeeder extends Seeder
             21 => 
             array (
                 'product_id' => 9,
-                'category_id' => 1,
+                'category_id' => 2,
                 'created_at' => '2021-08-28 00:13:06',
                 'updated_at' => '2021-08-28 00:13:06',
             ),
@@ -183,14 +183,14 @@ class ProductCategoriesTableSeeder extends Seeder
             23 => 
             array (
                 'product_id' => 9,
-                'category_id' => 4,
+                'category_id' => 5,
                 'created_at' => '2021-08-28 00:13:06',
                 'updated_at' => '2021-08-28 00:13:06',
             ),
             24 => 
             array (
                 'product_id' => 9,
-                'category_id' => 11,
+                'category_id' => 12,
                 'created_at' => '2021-08-28 00:13:06',
                 'updated_at' => '2021-08-28 00:13:06',
             ),
@@ -204,7 +204,7 @@ class ProductCategoriesTableSeeder extends Seeder
             26 => 
             array (
                 'product_id' => 12,
-                'category_id' => 1,
+                'category_id' => 2,
                 'created_at' => '2021-08-28 00:18:36',
                 'updated_at' => '2021-08-28 00:18:36',
             ),
@@ -253,14 +253,14 @@ class ProductCategoriesTableSeeder extends Seeder
             33 => 
             array (
                 'product_id' => 10,
-                'category_id' => 1,
+                'category_id' => 2,
                 'created_at' => '2021-08-28 00:27:16',
                 'updated_at' => '2021-08-28 00:27:16',
             ),
             34 => 
             array (
                 'product_id' => 10,
-                'category_id' => 4,
+                'category_id' => 5,
                 'created_at' => '2021-08-28 00:27:16',
                 'updated_at' => '2021-08-28 00:27:16',
             ),
@@ -295,21 +295,21 @@ class ProductCategoriesTableSeeder extends Seeder
             39 => 
             array (
                 'product_id' => 11,
-                'category_id' => 4,
+                'category_id' => 5,
                 'created_at' => '2021-08-28 00:29:22',
                 'updated_at' => '2021-08-28 00:29:22',
             ),
             40 => 
             array (
                 'product_id' => 11,
-                'category_id' => 1,
+                'category_id' => 2,
                 'created_at' => '2021-08-28 00:29:22',
                 'updated_at' => '2021-08-28 00:29:22',
             ),
             41 => 
             array (
                 'product_id' => 8,
-                'category_id' => 1,
+                'category_id' => 2,
                 'created_at' => '2021-08-28 00:30:30',
                 'updated_at' => '2021-08-28 00:30:30',
             ),
@@ -330,7 +330,7 @@ class ProductCategoriesTableSeeder extends Seeder
             44 => 
             array (
                 'product_id' => 13,
-                'category_id' => 1,
+                'category_id' => 2,
                 'created_at' => '2021-08-28 19:48:37',
                 'updated_at' => '2021-08-28 19:48:37',
             ),
@@ -372,7 +372,7 @@ class ProductCategoriesTableSeeder extends Seeder
             50 => 
             array (
                 'product_id' => 14,
-                'category_id' => 1,
+                'category_id' => 2,
                 'created_at' => '2021-08-28 20:02:34',
                 'updated_at' => '2021-08-28 20:02:34',
             ),

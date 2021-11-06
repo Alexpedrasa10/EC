@@ -17,7 +17,7 @@ class CreateCategoriesTable extends Migration
             
             $table->id();
             $table->string('category');
-            $table->string('code');
+            $table->string('code')->nullable(true);
             $table->string('name');
             $table->jsonb('data')->nullable(true);
             $table->boolean('active')->default(true);

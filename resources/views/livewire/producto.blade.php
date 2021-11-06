@@ -92,7 +92,7 @@
             </div>
         </div>
     </main>
-    <div class="mt-20">
+    <div class="mt-20 p-2 sm:p-10 xl:p-10 lg:p-10 md:p-10">
         @livewire('products-relationed', [ 
             'product' => $product
         ]))

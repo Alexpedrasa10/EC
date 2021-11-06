@@ -14,6 +14,12 @@ class Categories extends Seeder
      */
     public function run()
     {
+
+        DB::table('categories')->insert([
+            'category' => 'GENDER',
+            'name' => 'Generos'
+        ]);
+
         DB::table('categories')->insert([
             'category' => 'GENDER',
             'code' => 'MEN',
@@ -24,6 +30,11 @@ class Categories extends Seeder
             'category' => 'GENDER',
             'code' => 'WOMEN',
             'name' => 'Mujer'
+        ]);
+
+        DB::table('categories')->insert([
+            'category' => 'CAT',
+            'name' => 'Categorías',
         ]);
 
         DB::table('categories')->insert([
@@ -45,13 +56,13 @@ class Categories extends Seeder
         ]);
 
         DB::table('categories')->insert([
-            'category' => 'SUBCAT',
+            'category' => 'CAT',
             'code' => 'PANT',
             'name' => 'Pantalón'
         ]);
 
         DB::table('categories')->insert([
-            'category' => 'SUBCAT',
+            'category' => 'CAT',
             'code' => 'TSHIRT',
             'name' => 'Remera'
         ]);
@@ -60,6 +71,11 @@ class Categories extends Seeder
             'category' => 'CAT',
             'code' => 'HYPE',
             'name' => 'Hype'
+        ]);
+
+        DB::table('categories')->insert([
+            'category' => 'BRAND',
+            'name' => 'Marcas'
         ]);
 
         DB::table('categories')->insert([
@@ -111,95 +127,9 @@ class Categories extends Seeder
         ]);
 
         DB::table('categories')->insert([
-            'category' => 'SUBCAT',
+            'category' => 'CAT',
             'code' => ' SNEAKER',
             'name' => 'Sneaker'
-        ]);
-
-        // Tabla Pivot
-        DB::table('product_categories')->insert([
-            'product_id' => 1,
-            'category_id' => 3,
-        ]);
-
-        DB::table('product_categories')->insert([
-            'product_id' => 1,
-            'category_id' => 1,
-        ]);
-
-        DB::table('product_categories')->insert([
-            'product_id' => 2,
-            'category_id' => 2,
-        ]);
-
-        DB::table('product_categories')->insert([
-            'product_id' => 2,
-            'category_id' => 4,
-        ]);
-
-        DB::table('product_categories')->insert([
-            'product_id' => 2,
-            'category_id' => 3,
-        ]);
-
-        DB::table('product_categories')->insert([
-            'product_id' => 2,
-            'category_id' => 6,
-        ]);
-
-        DB::table('product_categories')->insert([
-            'product_id' => 3,
-            'category_id' => 1,
-        ]);
-
-        DB::table('product_categories')->insert([
-            'product_id' => 3,
-            'category_id' => 4,
-        ]);
-
-        DB::table('product_categories')->insert([
-            'product_id' => 4,
-            'category_id' => 1,
-        ]);
-
-        DB::table('product_categories')->insert([
-            'product_id' => 4,
-            'category_id' => 3,
-        ]);
-
-        DB::table('product_categories')->insert([
-            'product_id' => 5,
-            'category_id' => 2,
-        ]);
-
-        DB::table('product_categories')->insert([
-            'product_id' => 5,
-            'category_id' => 4,
-        ]);
-
-        DB::table('product_categories')->insert([
-            'product_id' => 5,
-            'category_id' => 6,
-        ]);
-
-        DB::table('product_categories')->insert([
-            'product_id' => 6,
-            'category_id' => 1,
-        ]);
-
-        DB::table('product_categories')->insert([
-            'product_id' => 6,
-            'category_id' => 4,
-        ]);
-
-        DB::table('product_categories')->insert([
-            'product_id' => 7,
-            'category_id' => 2,
-        ]);
-
-        DB::table('product_categories')->insert([
-            'product_id' => 7,
-            'category_id' => 4,
         ]);
     }
 }

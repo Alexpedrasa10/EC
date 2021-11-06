@@ -26,23 +26,11 @@ Route::get('/cart', function () {
 })->name('cart');
 
 // Dinamic
-Route::get('/productos/{category?}', function ($category = NULL) {
+Route::get('/productos', function ($category = NULL) {
     return view('productos', [ 
         'category' => $category
     ]);
 })->name('productos');
-
-Route::get('/productos/MEN', function ($category = "MEN") {
-    return view('productos', [ 
-        'category' => $category
-    ]);
-})->name('MEN');
-
-Route::get('/productos/WOMEN', function ($category = "WOMEN") {
-    return view('productos', [ 
-        'category' => $category
-    ]);
-})->name('WOMEN');
 
 
 Route::get('/producto/{slug}', function ($slug) {

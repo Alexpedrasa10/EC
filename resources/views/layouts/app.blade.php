@@ -22,10 +22,10 @@
     <body class="font-sans antialiased dark:bg-gray-900">
         @livewire('navigation-menu')
 
-        <div class="pt-5 sm:pt-40 lg:pt-40 xl:pt-40 bg-gray-50 dark:bg-gray-900">
+        <div class="pt-5 sm:pt-20 lg:pt-20 xl:pt-20 bg-gray-50 dark:bg-gray-900">
 
             <!-- Page Content -->
-            <main>
+            <main class="pt-3">
                 {{ $slot }}
             </main>
             @livewire('footer')

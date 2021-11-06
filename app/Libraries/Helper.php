@@ -29,7 +29,7 @@ class Helper
 
     public static function getAllCategories ()
     {
-        return Category::where('active', true)->get();
+        return Category::where('active', true)->whereNotNull('code')->get();
     }
 
     public static function getLoginMethods()

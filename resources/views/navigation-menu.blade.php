@@ -1,7 +1,7 @@
 @php
     $navLinks = [
-        ['name' => 'Hombres', 'route' => 'MEN' ],
-        ['name' => 'Mujer', 'route' => 'WOMEN' ],
+        ['name' => 'Hombres', 'route' => 'productos', 'code' => "MEN" ],
+        ['name' => 'Mujer', 'route' => 'productos', 'code' => "WOMEN" ],
     ];
 
     if (Auth::user()) {
@@ -16,7 +16,7 @@
 @endphp
 
 
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100 md:fixed sm:md:fixed lg:md:fixed xl:md:fixed w-full z-40">
+<nav x-data="{ open: false }" class="bg-gray-50 border-b border-gray-100 md:fixed sm:md:fixed lg:md:fixed xl:md:fixed w-full z-40">
     
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -36,7 +36,9 @@
                     </x-jet-nav-link>
 
                     @foreach ($navLinks as $nav)
-                        <x-jet-nav-link href="{{ route($nav['route']) }}" :active="request()->is($nav['route'])">
+                        <x-jet-nav-link href="{{ route($nav['route'], [
+                            'category' => $nav['code']
+                        ]) }}">
                             {{ __($nav['name']) }}
                         </x-jet-nav-link>
                     @endforeach
