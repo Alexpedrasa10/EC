@@ -16,16 +16,18 @@ use Illuminate\Support\Facades\DB;
 
 class Products extends Component
 {
-    public $categories, $category, $user, $dataProducts = array();
+    public $categories, $categoriesFilter = [], $user, $dataProducts = array();
 
     use WithPagination;
-    public $filter = null, $priceLimit, $page = 1, $until = null, $since = null;
+    public $filter = null, $priceLimit, $page = 1, $until = null, $since = null,
+    $category = "";
 
     protected $queryString = [
         'filter' => ['except' => null],
         'page' => ['except' => 1],
         'until' => ['except' => null],
-        'since' => ['except' => null]
+        'since' => ['except' => null],
+        'category' => ['except' => '']
     ];
 
     public function addProductToCart(int $idProduct)
@@ -252,9 +254,12 @@ class Products extends Component
     {
         $products = Product::with('categories');
         
-        if (!empty($this->category)) {
+        if (!empty($this->categoriesFilter)) {
+
+            $this->category = implode(' ', $this->categoriesFilter);
+
             $products->whereHas('categories', function ($query) {
-                return $query->where('id', '=', $this->category->id);
+                return $query->whereIn('code', $this->categoriesFilter);
             });
         }
         
@@ -306,7 +311,7 @@ class Products extends Component
 
     public function mount ($category)
     {
-        $this->category = Category::where('code', $category)->first();
+        if (!is_null($category)) array_push($this->categoriesFilter, $category);
     }
 
     public function render()

@@ -16,7 +16,7 @@
 @endphp
 
 
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100 fixed w-full z-40">
+<nav x-data="{ open: false }" class="bg-white border-b border-gray-100 md:fixed sm:md:fixed lg:md:fixed xl:md:fixed w-full z-40">
     
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -172,8 +172,7 @@
         </div>
         @endauth
     </div>
-</nav>
-@auth
+    @auth
 @if(!empty(App\Models\User::where('id', '=', Auth::user()->id)->first()->cart()->first()))
 <div class="bg-indigo-600">
     <div class="max-w-7xl mx-auto py-3 px-3 sm:px-6 lg:px-8">
@@ -210,4 +209,4 @@
   </div>
 @endif
 @endauth
-
+</nav>
