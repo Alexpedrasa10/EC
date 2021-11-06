@@ -19,7 +19,14 @@ class Products extends Component
     public $categories, $category, $user, $dataProducts = array();
 
     use WithPagination;
-    public $filter = NULL, $priceLimit;
+    public $filter = null, $priceLimit, $page = 1, $until = null, $since = null;
+
+    protected $queryString = [
+        'filter' => ['except' => null],
+        'page' => ['except' => 1],
+        'until' => ['except' => null],
+        'since' => ['except' => null]
+    ];
 
     public function addProductToCart(int $idProduct)
     {
@@ -251,16 +258,27 @@ class Products extends Component
             });
         }
         
-        if ($this->filter == "sale") {
-            $products->whereNotNull('sale_price');
+        if (!is_null($this->filter)) {
+            
+            if ($this->filter == "sale") {
+                $products->whereNotNull('sale_price');
+            }
+    
+            if ($this->filter == "priceLower") {
+                $products->orderBy('price', 'ASC');
+            }
+    
+            if ($this->filter == "priceHigher") {
+                $products->orderBy('price', 'DESC');
+            }
         }
 
-        if ($this->filter == "priceLower") {
-            $products->orderBy('price', 'ASC');
+        if (!is_null($this->until) || !empty($this->until)) {
+            $products->where('price', '>=', $this->until);
         }
 
-        if ($this->filter == "priceHigher") {
-            $products->orderBy('price', 'DESC');
+        if (!is_null($this->since) || !empty($this->since)) {
+            $products->where('price', '<=', $this->since);
         }
         
         return $products;
@@ -300,7 +318,7 @@ class Products extends Component
         $products = $this->getFilteredProducts();
 
         return view('livewire.products', [ 
-            'products' => $products->paginate(8)
+            'products' => $products->paginate(6)
         ]);
     }
 }

@@ -2,16 +2,30 @@
     <h1 class="text-3xl font-bold ">Productos</h1>
 
     <div class="py-5">
-        <div class="w-full flex flex-col mb-3">
-            <div>
+        <div class="grid grid-cols-1 sm:grid-cols-4 md:sm:grid-cols-4 lg:sm:grid-cols-4 gap-2 sm:gap-2 md:gap-2 lg:gap-2">
+            <div class="col-span-2">
                 <label class=" text-gray-500 py-2">Filtrar por</label>
-                <select wire:model="filter" class="block text-grey-darker border border-gray-200 rounded-lg w-full sm:w-1/5 md:w-2/5 " required="required" name="integration[city_id]" id="integration_city_id">
+                <select type="search" wire:model="filter" class="block text-grey-darker border border-gray-200 rounded-lg w-full sm:w-1/5 md:w-3/5 " required="required" name="integration[city_id]" id="integration_city_id">
                     <option value="null">Todos</option>
                     <option value="priceLower">Precio más bajo</option>
                     <option value="priceHigher">Precio más alto</option>
                     <option value="sale">En oferta</option>
                 </select>
             </div>
+            <div class="col-span-2 flex flex-row">
+                <div class="flex-1 mx-1">
+                    <label class=" text-gray-500 py-2" for="until">Desde</label>
+                    <input class="block text-grey-darker border border-gray-200 rounded-lg w-full " wire:model="until" type="number">
+                </div>
+                <div class="flex-1 mx-1">
+                    <label class=" text-gray-500 py-2" for="until">Hasta</label>
+                    <input class="block text-grey-darker border border-gray-200 rounded-lg w-full" wire:model="since" type="number">
+                </div>
+            </div>
+            <div class="col-span-full">
+                
+            </div>
+            
         </div>
     </div>
 
