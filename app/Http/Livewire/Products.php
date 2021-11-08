@@ -16,7 +16,10 @@ use Illuminate\Support\Facades\DB;
 
 class Products extends Component
 {
-    public $categories, $categoriesFilter = [], $user, $dataProducts = array();
+    public $categories, $filterCategories, $user,
+    $dataProducts = array(), $allCategories;
+
+    public $categoriesFilter = array();
 
     use WithPagination;
     public $filter = null, $priceLimit, $page = 1, $until = null, $since = null,
@@ -256,11 +259,13 @@ class Products extends Component
         
         if (!empty($this->categoriesFilter)) {
 
-            $this->category = implode(' ', $this->categoriesFilter);
+            $this->category = implode('-', $this->categoriesFilter);
 
             $products->whereHas('categories', function ($query) {
-                return $query->whereIn('code', $this->categoriesFilter);
+                return $query->whereIn('categories.code', $this->categoriesFilter);
             });
+
+            dump($this->categoriesFilter);
         }
         
         if (!is_null($this->filter)) {
@@ -309,17 +314,23 @@ class Products extends Component
         return json_encode($data);
     }
 
+    public function addCategory($cat)
+    {
+        array_push($this->categoriesFilter, $cat['code']);
+    }
+
     public function mount ($category)
     {
+        if (Auth::user()) {
+            $this->user = User::whereId(Auth::user()->id)->first();
+        }
+
         if (!is_null($category)) array_push($this->categoriesFilter, $category);
     }
 
     public function render()
     {
-        if (Auth::user()) {
-            $this->user = User::where('id', '=', Auth::user()->id)->first();
-        }
-
+        $this->allCategories = Category::getCategories();
         $products = $this->getFilteredProducts();
 
         return view('livewire.products', [ 
