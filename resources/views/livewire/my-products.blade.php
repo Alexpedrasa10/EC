@@ -17,8 +17,8 @@
       </div>
 
       <div class="w-full">
-        <label class="block text-gray-600" for="productName">Nombre</label>
-        <x-jet-input id="productName" type="text" wire:model="productName"/>
+        <label class="block text-gray-600" for="name">Nombre</label>
+        <x-jet-input id="name" type="text" wire:model="name"/>
       </div>
 
       <div class="w-full">
@@ -75,7 +75,7 @@
                     <span class="text-gray-500 text-sm text-center">({{$this->getStockData($item->data)}})</span>
                 </td>
                 <td>
-                  @if (!empty($item->properties))
+                  @if (!empty($item->categories))
                   <span class="text-gray-500 text-sm text-center">
                     {{$this->getPropertiesStr($item->categories)}}
                   </span>
@@ -101,5 +101,18 @@
               @endforeach
             </tbody>
           </table>
+          
+          <div class="my-5 w-full">
+            {{$products->links()}}
+        </div>
+        <div class="w-3/5">
+          <label class=" text-gray-500 py-2">Filtrar por</label>
+          <select wire:model="limit" class="block text-grey-darker border border-gray-200 rounded-lg w-1/5">
+              <option value="10">10</option>
+              <option value="5">5</option>
+              <option value="15">15</option>
+              <option value="20">20</option>
+          </select>
+        </div>
     </div>    
 </div>

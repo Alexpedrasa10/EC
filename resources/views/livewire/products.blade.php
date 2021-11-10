@@ -21,6 +21,7 @@
                     <label class=" text-gray-500 py-2" for="until">Hasta</label>
                     <input class="block text-grey-darker border border-gray-200 rounded-lg w-full" wire:model="since" type="number">
                 </div>
+                
             </div>
             <div class="col-span-full">
                 
