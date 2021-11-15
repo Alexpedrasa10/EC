@@ -20,7 +20,7 @@ class MyProducts extends Component
 
     protected $queryString = [
         'name' => ['except' => ''],
-        'filter' => ['except' => ''],
+        'filter' => ['except' => 'null'],
         'limit' => ['except' => 0]
     ];
 

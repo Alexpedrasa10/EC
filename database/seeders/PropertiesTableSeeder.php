@@ -129,6 +129,17 @@ class PropertiesTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
+            10 => 
+            array (
+                'id' => 11,
+                'category' => 'OSTA',
+                'code' => 'CART',
+                'name' => 'En carrito',
+                'data' => NULL,
+                'active' => 1,
+                'created_at' => NULL,
+                'updated_at' => NULL,
+            ),
         ));
         
         

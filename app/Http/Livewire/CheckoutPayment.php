@@ -58,17 +58,6 @@ class CheckoutPayment extends Component
             $order->total_amount = $totalAmount;
             $order->save();
         }
-        else {
-
-            $order = Order::create([
-                'user_cart_id' => $this->cart->id,
-                'method_id' => $methodId,
-                'adress_id' => $this->userAddress->id,
-                'status_id' => $statusOrder,
-                'asset_id' => $assetId,
-                'total_amount' => $totalAmount
-            ]);
-        }
 
         $pay = new Pay();
         $pay->createOrder($order);
@@ -76,7 +65,6 @@ class CheckoutPayment extends Component
 
     public function getLogo($methodName)
     {
-        
         return asset("img/{$methodName}.png");
     }
 

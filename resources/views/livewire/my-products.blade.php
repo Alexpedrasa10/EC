@@ -108,8 +108,8 @@
         <div class="w-3/5">
           <label class=" text-gray-500 py-2">Filtrar por</label>
           <select wire:model="limit" class="block text-grey-darker border border-gray-200 rounded-lg w-1/5">
-              <option value="10">10</option>
               <option value="5">5</option>
+              <option value="10">10</option>
               <option value="15">15</option>
               <option value="20">20</option>
           </select>

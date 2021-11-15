@@ -266,10 +266,10 @@ class Producto extends Component
                 }
                 else{
         
-                    $newCart = new UserCart();
-                    $newCart->user_id = $user->id;
-                    $newCart->amount = $this->getAmount();
-                    $newCart->save();
+                    $newCart = UserCart::create([
+                        'user_id' => $user->id,
+                        'amount' => $this->getAmount()
+                    ]);
         
                     $newProductCart = new CartProduct();
                     $newProductCart->user_cart_id = $newCart->id;

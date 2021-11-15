@@ -16,13 +16,13 @@ class Orders extends Migration
         Schema::create('orders', function (Blueprint $table) {
 
             $table->id();
-            $table->unsignedBigInteger('method_id');
+            $table->unsignedBigInteger('method_id')->nullable();
             $table->unsignedBigInteger('user_cart_id');
-            $table->unsignedBigInteger('adress_id');
+            $table->unsignedBigInteger('adress_id')->nullable();
             $table->unsignedBigInteger('status_id');
             $table->jsonb('data')->nullable();
             $table->longtext('payment_id')->nullable();
-            $table->unsignedBigInteger('asset_id');
+            $table->unsignedBigInteger('asset_id')->nullable();
             $table->float('total_amount');
             $table->timestamps();
 

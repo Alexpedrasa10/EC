@@ -323,7 +323,7 @@ class Products extends Component
         $products = $this->getFilteredProducts();
 
         return view('livewire.products', [ 
-            'products' => $products->paginate(6)
+            'products' => $products->paginate(9)
         ]);
     }
 }
