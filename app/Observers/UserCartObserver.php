@@ -31,7 +31,21 @@ class UserCartObserver
      */
     public function updated(UserCart $userCart)
     {
-        //
+        $order = $userCart->order()->first();
+        
+        if ($userCart->canceled) {
+            
+            $order->status_id = Helper::getProperties('OSTA','CANCEL')->id;
+            $order->save();
+        }
+        else {
+
+            if (is_null($order->method_id)) {
+            
+                $order->total_amount = $userCart->amount;
+                $order->save();
+            }
+        }
     }
 
     /**

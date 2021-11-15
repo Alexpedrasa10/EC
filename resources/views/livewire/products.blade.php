@@ -30,7 +30,7 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-3 md:sm:grid-cols-3 lg:sm:grid-cols-6 gap-3 sm:gap-2 md:gap-2 lg:gap-2">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:sm:grid-cols-4 gap-3 sm:gap-2 md:gap-4 lg:gap-2">
         @foreach ($products as $item)
         <div class="flex bg-white dark:bg-gray-800 rounded-sm shadow-md hover:shadow-lg py-4">
             <div class="flex-none w-48 relative">
