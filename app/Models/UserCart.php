@@ -34,4 +34,9 @@ class UserCart extends Model
         return $this->hasOne(Order::class, 'user_cart_id', 'id');
     }
 
+    public function user ()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
 }

@@ -2,13 +2,18 @@
 
 namespace App\Actions\Jetstream;
 
+use App\Mail\OrderFinish;
 use App\PaymentMethods\Mercadopago;
 use App\Models\UserCart;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Team;
+use App\Models\TeamInvitation;
 use Helper;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+use Laravel\Jetstream\Mail\TeamInvitation as MailTeamInvitation;
 
 class Pay
 {
@@ -69,6 +74,9 @@ class Pay
         
         $order->save();
         
+        $email = $cart->user()->first()->email;
+        $this->sendEmail($order, $email);
+
         return redirect()->to('/');
     }
 
@@ -106,5 +114,10 @@ class Pay
             $product->data = json_encode($stockSizes);
             $product->save();
         }
+    }
+
+    public function senEmail (Order $order, string $email)
+    {
+        Mail::to($email)->send(new OrderFinish($order));
     }
 }
