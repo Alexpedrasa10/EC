@@ -25,6 +25,11 @@ class UserAdress extends Model
         'references',
     ];
 
+    protected $appends = [
+        'provinceName',
+        'cityName'
+    ];
+
     public function province ()
     {
         return $this->hasOne(Province::class, 'id', 'province_id');
@@ -32,7 +37,12 @@ class UserAdress extends Model
 
     public function provinceName ()
     {
-        return $this->province->first()->name;
+        return $this->province()->first()->name;
+    }
+
+    public function getProvinceNameAttribute()
+    {
+        return $this->provinceName();
     }
 
     public function city ()
@@ -42,6 +52,11 @@ class UserAdress extends Model
 
     public function cityName ()
     {
-        return $this->city->first()->name;
+        return $this->city()->first()->name;
+    }
+
+    public function getCityNameAttribute()
+    {
+        return $this->cityName();
     }
 }
