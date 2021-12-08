@@ -45,9 +45,55 @@ class Pay
         }
     }
 
-    public static function paySucess ($data)
+    public static function paySucess (object $data)
     {
         // Actualiza el estado del carrito
+        $cart = self::getCart($data);
+        $cart->buy = TRUE;
+        $cart->save();
+
+        // Resta el stock
+        self::updateStock($cart);
+
+        // Actualiza orden
+        $order = $cart->order()->first();
+        self::updateOrder($order, $data, "SUCC");
+
+        $email = $cart->user()->first()->email;
+        self::sendEmail($order, $email);
+
+        return redirect()->to('/');
+    }
+
+    public static function payPending (object $data)
+    {
+        // Actualiza el estado del carrito
+        $cart = self::getCart($data);
+
+        // Actualiza orden
+        $order = $cart->order()->first();
+        self::updateOrder($order, $data, "PEND");
+        
+        $email = $cart->user()->first()->email;
+        self::sendEmail($order, $email);
+
+        return redirect()->to('/');
+    }
+
+    public static function updateOrder (Order $order, object $data, string $statusCode) :void
+    {
+        $order->data = json_encode($data->all());
+        $order->status_id = Helper::getProperties('OSTA', $statusCode)->id;
+
+        if (is_null($order->payment_id)) {
+            $order->payment_id = $data->payment_id;
+        }
+        
+        $order->save();
+    }
+
+    public static function getCart ($data) :UserCart
+    {
         if ($data->external_reference) {
             $cart = UserCart::where('id', $data->external_reference)->first();
         }
@@ -57,27 +103,7 @@ class Pay
             $cart = $order->cart()->first();
         }
 
-        $cart->buy = TRUE;
-        $cart->save();
-
-        // Resta el stock
-        self::updateStock($cart);
-
-        // Actualiza orden
-        $order = $cart->order()->first();
-        $order->data = json_encode($data->all());
-        $order->status_id = Helper::getProperties('OSTA', 'SUCC')->id;
-
-        if (is_null($order->payment_id)) {
-            $order->payment_id = $data->payment_id;
-        }
-        
-        $order->save();
-        
-        $email = $cart->user()->first()->email;
-        $this->sendEmail($order, $email);
-
-        return redirect()->to('/');
+        return $cart;
     }
 
     public static function updateStock (UserCart $cart)
@@ -116,7 +142,7 @@ class Pay
         }
     }
 
-    public function senEmail (Order $order, string $email)
+    public static function sendEmail (Order $order, string $email)
     {
         Mail::to($email)->send(new OrderFinish($order));
     }

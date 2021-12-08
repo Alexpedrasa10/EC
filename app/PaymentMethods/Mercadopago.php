@@ -47,7 +47,7 @@ class Mercadopago
 
     $preference->back_urls = [
       "success" => route('paySuccess'),
-      "pending" => route('dashboard'),
+      "pending" => route('payPending'),
       "failure" => route('dashboard'),
     ];
         
@@ -67,7 +67,6 @@ class Mercadopago
 
   protected function getItems()
   {
-
     $allItems = array();
 
     foreach ($this->products as $i) {
@@ -85,7 +84,6 @@ class Mercadopago
 
   protected function getPayer()
   {
-
     $payer = new Payer();
     $payer->name = $this->user->name;
     $payer->email = $this->user->email;

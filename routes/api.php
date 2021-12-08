@@ -24,3 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/paySuccess', function (Request $request) {
     return Pay::paySucess($request);
 })->name('paySuccess');
+
+Route::get('/payPending', function (Request $request) {
+    return Pay::payPending($request);
+})->name('payPending');
