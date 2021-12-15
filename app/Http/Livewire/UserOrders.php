@@ -15,7 +15,6 @@ class UserOrders extends Component
         $this->user = User::whereId(Auth::user()->id)->first();
     }
 
-
     public function render()
     {
         $orders = $this->user->allCarts()->with('order.adress', 'products')->get();

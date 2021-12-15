@@ -1,7 +1,8 @@
 <div>
 
-    <div>
-        <h1 class="text-xl py-5 font-semibold">Mis Ordenes</h1>
+    <div class="py-5">
+        <h1 class="text-xl font-semibold">Mis Ordenes</h1>
+        <p class="text-sm">Este es el historial de compras que has realizado en nuestra tienda.</p>
     </div>
 
     <div class="flex flex-col">
@@ -23,6 +24,7 @@
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Estado
                     </th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -46,6 +48,13 @@
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                     {{$order->order->status()->first()->name}}
                                 </span>            
+                            </td>
+                            <td>
+                                <span x-data="{}" x-on:click="window.livewire.emitTo('order-info', 'show', {{$order->order->id}})"title="Ver más" class="cursor-pointer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                                    </svg>
+                                </span>
                             </td>
                         </tr>
                     @endforeach

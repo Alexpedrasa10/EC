@@ -32,7 +32,7 @@
         </div>
 
         @stack('modals')
-        
+        <livewire:order-info />
         @livewireScripts
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
         <script>
