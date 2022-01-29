@@ -39,7 +39,7 @@ class OrderInfo extends Modal
 
     public function render()
     {
-        $order = Order::whereId($this->orderId)->with('cart.products.product')->first();
+        $order = Order::whereId($this->orderId)->with('cart.products.product', 'adress')->first();
 
         return view('livewire.order-info', [
             'order' => $order
