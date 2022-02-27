@@ -9,10 +9,7 @@
         $user = App\Models\User::whereId(Auth::user()->id)->first();
         $teamAdmin = App\Models\Team::whereName('Administracion')->first();
         $isAdmin = $user->belongsToTeam($teamAdmin);
-
     }
-
-
 @endphp
 
 
@@ -76,23 +73,29 @@
 
                         <x-slot name="content">
 
-                            <x-jet-dropdown-link href="{{ route('profile.show') }}">
-                                {{ __('Profile') }}
-                            </x-jet-dropdown-link>
+                            @if (!$isAdmin)
+                                <x-jet-dropdown-link href="{{ route('profile.show') }}">
+                                    {{ __('Mi Perfil') }}
+                                </x-jet-dropdown-link>
+                            @endif
 
                             <div class="border-t border-gray-100"></div>
 
                             @if (Auth::user()->id == 1)
                                 
-                             <!-- Account Management -->
-                             <div class="block px-4 py-2 text-xs text-gray-400">
-                                {{ __('My Ecommerce') }}
-                            </div>
+                                <!-- Account Management -->
+                                <div class="block px-4 py-2 text-xs text-gray-400">
+                                    {{ __('My Ecommerce') }}
+                                </div>
 
-                            <x-jet-dropdown-link href="{{ route('myProducts') }}">
-                                {{ __('Mis Productos') }}
-                            </x-jet-dropdown-link>
+                                <x-jet-dropdown-link href="{{ route('myProducts') }}">
+                                    {{ __('Mis Productos') }}
+                                </x-jet-dropdown-link>
 
+                                <x-jet-dropdown-link href="{{ route('profile.show') }}">
+                                    {{ __('Mis ventas') }}
+                                </x-jet-dropdown-link>
+                                <hr>
                             @endif
 
                             <!-- Authentication -->

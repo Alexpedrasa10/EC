@@ -36,7 +36,6 @@ class Product extends Model
     {
         return $this->photo()->first();
     }
-
     
     public function categories(): HasManyThrough
     {

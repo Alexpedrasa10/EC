@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\PaymentMethods\Bitcoin;
 use GuzzleHttp\Client;
 use App\Services\ConvertApi;
+use Illuminate\Support\Facades\Hash;
 
 class Test extends Command
 {
@@ -44,7 +45,10 @@ class Test extends Command
      */
     public function handle()
     {
-        $btc = new Bitcoin();
-        $btc->run();
+        /* $btc = new Bitcoin();
+        $btc->run(); */
+
+        $qProducts = Product::whereId(12)->first()->quantitySells();
+        dump($qProducts);
     }
 }
