@@ -11,7 +11,6 @@ class OrderInfo extends Modal
     public function getStockData ($data)
     {
         if (!is_null($data) && !empty($data)) {
-
             
             $sizes = json_decode($data);
             $qSizes = count($sizes);

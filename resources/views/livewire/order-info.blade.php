@@ -33,7 +33,7 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                             @if (!empty($item->data))
                                 <span class="text-sm font-medium text-gray-700">
-                                    ({{$this->getStockData($item->data)}})
+                                    {{$this->getStockData($item->data)}}
                                 </span>
                             @endif
                             </td>

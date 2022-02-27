@@ -17,7 +17,10 @@ class UserOrders extends Component
 
     public function render()
     {
-        $orders = $this->user->allCarts()->with('order.adress', 'products')->get();
+        $orders = $this->user->allCarts()
+            ->with('order.adress', 'products')
+            ->whereHas('order')
+            ->get();
 
         return view('profile.user-orders', [
             'orders' => $orders
