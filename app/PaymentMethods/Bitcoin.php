@@ -5,11 +5,16 @@ namespace App\PaymentMethods;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CartProduct;
 use App\Models\User;
+use ExchangeAuth;
 use GuzzleHttp\Client;
 use Helper;
 use stdClass;
+/**
+ * Payment for buda's api
+ */
 class Bitcoin
 {
+    use ExchangeAuth;
 
     protected $api_key, $secret, $url, $market;
 
@@ -22,12 +27,6 @@ class Bitcoin
         $this->secret = config("payment-methods.bitcoin.secret");
         $this->url = config("payment-methods.bitcoin.url");
         $this->market = config("payment-methods.bitcoin.market");
-
-        // User information
-        //$this->user = Auth::user();
-        $this->user = User::find(2);
-        $this->cart = $this->user->cart()->first();
-        //$this->products = CartProduct::with('product')->where('user_cart_id', $this->cart->id)->get();
     }
     
 
@@ -50,7 +49,7 @@ class Bitcoin
     * Método para convertir precio en ARS al valor del BTC actual
     * @return mixed
     */
-    public function getAmountBTC()
+    public function getAmountBTC ()
     {
         // Call API for quote
         $path = "markets/{$this->market}/ticker";
@@ -130,41 +129,16 @@ class Bitcoin
         }
 
         if ($method == "GET") {
-            $res = new stdClass();
-            $res->code = $call->getStatusCode();
-            $res->response = json_decode($call->getBody()->getContents());
+
+            $res = (object)[
+                'response' => json_decode($call->getBody()->getContents()),
+                'code' => $call->getStatusCode(),
+            ];
         }
 
         return $res;
     }
 
-    public function getNonce () :string
-    {
-        list($msec, $sec) = explode(' ', microtime());
-        return $sec . substr($msec, 2, 3);
-    }
-
-    /**
-     * Método para autenticarse a la API de Buda
-     * @param string $method
-     * @param string $path
-     * @param string $nonce
-     * @param string $body
-     * @return mixed     * 
-     */
-    public function getSign(string $method, string $path, string $nonce, string $body = null)
-    {
-        $components = [$method, $path];
-
-        if (!is_null($body)) $components[] = base64_encode($body);
-
-        $components[] = $nonce;
-        $msg = implode(" ", $components);
-
-        return hash_hmac("sha384", $msg, $this->secret);
-    }
-
-    
     /**
      * Método que devuelve el body para generar invoice
      * @param $amount
