@@ -5,7 +5,7 @@ namespace App\PaymentMethods;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CartProduct;
 use App\Models\User;
-use ExchangeAuth;
+use App\Traits\ExchangeAuth;
 use GuzzleHttp\Client;
 use Helper;
 use stdClass;

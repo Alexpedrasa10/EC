@@ -46,7 +46,7 @@
                             </td>
                             <td class="whitespace-nowrap text-left">    
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{$order->status->code}}">
-                                    {{$order->status->name}}  {{$order->status->code}} 
+                                    {{$order->status->name}}
                                 </span>            
                             </td>
                             <td>
@@ -71,12 +71,12 @@
     
     .SUCC {
         color: #F1F1F1;
-        background: #17b917;
+        background: #16A34A;
         border-radius: 1rem;
     }
 
     .PEND {
-        background: #e06d20;
+        background: #F97316;
         border-radius: 1rem;
         color : #F1F1F1F1;
     }

@@ -45,8 +45,8 @@ class Test extends Command
      */
     public function handle()
     {
-        /* $btc = new Bitcoin();
-        $btc->run(); */
+        $btc = new Bitcoin();
+        $btc->run();
 
         $qProducts = Product::whereId(12)->first()->quantitySells();
         dump($qProducts);
