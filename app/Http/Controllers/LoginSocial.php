@@ -19,7 +19,7 @@ class LoginSocial extends Controller
     
     public function login ($driver)
     {
-        $user = Socialite::driver($driver)->user();
+        $user = Socialite::driver($driver)->stateless()->user();
 
         $auth = User::firstOrCreate([
             'name' => $user->getName(),
