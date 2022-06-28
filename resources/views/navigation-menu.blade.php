@@ -153,12 +153,18 @@
             </x-jet-responsive-nav-link>
             
             @foreach ($navLinks as $nav)
-            <x-jet-responsive-nav-link href="{{ route($nav['route']) }}" :active="request()->is($nav['route'])">
-                {{ __($nav['name']) }}
-            </x-jet-responsive-nav-link>
-        @endforeach
-        </div>
+                <x-jet-responsive-nav-link href="{{ route($nav['route']) }}" :active="request()->is($nav['route'])">
+                    {{ __($nav['name']) }}
+                </x-jet-responsive-nav-link>
+            @endforeach
 
+            @auth
+            @else 
+                <x-jet-responsive-nav-link href="{{ route('login') }}" active>
+                    {{ __('Ingresar ') }}
+                </x-jet-responsive-nav-link>
+            @endauth
+        </div>
         @auth
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
@@ -174,6 +180,16 @@
                     <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
                 </div>
             </div>
+            <!-- Authentication -->
+            <form method="POST" action="{{ route('logout') }}">
+            @csrf
+
+            <x-jet-dropdown-link href="{{ route('logout') }}"
+                        onclick="event.preventDefault();
+                            this.closest('form').submit();">
+                {{ __('Log Out') }}
+            </x-jet-dropdown-link>
+            </form>
         </div>
         @endauth
     </div>
