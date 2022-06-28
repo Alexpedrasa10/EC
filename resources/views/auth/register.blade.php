@@ -47,14 +47,15 @@
             @endif
 
             <div class="flex items-center justify-end mt-4">
-                <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
-                    {{ __('Already registered?') }}
-                </a>
-
-                <x-jet-button class="ml-4">
-                    {{ __('Register') }}
+                <x-jet-button class="mt-5 inline-block bg-indigo-600 hover:bg-indigo-800 w-full rounded-lg shadow-lg text-center">
+                    <span class="text-center">
+                        {{ __('Log in') }}
+                    </span>
                 </x-jet-button>
             </div>
         </form>
+        <a class="underline text-sm text-gray-600 hover:text-gray-900 mt-5 block text-center" href="{{ route('login') }}">
+            {{ __('Already registered?') }}
+        </a>
     </x-jet-authentication-card>
 </x-guest-layout>
