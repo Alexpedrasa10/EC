@@ -8,7 +8,7 @@ class CartBanner extends Component
 {
     protected $listeners = ['showCartBanner' => 'showCartBanner'];
     
-    public $show = false;
+    public $show = true;
 
     public function showCartBanner()
     {

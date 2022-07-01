@@ -13,7 +13,7 @@
 @endphp
 
 
-<nav x-data="{ open: false }" class="bg-gray-50 border-b border-gray-100 md:fixed sm:md:fixed lg:md:fixed xl:md:fixed w-full z-40">
+<nav x-data="{ open: false }" class="bg-gray-50 border-b border-gray-100 w-full z-40">
     
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -193,5 +193,4 @@
         </div>
         @endauth
     </div>
-    @livewire('cart-banner')
 </nav>

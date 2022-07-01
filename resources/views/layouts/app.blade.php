@@ -21,7 +21,10 @@
         <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.3/dist/alpine.min.js" defer></script>
     </head>
     <body class="font-sans antialiased dark:bg-gray-900">
-        @livewire('navigation-menu')
+        <div class="md:fixed sm:md:fixed lg:md:fixed xl:md:fixed w-full z-50">
+            @livewire('navigation-menu')
+            @livewire('cart-banner')
+        </div>
 
         <div class="pt-5 sm:pt-20 lg:pt-20 xl:pt-20 bg-gray-50 dark:bg-gray-900">
 
