@@ -192,6 +192,7 @@ class CartProducts extends Component
             ->leftjoin('photo_products as pp', 'pp.id', '=', 'p.photo_id')
             ->get();
         $this->cart = $this->user->cart()->first();
+        dump($this->cart);
 
         return view('cart.cart-products');
     }

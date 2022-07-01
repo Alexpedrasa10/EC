@@ -64,7 +64,7 @@ class User extends AuthUser
 
     public function cart () :HasOne
     {
-        return $this->hasOne(UserCart::class, 'user_id', 'id')->whereNull('user_cart.buy')->whereNull('user_cart.canceled');
+        return $this->hasOne(UserCart::class, 'user_id', 'id')->whereNull('user_cart.buy');
     }
 
     public function adress ()
@@ -84,11 +84,11 @@ class User extends AuthUser
 
     public function products() :HasManyThrough
     {
-        return $this->hasManyThrough(CartProduct::class, UserCart::class, 'user_id', 'user_cart_id', 'id', 'id')->whereNull('user_cart.buy')->whereNull('user_cart.canceled');;
+        return $this->hasManyThrough(CartProduct::class, UserCart::class, 'user_id', 'user_cart_id', 'id', 'id')->whereNull('user_cart.buy');;
     }
 
     public function order () :HasOneThrough
     {
-        return $this->hasOneThrough(Order::class, UserCart::class)->whereNull('user_cart.buy')->whereNull('user_cart.canceled');
+        return $this->hasOneThrough(Order::class, UserCart::class)->whereNull('user_cart.buy');
     }
 }

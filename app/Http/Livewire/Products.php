@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 
 class Products extends Component
 {
-    public $categories, $categoriesFilter = [], $user, $dataProducts = array();
+    public $categories, $categoriesFilter = [], $user, $cart, $dataProducts = array();
 
     use WithPagination;
     public $filter = null, $priceLimit, $page = 1, $until = null, $since = null,
@@ -32,34 +32,46 @@ class Products extends Component
 
     public function addProductToCart(int $idProduct)
     {
-        $user = $this->user;
-        $cart = $user->cart()->first();
-        $product = Product::where('id', '=', $idProduct)->first();
-
-        if (!is_null($product->sale_price)) {
-            $product->price = $product->sale_price;
+        if (empty($this->user)) {
+            
+            $this->dispatchBrowserEvent('alert',[
+                'title' => 'Debes iniciar sesión para agregar productos al carrito.',
+                'type'=>'error', 
+            ]);
+            return;
         }
 
-        if ( $this->checkDataProducts($idProduct, FALSE) ) {
-        
-            if (!is_null($cart)){
+        $product = Product::find($idProduct);
 
-                $productCart = CartProduct::where('user_cart_id', '=', $cart->id)
+        if ( $this->checkDataProducts($idProduct, FALSE) ) {
+            
+
+            if (empty($this->cart->id)){
+                $this->cart->user_id = $this->user->id;
+                $this->cart->amount = 0;
+                $this->cart->save();
+            }
+
+            if (!empty($product->sale_price)) {
+                $product->price = $product->sale_price;
+            }    
+        
+            $productCart = CartProduct::where('user_cart_id', '=', $this->cart->id)
                     ->where('product_id', '=', $product->id)
                     ->first();
                 
                 if (empty($productCart)){
     
                     $newProductCart = new CartProduct();
-                    $newProductCart->user_cart_id = $cart->id;
+                    $newProductCart->user_cart_id = $this->cart->id;
                     $newProductCart->product_id = $product->id;
                     $newProductCart->quantity = 1;
                     $newProductCart->data = $this->getSizeJSON($idProduct);
                     $newProductCart->amount += $product->price;
                     $newProductCart->save();
     
-                    $cart->amount += $product->price;
-                    $cart->save();
+                    $this->cart->amount += $product->price;
+                    $this->cart->save();
     
                     $this->dispatchBrowserEvent('alert',[
                         'title' => 'Producto agregado al carrito.',
@@ -75,8 +87,8 @@ class Products extends Component
                         $productCart->amount = $productCart->amount + $product->price;
                         $productCart->save();
         
-                        $cart->amount += $product->price;
-                        $cart->save();
+                        $this->cart->amount += $product->price;
+                        $this->cart->save();
         
                         $this->dispatchBrowserEvent('alert',[
                             'title' => 'Producto agregado al carrito.',
@@ -90,27 +102,8 @@ class Products extends Component
                         ]);
                     }
                 }
-            }
-            else{
-    
-                $newCart = new UserCart();
-                $newCart->user_id = $user->id;
-                $newCart->amount = $product->price;
-                $newCart->save();
-    
-                $newProductCart = new CartProduct();
-                $newProductCart->user_cart_id = $newCart->id;
-                $newProductCart->product_id = $product->id;
-                $newProductCart->quantity = 1;
-                $newProductCart->data = $this->getSizeJSON($idProduct);
-                $newProductCart->amount = $product->price;
-                $newProductCart->save();
-    
-                $this->dispatchBrowserEvent('alert',[
-                    'title' => 'Producto agregado al carrito.',
-                    'type'=>'success', 
-                ]);
-            }
+
+            $this->emit('showCartBanner');
         }
         else{
             $this->dispatchBrowserEvent('alert',[
@@ -178,43 +171,21 @@ class Products extends Component
 
             foreach ($this->dataProducts as $key => $value) {
 
-                if (gettype($value) == "array") {
-                    
-                    if ($value['product_id'] == $idProduct){
-                
-                        if ($update){
-                            
-                            if (!is_null($size)) {
-                                $this->dataProducts[$key]['size'] = $size;
-                                $exist = TRUE;
-                            }
-                        }
-                        elseif($update == FALSE){
+                $value = (array)$value;
 
-                            if (isset($value['size'])) {
-                               $exist = TRUE;
-                            }
+                if ($value['product_id'] == $idProduct){
+                
+                    if ($update){
+                        
+                        if (!is_null($size)) {
+                            $this->dataProducts[$key]['size'] = $size;
+                            $exist = TRUE;
                         }
                     }
-                }
-                else{
+                    else {
 
-                    if ($value->product_id == $idProduct){
-        
-                        $exist = TRUE;
-        
-                        if ($update){
-                            
-                            if (!is_null($size)) {
-                                $this->dataProducts[$key]['size'] = $size;
-                                $exist = TRUE;
-                            }
-                        }
-                        elseif($update == FALSE){
-
-                            if (isset($value->size)) {
-                               $exist = TRUE;
-                            }
+                        if (isset($value['size'])) {
+                           $exist = TRUE;
                         }
                     }
                 }
@@ -311,15 +282,16 @@ class Products extends Component
 
     public function mount ($category)
     {
+        if (Auth::user()) {
+            $this->user = User::find(Auth::user()->id);
+            $this->cart = !empty($this->user->cart()->first()) ? $this->user->cart()->first() : new UserCart();
+        }
+
         if (!is_null($category)) array_push($this->categoriesFilter, $category);
     }
 
     public function render()
     {
-        if (Auth::user()) {
-            $this->user = User::where('id', '=', Auth::user()->id)->first();
-        }
-
         $products = $this->getFilteredProducts();
 
         return view('livewire.products', [ 
