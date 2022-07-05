@@ -12,23 +12,19 @@ use stdClass;
 
 class CartProducts extends Component
 {
-    public $cart, $user, $products, $idProductDelete,
-    $confirmDeleteProduct = FALSE,
-    $confirmCancelCart = FALSE;
+    public $cart, $user, $products, $idProductDelete;
 
-    // Eliminar product
-    public function cancel()
-    {
-        $this->idProductDelete = NULL;
-        return $this->confirmDeleteProduct = false;
-    }
+    protected $listeners = ['refreshCartProducts' => '$refresh'];
 
     public function confirmDeleteProduct(int $id)
     {
-        $this->idProductDelete = $id;
-        return $this->confirmDeleteProduct = true;
+        $this->emit("showDeleteProductCart", $id);
     }
 
+    public function cancelCart()
+    {
+        $this->emit("showDeleteCart");
+    }
     public function deleteProduct()
     {
         if ( !empty($this->idProductDelete) ){

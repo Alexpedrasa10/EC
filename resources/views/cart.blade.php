@@ -6,6 +6,13 @@
     </x-slot>
 
     <div class="py-12">
+
+        <!--Modal para confirmar la cancelar el carrito-->
+        @livewire('delete-cart', ['user' => Auth::user()])
+
+        <!--Modal para confirmar la eliminación de un producto-->
+        @livewire('delete-product-cart', ['user' => Auth::user()])
+
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             @livewire('cart-products')
         </div>

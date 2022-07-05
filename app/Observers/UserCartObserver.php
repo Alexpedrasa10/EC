@@ -56,8 +56,7 @@ class UserCartObserver
     public function deleted(UserCart $userCart)
     {
         $order = $userCart->order()->first();
-        $order->status_id = Helper::getProperties('OSTA','CANCEL')->id;
-        $order->save();
+        $order->delete();
     }
 
     /**

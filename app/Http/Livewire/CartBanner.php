@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use Illuminate\Foundation\Auth\User;
 use Livewire\Component;
 
 class CartBanner extends Component
@@ -13,6 +14,13 @@ class CartBanner extends Component
     public function showCartBanner()
     {
         $this->show = true;
+    }
+
+    public function mount(User $user)
+    {
+        $this->user = $user;
+        $this->cart = $user->cart()->first();
+        $this->show = !empty($this->cart);
     }
 
     public function render()

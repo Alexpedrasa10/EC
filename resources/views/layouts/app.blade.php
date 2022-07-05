@@ -23,7 +23,7 @@
     <body class="font-sans antialiased dark:bg-gray-900">
         <div class="md:fixed sm:md:fixed lg:md:fixed xl:md:fixed w-full z-50">
             @livewire('navigation-menu')
-            @livewire('cart-banner')
+            @livewire('cart-banner',['user' => Auth::user()])
         </div>
 
         <div class="pt-5 sm:pt-20 lg:pt-20 xl:pt-20 bg-gray-50 dark:bg-gray-900">
