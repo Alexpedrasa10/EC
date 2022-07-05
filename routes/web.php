@@ -21,7 +21,7 @@ Route::get('/', function () {
     return view('dashboard');
 })->name('dashboard');
 
-Route::get('/cart', function () {
+Route::middleware(['auth'])->get('/cart', function () {
     return view('cart');
 })->name('cart');
 
@@ -45,11 +45,11 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/edit-product/{slug?}', fu
     ]);
 })->name('edit-products');
 
-Route::get('/my-products', function () {
+Route::middleware(['auth'])->get('/my-products', function () {
     return view('myProducts');
 })->name('myProducts');
 
-Route::get('/checkout-payment', function () {
+Route::middleware(['auth'])->get('/checkout-payment', function () {
     return view('checkout-payment');
 })->name('checkout');
 
